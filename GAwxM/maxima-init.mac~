@@ -1,4 +1,0 @@
-maxima_userdir;
-wxMuserdir:strimr(".maxima",maxima_userdir)$
-fylenames:simplode([wxMuserdir,"GAwxM/GA_functions/###.wxm"])$
-file_search_maxima: append (file_search_maxima,[fylenames])$
