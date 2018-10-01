@@ -1,0 +1,158 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 17.10.1 ] */
+/* [wxMaxima: comment start ]
+gafns4.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+function grader() definition 
+generation of multivectors with subscripted coefficients in two different ways...
+makemultivec(name)
+makelistgrademv(name,lstgrades)
+generation of multivectors with unit coefficients...
+makeunitarymv(name)
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+grader() allocates all grades from a Multivector to a local array (of length Plen+2),  
+grarr (of Plen+1 expressions; including ,for grarr[0], the zero grade scalar part);
+the denominator of the input, M, is found as an expression and is carried out of grader() 
+as part of the function value in grarr[Plen+1]
+usage e.g.
+arr:grader(A)$
+denA:arr[Plen+1]$
+scalarA:arr[0]/denA$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+grader(M):=block([grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,
+strarg,searchlst,ng,strbld,posb,lenlst,narg,evarg,argsum,aMn],
+local(grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,strarg,searchlst,
+ng,strbld,posb,lenlst,narg,evarg,argsum,aMn),
+grarr:make_array(any,Plen+2),
+for grd:0 thru Plen do grarr[grd]:0,
+grarr[Plen+1]:1,
+rM:rat(M),
+bM:denom(rM),
+aM:rM*bM,
+aM:facsum(aM,allblds),
+grarr[Plen+1]:bM,
+for grd:Plen thru 1 step -1 do
+block(
+lstargs:arglst(aM),
+lenarg:length(lstargs),
+searchlst:lstblds[grd],
+lengrd:nbases[grd],
+lstgrdarg:[],
+if not aM=0 then 
+block(for na:1 thru lenarg do
+block(strarg:string(lstargs[na]),
+for ng:1 thru lengrd do
+block(strbld:string(searchlst[ng]),
+posb:ssearch(strbld,strarg,sequal),
+if posb>0 then
+block(lstgrdarg:endcons(strarg,lstgrdarg))))),
+lenlst:length(lstgrdarg),
+if lenlst>0 then 
+block(evarg:make_array(any,lenlst+1),
+for narg:1 thru lenlst do
+block(evarg[narg]:eval_string(lstgrdarg[narg])),
+argsum:sum(evarg[n],n,1,lenlst),
+grarr[grd]:argsum,
+aMn:aM-argsum,
+aM:facsum(aMn,allblds))),
+grarr[0]:aM,grarr)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+lstblds does not include the scalar, 1, so add a[0,1]*1 as the scalar part
+usage
+nameA:"A"$
+makemultivec(nameA);
+arrayinfo(a);
+generates global multivector A and the global array of coordinates, a
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+makemultivec(name):=block([str,stra,arrvec,grd,lengrd,strv,strn],
+local(str,stra,arrvec,grd,lengrd,strv,strn),
+str:sdowncase(name), 
+stra:sconcat("array(",str,",Plen,maxnbases)"),
+eval_string(stra),
+arrvec:make_array(any,Plen+1),
+for grd:Plen thru 1 step -1 do
+block(lengrd:nbases[grd],
+strv:sconcat("arrvec[grd]:sum(",str,"[grd,k]*lstblds[grd][k],k,1,lengrd)"),
+eval_string(strv)),
+strn:sconcat(name,":",str,"[0,1]+sum(arrvec[j],j,1,Plen)"),
+eval_string(strn))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+no checks on lstgrades
+creates a multivector from the list of particular grades
+usage
+lstgC0:[0,1,Plen]$
+nameC0:"C0"$
+makelistgrademv(nameC0,lstgC0)$
+C0;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+makelistgrademv(name,lstgrades):=block([nameCstr,strm,strp,arr,arrprj,
+lengrds,ng,grd,Cout,strn],
+local(nameCstr,strm,strp,arr,arrprj,lengrds,ng,grd,Cout,strn),
+nameCstr:string(name),
+strm:sconcat("makemultivec(",nameCstr,")"),
+eval_string(strm),
+strp:sconcat("arrprj:grader(",name,")"),
+eval_string(strp),
+arr:make_array(any,Plen+2),
+fillarray(arr,arrprj),
+/*denM:arrprj[Plen+1],*/
+remarray(arrprj),
+lengrds:length(lstgrades),
+Cout:0,
+for ng:1 thru lengrds do
+block(grd:lstgrades[ng],
+Cout:Cout+arr[grd]),
+strn:sconcat(name,":Cout"),
+eval_string(strn))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+usage
+nameE:"E"$
+makeunitarymv(nameE)$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+makeunitarymv(name):=block([str,stra,arrvec,grd,lengrd,strv,strn],
+local(str,stra,arrvec,grd,lengrd,strv,strn),
+str:sdowncase(name), 
+arrvec:make_array(any,Plen+1),
+for grd:Plen thru 1 step -1 do
+block(lengrd:nbases[grd],
+strv:sconcat("arrvec[grd]:sum(lstblds[grd][k],k,1,lengrd)"),
+eval_string(strv)),
+strn:sconcat(name,":","1+sum(arrvec[j],j,1,Plen)"),
+eval_string(strn))$ 
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

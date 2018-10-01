@@ -1,0 +1,210 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_polar_grad_noreciprocb.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Exercise 5.20, VAGC page 70 for the gradient in polar coordinates for 2D only
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+the paths in file_search_maxima are also extended to point to the GC functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+batchload("gcfns2")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20
+VAGC page 70
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate vector, xb(old) in 2D only!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xv:x*e1+y*e2$
+ldisplay(xv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xb:r*cos(th)*e1+r*sin(th)*e2$
+ldisplay(xb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+only wr is a unit vector of wjbasis from Eq. 5.16
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wr:diff(xb,r)$
+wth:diff(xb,th)$
+ldisplay(wr,wth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the basis from Eq. 5.16
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+r:sqrt(x^2+y^2)$
+th:atan(y/x)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(r,x)*e1+diff(r,y)*e2$
+wkr:ratsimp(%)$
+diff(th,x)*e1+diff(th,y)*e2$
+wkth:ratsimp(%)$
+ldisplay(wkr,wkth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+only wkr is a unit vector of wkbasis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+normod(wkr);
+normod(wkth);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

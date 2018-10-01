@@ -1,0 +1,108 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gcfns3.wxm
+
+Copyright (C) 2017  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+function lst2outer() definition to form an expression for the outer product 
+of a list of vectors
+function reciprocM() definition to form the reciprocal of the outer product 
+of a list of basis vectors for any dimension manifold in any higher dimension vector space
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function lst2outer() using code developed in file develop_reciprocM_code.wxm
+usage e.g.
+tgtbasis:['bu,'bv];
+bivout:lst2outer_code(tgtbasis);
+and specifically in
+function reciprocM() below
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lst2outer(lst):=block([len,n,bstr,bnstr,bout],
+local(len,n,bstr,bnstr,bout),
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+if is(equal(len,1)) then return(lst[1]) else
+block(bstr:string(lst[1]),for n:2 thru len do 
+block(bnstr:string(lst[n]),bstr:sconcat(bstr,"&^",bnstr)),
+bout:parse_string(bstr))))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function reciprocM() using code developed in file develop_reciprocM_code.wxm
+usage e.g.
+recM:reciprocM_code(tgtbasis);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reciprocM(cov):=block([mut,mutev,abs2,mrev,lenc,x,i,j,lst,bex,mv,mvev,nj,rec,con],
+local(mut,mutev,abs2,mrev,lenc,x,i,j,lst,bex,mv,mvev,nj,rec,con),
+mut:lst2outer(cov),
+mutev:ev(mut),
+abs2:normod(mutev)^2,
+mrev:mvrev(mutev),
+lenc:length(cov),
+con:[],
+for j:1 thru lenc do
+block(lst:cov,
+bex:cov[j],
+lst:delete(bex,lst),
+mv:lst2outer(lst),
+mvev:ev(mv),
+nj:(j-1),
+rec:(-1)^nj*mvev&*mrev,
+con:endcons(facsum(rec,allblds)/abs2,con)),con)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function vectordelM() using code developed in file develop_vectordelM_code.wxm
+usage e.g.
+
+bx:u*e1+v*e2+w*e3+(u*u+v*v+w*w)*e4$
+bu:diff(bx,u)$
+bv:diff(bx,v)$
+bw:diff(bx,w)$
+
+tgtbasis:['bu,'bv,'bw]$
+rectgt:reciprocM(tgtbasis)$
+b1:rectgt[1]$
+b2:rectgt[2]$
+b3:rectgt[3]$
+
+reclst:['b1,'b2,'b3];
+parlst:[u,v,w];
+
+bf:(v+1)*bu+u*w*bv+u*v*bw$
+bfstr:"bf"$
+
+vectordelM(bfstr,parlst,reclst)$
+ev(%)$
+facsum(%,allblds)$
+ldisplay(%)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vectordelM(bfstr,parlst,reclst):=block([j,delfstr,lenlst,rec,recstr,pstr,dstr],
+local(j,delfstr,lenlst,rec,recstr,pstr,dstr),
+delfstr:"",
+lenlst:length(parlst),
+for j:1 thru lenlst do
+block(
+rec:reclst[j],
+recstr:string(rec),
+pstr:string(parlst[j]),
+dstr:sconcat("diff(",bfstr,",",pstr,")"),
+delfstr:sconcat(delfstr,"+",recstr,"&*",dstr)),
+delfe:parse_string(delfstr),delfe)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

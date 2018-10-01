@@ -1,0 +1,293 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+develop_mvgrad_code.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+use string concatenation with 'diff() to develop code to calculate the gradient 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+the paths in file_search_maxima are also extended to point to the GC functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+survey page 19, Section 3.1
+the Fourier expansion (Section 2.3.7), has a summation over J and may have 2^Plen terms
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the derivative with respect to the grade zero term of the coordinate has been excluded,
+and our lists, allblds and invblds, exclude the unit of the basis so our index, j will
+only run from 1 to 2^Plen-1
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+attempt to form a gradient of multivector F, just for Plen=3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+coefficients of the non-zero grades of the 'coordinate' multivector, C
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Clst:[c1,c2,c3,c4,c5,c6,c7]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the global list invblds[] is found using VAGC, Exercise 6.7, page 99
+the inverse basis used in the Fourier expansion, Survey, Section 2.3.7,
+is eJm1 (eJ to minus 1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+eJ:allblds$ 
+eJm1:invblds$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate multivector from the list of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lenlst:2^Plen-1$
+C:0$
+for j:1 thru lenlst do
+block(C:C+Clst[j]*eJ[j])$
+ldisplay(C)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+create a simple function of the coordinate multivector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(C):=3*C&^C$
+F:ev(F(C))$
+ldisplay(F)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define DelFstr for each non-zero coordinate with string concatenation followed by parsing
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Fstr:"F"$
+DelFstr:""$
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(ejm1:eJm1[j],
+ejstr:string(ejm1),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DelFstr:sconcat(DelFstr,"+",ejstr,"&*",dstr)),
+DelF:parse_string(DelFstr))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(dstr,DelFstr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(DelF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ev(DelF,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function mvgrad() to find an expression for the gradient of any multivector
+expression given as a string; this can then be evaluated, given the multivector values
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvgrad_code(Fstr,Clst):=block([j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF],
+local(j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF),
+DelFstr:"",
+lenlst:2^Plen-1,
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(ejm1:invblds[j],
+ejstr:string(ejm1),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DelFstr:sconcat(DelFstr,"+",ejstr,"&*",dstr)),
+DelF:parse_string(DelFstr)),DelF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the multivector G using function mvgrad_code() above
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gstr:"G"$
+gradG:mvgrad_code(Gstr,Clst)$
+ldisplay(gradG)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+G:F$
+ev(gradG,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the multivector H using function mvgrad() in file gcfns1.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Hstr:"H"$
+gradH:mvgrad(Hstr,Clst)$
+ldisplay(gradH)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+H:F$
+ev(gradH,diff);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,611 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+lhs_rhs_solid_ellipsoid_limited_hole_R4_w_first.wxm
+
+Copyright (C) 2017  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A development document for Geometric Algebra with wxMaxima
+to test the vector calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+To confirm the equality of...
+Integration over the volume defined by a solid ellipsoid using a (vector) 
+derivative of a vector function within that 3D manifold
+i.e. the left hand side (lhs) of the fundamental theory of geometric calculus
+with...
+Integration over the boundary of the volume defined by the surface of the ellipsoid using 
+the integral of a vector function on the boundary surface
+i.e. the right hand side (rhs) of the equation for the fundamental theory
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the method uses a very small cylindrical hole between the poles of the ellipsoid to
+allow for discontinuities at either pole
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+here the first integration over the solid is with the ordinate parameter, w=[0,1]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+the paths in file_search_maxima are also extended to point to the GC functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+batchload("gcfns2")$
+batchload("gcfns3")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3~e4$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using the (M)anifold functions found in file gcfns3.wxm,
+we must find the left hand side (lhs) of the integral equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the volume of the ellipsoid with the eccentric angle, u
+and the azimuth angle, v where u=[-pi/2+epsln,+pi/2-epsln], v=[0,2pi];
+the third parameter is w=[0,+1] as a multiple for the ordinate of the surface;
+then find the three basis vectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bx3:a*cos(u)*(cos(v)*e1+sin(v)*e2)+w*b*sin(u)*e3$
+bx:bx3+l*e4;
+bu:diff(bx,u);
+bv:diff(bx,v);
+bw:diff(bx,w);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+tgtbasis:['bu,'bv,'bw]$
+rectgt:reciprocM(tgtbasis)$
+b1:rectgt[1]$
+b2:rectgt[2]$
+b3:rectgt[3]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define a simple vector function with continuous derivatives within the manifold...
+e.g.? bv/cos(u)$, br:bx-(p*e1+q*e2+r*e3)$, r3:normod(bx3)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+(1+w)*bv/cos(u)$
+bf:expand(%)$
+exprbf:bf$
+define(bfl(u,v,w,l),exprbf);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the vector derivative; "vector del" &* "vector bf" = bivector + scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bfstr:"bf"$
+parlst:[u,v,w]$
+reclst:['b1,'b2,'b3]$
+ldisplay(parlst,reclst)$
+vectordelM(bfstr,parlst,reclst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ev(%)$
+trigsimp(%)$
+delbf:facsum(%,allblds)$
+ldisplay(delbf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+this is the tangent to the interior of the ellipsoid, maybe
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bu&^bv&^bw$
+trigsimp(%)$
+bubvbw:facsum(%,allblds)$
+ldisplay(bubvbw)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now we need a triple integral over the interior of the ellipsoid (less the hole)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+first form the integrand, integ, of the left hand side (lhs) of the fundamental theorem 
+and grade the geometric product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bubvbw&*delbf$
+facsum(%,allblds)$
+integ:grader(%)$
+deninteg:integ[Plen+1]$
+integ[0]/deninteg$
+scalarinteg:trigsimp(%)$
+integ[1]/deninteg$
+vectorinteg:trigsimp(%)$
+
+integ[2]/deninteg$
+bivecinteg:trigsimp(%)$
+integ[3]/deninteg$
+trivecinteg:trigsimp(%)$
+
+ldisplay(scalarinteg,vectorinteg,bivecinteg,trivecinteg)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+recombine the integrand and display the triple integral
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+scalarinteg+vectorinteg+bivecinteg+trivecinteg$
+lhsinteg:trigsimp(%)$
+J1:'integrate(lhsinteg,w)$
+J2:'integrate(J1,u)$
+J3:'integrate(J2,v)$
+ldisplay(J3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the innermost part of the iterated integral
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J1lhs:'integrate(lhsinteg,w)$
+ldisplay(J1lhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using a functional method to evaluate the first integral at the limits
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(J1lhs,nouns)$
+define(J1fw(w),expr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J1upper:J1fw(1)$
+J1lower:J1fw(0)$
+J1upper-J1lower$
+trigsimp(%)$
+J2integ:facsum(%,allblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J2lhs:'integrate(J2integ,u)$
+ldisplay(J2lhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+to demonstrate an (unnecessary) change of variable from u to y with f(u,y)=u-y=0 
+using a functional method to evaluate the limits of the new variable, y
+N.B. intrinsic function solve() outputs a list of 1 equation for y and the variable expruy
+is used both in function solve() and in function changevar()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expruy:u-y$
+ylst:solve([expruy],[y]);
+ylst[1];
+expru:subst(%,y);
+define(limfu(u),expru)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+evaluate the limits of the new variable at the old limits u=[-pi/2+epsln,pi/2-epsln]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+epsln defines the extent of the hole at the "poles" of the ellipsoid,
+the radius of the hole is a*cos(pi/2-epsln) 
+use epsln equal to one arcsec to approximate the integrals near the end of this file
+(method was developed here with epsln:%pi/6;)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+epsln:%pi/6;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+uupp:+%pi/2-epsln$
+upperlim:limfu(uupp);
+ulow:-%pi/2+epsln$
+lowerlim:limfu(ulow);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+apply the change of variable viz. intrinsic maxima function changevar()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J2ch:changevar(J2lhs,expruy,y,u)$
+ldisplay(J2ch)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+perform the indefinite integration
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(J2ch,nouns)$
+ldisplay(expr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+again, use another functional method to evaluate the definite integral at the limits 
+of the new variable
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(J2fy(y),expr)$
+J2upper:J2fy(upperlim)$
+J2lower:J2fy(lowerlim)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J2upper-J2lower$
+J3integ:facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J3lhs:'integrate(J3integ,v)$
+ldisplay(J3lhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(J3lhs,nouns)$
+define(J3fv(v),expr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J3upper:J3fv(2*%pi)$
+J3lower:J3fv(0)$
+Jlhs:J3upper-J3lower;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+now we must find the right hand side (rhs) of the integral equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the lhs needed a triple integral for the volume, M;
+the rhs needs a double integral over the boundary surface, dM 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the direction of the boundaries must be anticlockwise from the exterior
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the surface of the ellipsoid (without w)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bx3:a*cos(u)*(cos(v)*e1+sin(v)*e2)+b*sin(u)*e3$
+bx:bx3+l*e4;
+bu:diff(bx,u);
+bv:diff(bx,v);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+tgtbasis:['bu,'bv]$
+rectgt:reciprocM(tgtbasis)$
+b1:rectgt[1]$
+b2:rectgt[2]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using the same expression, from above, for the vector function on the surface
+we need to label bf on the surface w=1 as bfs
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bfs:bfl(u,v,1,l);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+this is the anticlockwise bivector tangent to the convex ellipsoid
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bu&^bv$
+trigsimp(%)$
+bubv:facsum(%,allblds)$
+ldisplay(bubv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now we need a double integral over the ellipsoid surface excluding the two holes
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+first form the integrand, integ, of the right hand side (rhs) of the fundamental theorem 
+and grade the geometric product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bubv&*bfs$
+facsum(%,allblds)$
+integ:grader(%)$
+deninteg:integ[Plen+1]$
+integ[0]/deninteg$
+scalarinteg:trigsimp(%)$
+integ[1]/deninteg$
+vectorinteg:trigsimp(%)$
+
+integ[2]/deninteg$
+bivecinteg:trigsimp(%)$
+integ[3]/deninteg$
+trivecinteg:trigsimp(%)$
+
+ldisplay(scalarinteg,vectorinteg,bivecinteg,trivecinteg)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+recombine the two and display the double integral
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+scalarinteg+vectorinteg+bivecinteg+trivecinteg$
+rhsinteg:trigsimp(%)$
+J1:'integrate(rhsinteg,v)$
+J2:'integrate(J1,u)$
+ldisplay(J2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the inner part of the iterated integral
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J1rhs:'integrate(rhsinteg,v)$
+ldisplay(J1rhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using a functional method to evaluate the first integral at the limits
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(J1rhs,nouns)$
+define(J1fuv(u,v),expr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J1upper:J1fuv(u,2*%pi)$
+J1lower:J1fuv(u,0)$
+J1upper-J1lower;
+trigsimp(%)$
+J2integ:facsum(%,allblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+J2rhs:'integrate(J2integ,u)$
+ldisplay(J2rhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+to demonstrate an (unnecessary) change of variable from u to y with f(u,y)=u-y=0 
+using a functional method to evaluate the limits of the new variable, y
+N.B. intrinsic function solve() outputs a list of 1 equation for y and the variable expruy
+is used both in function solve() and in function changevar()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expruy:u-y$
+ylst:solve([expruy],[y]);
+ylst[1];
+expru:subst(%,y);
+define(limfu(u),expru)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+evaluate the limits of the new variable at the old limits u=[-pi/2+epsln,+pi/2-epsln]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+uupp:%pi/2-epsln$
+upperlim:limfu(uupp);
+ulow:-%pi/2+epsln$
+lowerlim:limfu(ulow);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+apply the change of variable viz. intrinsic maxima function changevar()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J2ch:changevar(J2rhs,expruy,y,u)$
+ldisplay(J2ch)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+perform the indefinite integration
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(J2ch,nouns)$
+ldisplay(expr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+again, use another functional method to evaluate the definite integral at the limits 
+of the new variable
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(J2fy(y),expr)$
+J2upper:J2fy(upperlim)$
+J2lower:J2fy(lowerlim)$
+J2upper-J2lower$
+trigsimp(%)$
+Jrhs:facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the test for approximate equality...let epsln tend to zero (or just one arcsec);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(Jlhs,Jrhs))$
+ldisplay(%,Jlhs,Jrhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+epsln:%pi/180/60/60$
+Jlhs:ev(Jlhs,numer,eval)$
+Jrhs:ev(Jrhs,numer,eval)$
+ldisplay(epsln,Jlhs,Jrhs)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

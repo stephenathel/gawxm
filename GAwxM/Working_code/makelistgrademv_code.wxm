@@ -1,0 +1,266 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+makelistgrademv_code.wxm
+
+Copyright (C) 2014  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Use makemultivec() in makelistgrademv() to produce a multivector, then function grader() 
+separates the grades and then select those grades present in the input, lstgrades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2;
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+first confirm that makemultivec() works since it is used in makelistgrademv() to
+produce a multivector with all grades being non-zero, then function grader() 
+separates the grades and those grades present in the input, lstgrades, are used
+to form the output
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nameC:"C"$
+makemultivec(nameC);
+ldisplay(C)$
+kill(C);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the input for function makelistgrademv()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgrades:[0,1,Plen]$
+name:"C"$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+firstly, produce a multivector with all grades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nameCstr:string(name);
+strm:sconcat("makemultivec(",nameCstr,")");
+eval_string(strm);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+then the function grader() code separates the grades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arr:grader(C)$
+arr[0];
+arr[1];
+arr[2];
+arr[3];
+denM:arr[Plen+1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+since the denominator will always be unity, the individual grades need not be
+divided by the denominator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lengrds:length(lstgrades);
+Cout:0$
+for ng:1 thru lengrds do
+block(grd:lstgrades[ng],
+Cout:Cout+arr[grd])$
+strn:sconcat(name,":Cout");
+eval_string(strn);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now clear the variables then put all the steps together and ignore
+the denominator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(C,Cout,strm,strp,arr,lengrds,ng,Cout,strn);
+lstgrades:[0,1,Plen]$
+name:"C"$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+nameCstr:string(name)$
+strm:sconcat("makemultivec(",nameCstr,")")$
+eval_string(strm)$
+strp:sconcat("arrprj:grader(",name,")");
+eval_string(strp);
+arr:make_array(any,Plen+2)$
+fillarray(arr,arrprj)$
+/*denM:arrprj[Plen+1]$*/
+remarray(arrprj)$
+lengrds:length(lstgrades);
+Cout:0$
+for ng:1 thru lengrds do
+block(grd:lstgrades[ng],
+Cout:Cout+arr[grd])$
+strn:sconcat(name,":Cout");
+eval_string(strn);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now collect the above code into a test function and put commas in the blocks
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+makelistgrademv_code(name,lstgrades):=block([nameCstr,strm,strp,arr,arrprj,
+lengrds,ng,grd,Cout,strn],
+local(nameCstr,strm,strp,arr,arrprj,lengrds,ng,grd,Cout,strn),
+nameCstr:string(name),
+strm:sconcat("makemultivec(",nameCstr,")"),
+eval_string(strm),
+strp:sconcat("arrprj:grader(",name,")"),
+eval_string(strp),
+arr:make_array(any,Plen+2),
+fillarray(arr,arrprj),
+/*denM:arrprj[Plen+1],*/
+remarray(arrprj),
+lengrds:length(lstgrades),
+Cout:0,
+for ng:1 thru lengrds do
+block(grd:lstgrades[ng],
+Cout:Cout+arr[grd]),
+strn:sconcat(name,":Cout"),
+eval_string(strn))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now clear the variables then use the test function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(C,Cout,strm,strp,arr,lengrds,ng,grd,Cout,strn);
+lstgC:[0,1,Plen]$
+nameC:"C"$
+makelistgrademv_code(nameC,lstgC)$
+ldisplay(C)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now use function makelistgrademv() in file gafns4.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(C);
+lstgC:[0,1,Plen]$
+nameC:"C"$
+makelistgrademv(nameC,lstgC)$
+ldisplay(C)$
+arrC:grader(C)$
+for ng:0 thru Plen do ldisplay(arrC[ng]);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,200 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+bladep_debug.wxm
+
+Copyright (C) 2018  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+that may be used as an initialization template and to check that 
+there are no stdin errors due to batchload;
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+using pseudovector k1~k2~k4~k4 instead of e1~e2~e3~e4 to show that function bladep()
+still works; also an indication of the cause of false blade products due to the lower
+precedence of the intrinsic scalar multiplication during incorrect usage of syntax;
+this also applies to function bladepinn() and function bladepout()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be k1~k2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:k1~k2~k3~k4$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+to show the cause of false blade products such as
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a*k1~*b*k2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+firstly, the blade product, k1~*b is found (precedence of ~* greater than precedence of *)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pbld:k1;
+Qbld:b;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+code from file gafns1.wxm, function bladep()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Plst:extract(Pbld);
+Pscalar:Plst[1];
+Pcord:Plst[2];
+ZPbase:Plst[3];
+Qlst:extract(Qbld);
+Qscalar:Qlst[1];
+Qcord:Qlst[2];
+ZQbase:Qlst[3];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+if (Pscalar and (not Qscalar)) then
+block(bp:Pcord*Qcord*ZQbase);
+if ((not Pscalar) and Qscalar) then
+block(bp:Pcord*Qcord*ZPbase);
+if (Pscalar and Qscalar) then
+block(bp:Pcord*Qcord);
+if ((not Pscalar) and (not Qscalar)) then
+block(zbp:basesp(ZPbase,ZQbase),
+bp:Pcord*Qcord*zbp);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+a*k1~*b*k2; becomes a*bp*k2;
+creating the false blade product due to the incorrect use of the syntax in a*k1~*b*k2;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a*bp*k2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+some valid expressions are...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a*k1~*(b*k2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+a*k1~*b~*k2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+N.B. the error does not arise until function bladep() has completed so it seems difficult
+to catch any such errors due to incorrect usage; this also applies to function bladepinn()
+and function bladepout();
+on the plus side we can see that if we detect any false blade products within the output,
+then we know that they have arisen due to ambiguous or incorrect syntax within the input.
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

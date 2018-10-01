@@ -1,0 +1,49 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gafns0.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+definition and precedence of the infix operators
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+infix("~",140,141,expr,expr,expr)$
+
+infix("~*",130,131,expr,expr,expr)$
+"~*"(A,B):=bladep(A,B);
+infix("@*",130,131,expr,expr,expr)$
+"@*"(A,n):=bldpwr(A,n);
+infix("&*",125,126,expr,expr,expr)$
+"&*"(A,B):=geomp(A,B);
+
+infix("~.",130,131,expr,expr,expr)$
+"~."(A,B):=bladepinn(A,B);
+infix("@.",130,131,expr,expr,expr)$
+"@."(A,n):=bldpwrinn(A,n);
+infix("&.",125,126,expr,expr,expr)$
+"&."(A,B):=geompinn(A,B);
+
+infix("~^",130,131,expr,expr,expr)$
+"~^"(A,B):=bladepout(A,B);
+infix("@^",130,131,expr,expr,expr)$
+"@^"(A,n):=bldpwrout(A,n);
+infix("&^",125,126,expr,expr,expr)$
+"&^"(A,B):=geompout(A,B);
+
+infix(".",130,131,expr,expr,expr)$
+infix("*",120,121,expr,expr,expr)$
+infix("-",100,101,expr,expr,expr)$
+
+infix("&x",125,126,expr,expr,expr)$
+"&x"(A,B):=commp(A,B);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

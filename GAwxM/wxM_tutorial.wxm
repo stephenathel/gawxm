@@ -1,0 +1,146 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 17.10.1 ] */
+/* [wxMaxima: comment start ]
+wxM_tutorial.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+In this wxMaxima document we show how to use wxMaxima (a multi-platform
+GUI for the Maxima computer algebra system) to develop text and input cells.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+The wxMaxima system uses the concept of a live mathematical document (like
+this document) in which text cells and input cells are mixed.
+
+This allows the user to see code (within a text cell) for possible future 
+computations without it being currently active in an input cell.
+
+e.g. 
+diff(x^3/3,x);
+
+Each cell has a bracket on the left border of the document.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+diff(x^3/3,x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The input cells below (i.e. the Maxima code within them) can be evaluated 
+with CTRL-R. That can be tried now. Key in CTRL-R.
+
+Any output wxMaxima (the GUI) gets from Maxima (the computation system) 
+will be attached into the output part of the input cell, after the code
+generating the output.
+
+The semi-colon ";" at the end of any line of code allows the result from that line
+to be displayed 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+diff(x^4/4,x);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The "$" at the end of any line supresses the display.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+diff(x^4/4,x)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Resulting values may be assigned to a variable name using the operator,":"
+and may then be displayed using the semi-colon ";"
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ddxx4:diff(x^4/4,x)$
+ddxx4;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The variable may be displayed by name
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ldisplay(ddxx4)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The % sign is used to carry the result of the previous computation forwards
+to the next line without having to assign a variable name, making for very 
+compact code.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+integrate(x^3,x)$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+In order to modify the contents of a cell, put the cursor into it.
+
+The left cell bracket will be high-lighted, to show that the cell is being edited.
+
+If the cursor is moved upwards past the beginning of a cell a
+horizontal line appears between cells. 
+
+This line is like a horizontal cursor. Pressing any character key will insert a new
+input cell, while pressing CTRL-1 will open a new text cell.
+
+In order to delete a cell, select the bracket on the left with shift/arrow and press
+the delete key.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+The cut, copy and paste actions need the usual CTRL-X, CTRL-C and CTRL-V
+commands.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Any document can thus be edited then 'saved as' with Shift-CTRL-S or 
+just resaved with CTRL-S.
+
+The output parts of input cells will not be saved, but may be saved with the 
+File>Export option. 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Any cell can be mostly hidden by clicking into the empty triangle at the top
+of the bracket of e.g. the input cell above. The output can be shown again
+by clicking again into the triangle. A full triangle shows that the
+cell (and any output) may be mainly hidden.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+When entering brackets of any type into code there is an automatic
+bracket pair created, but the end bracket can be deleted if it is not yet
+needed and the bracket closed at the end of the expression.
+   [wxMaxima: comment end   ] */
+
+
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

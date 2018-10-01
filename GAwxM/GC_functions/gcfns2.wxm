@@ -1,0 +1,128 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gcfns2.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+function mvderiv() definition for the multivector directional derivative
+function lstmvcrd() definition to find a list of the multivector coordinates
+function makemvcrd() definition to find the coordinate multivector from that list
+function lstvector() definition to find a list of the (multi)vector coordinates
+function makevector() definition to find the coordinate (multi)vector from that list
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function mvderiv() using code developed in file develop_mvderiv_code.wxm
+usage e.g.
+
+Alst:[a1,a2,a3,a4,a5,a6,a7];
+Clst:[c1,c2,c3,c4,c5,c6,c7]$
+eJ:allblds$
+lenlst:2^Plen-1$
+C:0$
+for j:1 thru lenlst do
+block(C:C+Clst[j]*eJ[j])$
+F(C):=3*C&^C$
+F:ev(F(C))$
+Gstr:"G"$
+derivG:mvderiv_code(Gstr,Clst,Alst)$
+ldisplay(derivG)$
+G:F$
+ev(derivG,diff);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvderiv(Fstr,Clst,Alst):=block([j,lenlst,crd,aj,ajstr,crdstr,dstr,DdFstr,DdF],
+local(j,lenlst,crd,aj,ajstr,crdstr,dstr,DdFstr,DdF),
+DdFstr:"",
+lenlst:2^Plen-1,
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(aj:Alst[j],
+ajstr:string(aj),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DdFstr:sconcat(DdFstr,"+",ajstr,"*",dstr)),
+DdF:parse_string(DdFstr)),DdF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function lstmvcrd() to find a list of the multivector coordinates given 
+the name of the coordinate as a string e.g. "X"
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstmvcrd(str):=block([lenlst,lst,j,ndxstr,xstr,xcrd],
+local(lenlst,lst,j,ndxstr,xstr,xcrd),
+lenlst:2^Plen-1,
+lst:[],
+for j:1 thru lenlst do
+block(
+ndxstr:string(j),
+xstr:sconcat(str,ndxstr),
+xcrd:parse_string(xstr),
+lst:endcons(xcrd,lst)),lst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function makemvcrd() to find the coordinate multivector from 
+the list of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+makemvcrd(Clst):=block([lenlst,eJ,C,j],
+local(lenlst,eJ,C,j),
+lenlst:2^Plen-1,
+eJ:allblds,
+C:0,
+for j:1 thru lenlst do
+block(C:C+Clst[j]*eJ[j]),C)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function lstvector() to find a list of the multivector coordinates given 
+the name of the coordinate as a string e.g. "X"
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstvector(str):=block([lenlst,lst,j,ndxstr,xstr,xcrd],
+local(lenlst,lst,j,ndxstr,xstr,xcrd),
+lenlst:2^Plen-1,
+lst:[],
+for j:1 thru Plen do
+block(
+ndxstr:string(j),
+xstr:sconcat(str,ndxstr),
+xcrd:parse_string(xstr),
+lst:endcons(xcrd,lst)),
+for j:Plen+1 thru lenlst do
+block(
+xcrd:0,
+lst:endcons(xcrd,lst)),lst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function makevector() to find the coordinate multivector from 
+the list of coefficients (lower case version of function makemvcrd())
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+makevector(clst):=block([lenlst,eJ,c,j],
+local(lenlst,eJ,c,j),
+lenlst:2^Plen-1,
+eJ:allblds,
+c:0,
+for j:1 thru lenlst do
+block(c:c+clst[j]*eJ[j]),c)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

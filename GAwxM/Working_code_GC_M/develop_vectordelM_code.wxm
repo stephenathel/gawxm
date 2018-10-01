@@ -1,0 +1,312 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+develop_vectordelM_code.wxm
+
+Copyright (C) 2017  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+this is an extension of the file named develop_reciprocM_code_3DM.wxm and confirms that 
+the code works for a 3D manifold in a 4D space!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+the paths in file_search_maxima are also extended to point to the GC functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+batchload("gcfns2")$
+batchload("gcfns3")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3~e4$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extension of Exercise 5.26
+VAGC page 75
+(adapted from develop_reciprocM_code_3DM.wxm)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize a volume with vector b(old)x
+note that this should only contain members of Pvar as bases for bx;
+a manifold has m less than or equal to n so we can parameterize a region 
+of 4D space with (u,v,w)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bx:u*e1+v*e2+w*e3+(u*u+v*v+w*w)*e4$
+ldisplay(bx)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the basis using bold vectors again
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bu:diff(bx,u)$
+bv:diff(bx,v)$
+bw:diff(bx,w)$
+ldisplay(bu,bv,bw)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+tgtbasis:['bu,'bv,'bw]$
+display(tgtbasis)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the reciprocal basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rectgt:reciprocM(tgtbasis)$
+b1:rectgt[1]$
+b2:rectgt[2]$
+b3:rectgt[3]$
+ldisplay(b1,b2,b3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check the inner products
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bu&.b1;
+bv&.b2;
+bw&.b3;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define a (bold) vector function in the volume
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bf:(v+1)*bu+u*w*bv+u*v*bw$
+ldisplay(bf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the vector derivative; "vector del" &* "vector f" = bivector + scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+b1&*diff(bf,u)+b2&*diff(bf,v)+b3&*diff(bf,w)$
+delf:facsum(%,allblds)$
+ldisplay(delf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+separate the scalar and bivector parts
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arr:grader(delf)$
+dendelf:arr[Plen+1]$
+scalardelf:facsum(arr[0],allblds)$
+bivectdelf:facsum(arr[2],allblds)$
+ldisplay(dendelf,scalardelf,bivectdelf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+reclst:['b1,'b2,'b3];
+parlst:[u,v,w];
+bfstr:"bf"$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+delfstr:""$
+lenlst:length(parlst)$
+for j:1 thru lenlst do
+block(
+rec:reclst[j],
+recstr:string(rec),
+pstr:string(parlst[j]),
+dstr:sconcat("diff(",bfstr,",",pstr,")"),
+delfstr:sconcat(delfstr,"+",recstr,"&*",dstr))$
+delfstr;
+delfe:parse_string(delfstr);
+delfe;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+df:ev(delfe)$
+delfM:facsum(df,allblds)$
+ldisplay(delfM)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+gather the code into a function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vectordelM_code(bfstr,parlst,reclst):=block([j,delfstr,lenlst,rec,recstr,pstr,dstr],
+local(j,delfstr,lenlst,rec,recstr,pstr,dstr),
+delfstr:"",
+lenlst:length(parlst),
+for j:1 thru lenlst do
+block(
+rec:reclst[j],
+recstr:string(rec),
+pstr:string(parlst[j]),
+dstr:sconcat("diff(",bfstr,",",pstr,")"),
+delfstr:sconcat(delfstr,"+",recstr,"&*",dstr)),
+delfe:parse_string(delfstr),delfe)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+and test the function within the "develop...code.wxm" file
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vectordelM_code(bfstr,parlst,reclst)$
+ev(%)$
+facsum(%,allblds)$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now tranfer the function (and drop the "_code" from its name) to gcfns3.wxm and retest
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vectordelM(bfstr,parlst,reclst)$
+ev(%)$
+facsum(%,allblds)$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

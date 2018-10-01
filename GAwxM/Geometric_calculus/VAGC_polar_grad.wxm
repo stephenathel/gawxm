@@ -1,0 +1,328 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_polar_grad.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Exercise 5.20, VAGC page 70 for the gradient in polar coordinates for 2D only
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+the paths in file_search_maxima are also extended to point to the GC functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+batchload("gcfns2")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20
+VAGC page 70
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate vector, x from the lists of coefficients in 2D only!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xstr:"x"$
+xlst:lstvector(xstr)$
+ldisplay(xlst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xv:makevector(xlst)$
+ldisplay(xv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+x1:r*cos(th)$
+x2:r*sin(th)$
+x:ev(xv)$
+ldisplay(x)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+only wr is a unit vector of wjbasis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wr:diff(x,r)$
+wth:diff(x,th)$
+ldisplay(wr,wth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wjbasis:[wr,wth]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the basis with the usage of reciprocb() given in gafns5.wxm 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bld:list2vecouter(wjbasis)$
+denext:extract(bld)$
+normden:trigsimp(denext[2])$
+wkbasis_numerators:reciprocb(wjbasis)$
+wkr:wkbasis_numerators[1]/normden$
+wkth:wkbasis_numerators[2]/normden$
+ldisplay(wkr,wkth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+wkbasis:[wkr,wkth]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20, part a) use Equation (5.18) 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gradF:'wkr*'diff(F,r)+'wkth*'diff(F,th)$
+ldisplay(gradF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+identify the unit base vectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rhat:wr$
+thetahat:ratsimp(wth/r)$
+ldisplay(rhat,thetahat)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+inspection of the equation for gradF
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(wkr,rhat));
+is(equal(wkth,thetahat/r));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20, part b) 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+find the lhs of part b) as grad(F) for scalar F = f(r,th)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F:f(r,th)$
+ev(gradF,diff)$
+lhs:facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the rhs of part b) with rhat and thetahat
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(f(r,th),r)*rhat+(1/r)*diff(f(r,th),th)*thetahat$
+rhs:facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+&. and &^ will need special treatment when F is a vector field
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F:fr(r,th)*rhat+fth(r,th)*thetahat$
+dFr:diff(F,r);
+dFth:diff(F,th);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20, part c)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wkr&.dFr+wkth&.dFth$
+expand(%)$
+divF:trigsimp(%)$
+ldisplay(divF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+differentiation of a product and inspection of the rhs of the equation for divF
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+diff((r*fr(r,th)),r);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20, part d)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wkr&^dFr+wkth&^dFth$
+expand(%)$
+trigsimp(%)$
+curlF:facsum(%,allblds)$
+ldisplay(curlF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+show that rhat^thetahat = e1~e2 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wr&^(wth/r);
+rhat&^thetahat;
+trigsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+differentiation of a product and inspection of the rhs of the equation for curlF
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+diff((r*fth(r,th)),r);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

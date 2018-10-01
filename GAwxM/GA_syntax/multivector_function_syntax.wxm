@@ -1,0 +1,322 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+multivector_function_syntax.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A version of the main document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Full dimension multivector generation
+Associativity test for the triple geometric product
+Associativity test for the triple outer product
+Commutator product definition
+Test for the Jakobi expansion of the triple commutator product
+A series of consistency checks with the left inner product...
+   (generation of multivectors containing particular grades only)
+    using two particular pure grade multivectors
+    using the dual of the dual of a pure grade multivector
+Test for the reverse of the geometric product
+Test for the scalar product being symmetric and positive definite
+Test the norm (modulus) function using the scalar product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the main way to generate a multivector containing all of the Plen+1 grades;
+there are two subscripts for each coefficient; the first is the grade of the blade and
+the second subscript is the index of the blade of that particular grade;
+these three multivectors are only used for the (four) tests up to and including the 
+Jakobi expansion
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nameA:"A"$
+makemultivec(nameA);
+nameB:"B"$
+makemultivec(nameB);
+nameC:"C"$
+makemultivec(nameC);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test the associativity of the geometric product (can take several minutes for Plen > 3 )
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+R:(A&*B)&*C$
+S:A&*(B&*C)$
+is(equal(R,S));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test the associativity of the outer product (can take several minutes for Plen > 3 )
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+R:(A&^B)&^C$
+S:A&^(B&^C)$
+is(equal(R,S));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test the commutator product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Cm1:(A&*B-B&*A)/2$
+Cm2:A&xB$
+ldisplay(Cm2)$
+is(equal(Cm1,Cm2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test the Jakobi expansion of the triple commutator product
+(can take several minutes for Plen > 3 )
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Z1:A&x(B&xC)$
+Z2:(A&xB)&xC$
+Z3:B&x(A&xC)$
+J:expand(Z2+Z3)$
+expand(Z1)$
+is(equal(%,J));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+to generate multivectors containing particular grades only, use makelistgrademv() 
+rather than makemultivec()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+consistency check for the left inner product with the outer, commutator, and the 
+geometric products using a pure grade 2 multivector, A and an arbitrary full grade 
+multivector, B (usually A is a single bivector, not a sum of bivectors as in A)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgA:[2]$
+nameA:"A"$
+makelistgrademv(nameA,lstgA)$
+lstgB:[0,1,2,3]$
+nameB:"B"$
+makelistgrademv(nameB,lstgB)$
+ldisplay(A,B)$
+gp:expand(A&*B)$
+expand(A&^B+A&xB+A&.B)$
+is(equal(gp,%));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the dual of the dual of a pure grade multivector, D is +/-D,
+i.e. D** = +D or -D (depending on Plen with Plen = 3 )
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgD:[Plen-1]$
+nameD:"D"$
+makelistgrademv(nameD,lstgD)$
+ldisplay(D)$
+Ddual:D&*Ii$
+ldisplay(Ddual)$
+Ddd:Ddual&*Ii$
+ldisplay(Ddd)$
+is(equal(+D,Ddd));
+is(equal(-D,Ddd));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+display the multivector and its reverse for Plen = 3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgA:[0,1,2,3]$
+nameA:"A"$
+makelistgrademv(nameA,lstgA)$
+ldisplay(A)$
+mvrev(A);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the reverse of the geometric product equals 
+the juxtaposed product of the reverses
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgA:[0,1,2,3]$
+nameA:"A"$
+makelistgrademv(nameA,lstgA)$
+lstgB:[0,1,2,3]$
+nameB:"B"$
+makelistgrademv(nameB,lstgB)$
+ldisplay(A,B)$
+AB:A&*B$
+ABrev:mvrev(AB)$
+Arev:mvrev(A)$
+Brev:mvrev(B)$
+BrAr:Brev&*Arev$
+is(equal(ABrev,BrAr));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the scalar product function is symmetric and positive definite,
+with gradeA=gradeB=2 and Plen = 3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgA:[0,1,2]$
+nameA:"A"$
+makelistgrademv(nameA,lstgA)$
+lstgB:[0,1,2]$
+nameB:"B"$
+makelistgrademv(nameB,lstgB)$
+ldisplay(A,B)$
+s1:scalarp(A,B)$
+s2:scalarp(B,A)$
+ldisplay(s1,s2)$
+is(equal(s1,s2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the scalar product function is symmetric and positive definite,
+with gradeA=gradeB=3 and Plen = 3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgA:[0,1,2,3]$
+nameA:"A"$
+makelistgrademv(nameA,lstgA)$
+lstgB:[0,1,2,3]$
+nameB:"B"$
+makelistgrademv(nameB,lstgB)$
+ldisplay(A,B)$
+s1:scalarp(A,B)$
+s2:scalarp(B,A)$
+ldisplay(s1,s2)$
+is(equal(s1,s2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test the norm (modulus) function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nameA:"A"$
+makemultivec(nameA)$
+nm:normod(A)$
+ldisplay(A,nm)$
+scalarp(A,A)$
+sqrt(%)$
+is(equal(nm,%));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,188 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+list2blade_debug.wxm
+
+Copyright (C) 2018  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+that may be used as an initialization template and to check that 
+there are no stdin errors due to batchload;
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+using pseudovector k1~k2~k4~k4 instead of e1~e2~e3~e4 to give some explanation of the 
+Initialization of the canonical basis; see also work_list2blade_code.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be k1~k2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:k1~k2~k3~k4$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+to show the intrinsic and unchangable maxima parentheses during Initialization, noting
+that spaces are absent either side of 'tilda' in the expression b:concat(b,"~",u)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+list2blade_code(lst):=block([len,b,u,n],
+local(len,b,u,n),
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+block(b:string(lst[1]),for n:2 thru len do 
+block(u:string(lst[n]),b:concat(b,"~",u))),
+eval_string(b)))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+although the pseudoscalar is specified 'manually' to define the dimension of the space,
+we can use the implied Pvar to test the code for function list2blade()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pseudos_k:list2blade_code(Pvar)$
+ldisplay(pseudos_k)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+to show how the global arrays are formed take a particular 
+value of ng from the Initialization code above
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+eset:setify(Pvar);
+ng:2$
+nbases_ng:combination(Plen,ng);
+lstbases_ng:full_listify(powerset(eset,ng));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ng:2$
+lstb:lstbases[ng];
+lstblds_ng:makelist(list2blade_code(lst),lst,lstb);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that extract() and grader() still work with k1,... replacing e1,...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A:a*k1~k3$
+extlst:extract(A)$
+ldisplay(A,extlst)$
+remove(extlst,value)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arr:grader(A)$
+denA:arr[Plen+1]$
+scalarA:arr[0]/denA;
+arr[1]/denA;
+arr[2]/denA;
+arr[3]/denA;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

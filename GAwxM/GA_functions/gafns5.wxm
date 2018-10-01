@@ -1,0 +1,203 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gafns5.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+definition of the extract() function to isolate the scalar and basis parts of a blade
+definition of the mvrev() function to define the multivector reverse
+definition of the scalarp() function to find the scalar product of two multivectors
+definition of the normod() function to find the norm (modulus) of a multivector
+definition of the lst2bldouter() function for the outer product of orthonormal vector list
+definition of the reciproce() function to find the contravariant (reciprocal frame) basis
+definition of the lst2vecouter() function for the outer product of arbitrary vector list
+definition of the reciprocb() function to find the reciprocal of the arbitrary basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+extract() needs to handle all of scalars, blades and signed bases like e1~e2 and -e2~e3
+local elst:[rscalar,cord,base] (rscalar used as false for blades==scalar*base);
+the return value is false for an invalid input e.g. scalar plus vector
+usage
+extlst:extract(Rbld)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+extract(Rbld):=block([elst,rscalar,rbase,rblade,jb,bld,opR,parted,cord,base],
+local(elst,rscalar,rbase,rblade,jb,bld,opR,parted,cord,base),
+
+elst:false,
+rscalar:false,
+rbase:false,
+rblade:false,
+
+if lfreeof(Pvar,Rbld) then 
+block(rscalar:true,cord:Rbld,base:1,elst:[rscalar,cord,base]),
+
+if not rscalar then
+for jb:1 thru 2^Plen-1 do block(if not rbase then
+block(bld:allblds[jb],
+if is(equal(Rbld,bld)) then
+block(rbase:true,cord:1,base:Rbld,elst:[rscalar,cord,base]))),
+
+if not rscalar and not rbase then
+for jb:1 thru 2^Plen-1 do block(if not rbase then
+block(bld:allblds[jb],
+if is(equal(Rbld,-bld)) then 
+block(rbase:true,cord:-1,base:-Rbld,elst:[rscalar,cord,base]))),
+
+if not rscalar and not rbase then
+block(opR:op(Rbld),if notequal(opR,"+") then
+for jb:1 thru 2^Plen-1 do block(if not rblade then
+block(bld:allblds[jb],parted:partition(Rbld,bld),
+if parted[2]=bld then 
+block(if lfreeof(Pvar,parted[1]) then 
+block(rblade:true,cord:parted[1],base:parted[2],elst:[rscalar,cord,base]))))),
+
+elst)$ 
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function to define the multivector reverse
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvrev(M):=block([arrprj,arrA,denM,r,s,ndx,revM],
+local(arrprj,arrA,denM,r,s,ndx,revM),
+arrprj:grader(M),
+arrA:make_array(any,Plen+1),
+arrA[0]:arrprj[0],
+arrA[1]:arrprj[1],
+for r:2 thru Plen do
+block(ndx:r*(r-1)/2,arrA[r]:(-1)^ndx*arrprj[r]),
+denM:arrprj[Plen+1],
+remarray(arrprj),
+revM:0,
+for s:0 thru Plen do
+block(revM:revM+arrA[s]),
+revM/denM)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function to find the scalar product of two multivectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+scalarp(M,N):=block([Mrev,G,arrprj,arrS,denG],
+local(Mrev,G,arrprj,arrS,denG),
+Mrev:mvrev(M),
+G:Mrev&*N,
+arrprj:grader(G),
+arrS:make_array(any,Plen+2),
+fillarray(arrS,arrprj),
+denG:arrprj[Plen+1],
+remarray(arrprj),
+arrS[0]/denG)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function to find the norm (modulus) of a multivector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+normod(M):=block([spM],
+local(spM),
+spM:scalarp(M,M),
+sqrt(spM))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function to find the outer product of a list of orthonormal base vectors 
+(or using a list of components of a canonical base)
+usage ref.
+LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+list2bldouter(lst):=block([len,b,u,n],
+local(len,b,u,n),
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+block(b:string(lst[1]),for n:2 thru len do 
+block(u:string(lst[n]),b:concat(b,"~^",u))),
+eval_string(b)))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function for the reciprocal of the orthonormal basis
+N.B. if a function is to output a list, firstly we need to make (dimension) a dummy list
+usage ref.
+LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reciproce(ecov):=block([x,i,j,lst,excl,bld,nj,econ],
+local(x,i,j,lst,excl,bld,nj,econ),
+econ:makelist(concat(x,i),i,1,Plen),
+for j:1 thru Plen do
+block(lst:ecov,
+excl:ecov[j],
+lst:delete(excl,lst),
+bld:list2bldouter(lst),
+nj:(j-1),
+econ[j]:(-1)^nj*bld~*Ii),
+econ)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function list2vecouter() is derived from list2bldouter() by replacing the blade outer 
+product (~^) with the (multi)vector outer product (&^) and removing the string handling
+usage ref.
+LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+list2vecouter(lst):=block([len,b,u,n,bn,bout],
+local(len,b,u,n,bn,bout),
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+block(b:lst[1],for n:2 thru len do 
+block(u:lst[n],bn:b&^u,b:facsum(bn,allblds))),bout:b))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the function for the reciprocal of the arbitrary basis;
+usage ref.
+LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+usage...
+find the (scalar) norm of the denominator to be applied to the output of reciprocb()
+wjbasis:[wr,wth]$
+bld:list2vecouter(wjbasis)$
+denext:extract(bld)$
+normden:trigsimp(denext[2])$
+wkbasis:reciprocb(wjbasis)$
+wkr:wkbasis[1]/normden$
+wkth:wkbasis[2]/normden$
+ldisplay(wkr,wkth)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reciprocb(bcov):=block([x,i,j,lst,excl,bld,nj,bcon],
+local(x,i,j,lst,excl,bld,nj,bcon),
+bcon:makelist(concat(x,i),i,1,Plen),
+for j:1 thru Plen do
+block(lst:bcov,
+excl:bcov[j],
+lst:delete(excl,lst),
+bld:list2vecouter(lst),
+nj:(j-1),
+bcon[j]:(-1)^nj*bld&*Ii),
+bcon)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

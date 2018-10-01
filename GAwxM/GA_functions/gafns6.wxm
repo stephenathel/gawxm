@@ -1,0 +1,131 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gafns6.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+definition of the arglst() function 
+definition of the bldexp() function 
+definition of the mvexp() function
+definition of the pauser() function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function arglst() used as a more general version of the function args() in function 
+grader(); the code is also required in all three multivector product functions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+before arglst() can be used in grader() the denominator of any rational part
+must be isolated and before args() can be used in geomp(), the denominator 
+must be found by grader() and used to find the non-scalar part of the inputs to geomp()
+the main operator of the expression must be identified in order to distinguish signed 
+bases and blades from more complex multivectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+this function is developed using arglst_and_grader_code.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arglst(aM):=block([lstarg,opa,eM,ope,mM,opm],
+local(lstarg,opa,eM,ope,mM,opm),
+if is(atom(aM)) then lstarg:[aM]
+else block(opa:op(aM),  
+if (opa="~") then lstarg:[aM]
+elseif (opa="*") then block(eM:expand(aM),ope:op(eM),
+if (ope="*") then lstarg:[aM] else lstarg:args(eM))
+elseif (opa="+") then lstarg:args(aM) 
+elseif (opa="^") then block(eM:expand(aM),lstarg:args(eM))
+elseif (opa="-") then block(mM:-aM,
+if is(atom(mM)) then lstarg:[aM]
+else block(opm:op(mM),  
+if (opm="~") then lstarg:[aM]
+elseif (opm="*") then block(eM:expand(mM),ope:op(eM),
+if (ope="*") then lstarg:[aM] else lstarg:-args(eM))
+elseif (opm="+") then lstarg:-args(mM) 
+elseif (opm="^") then block(eM:expand(mM),lstarg:-args(eM))))
+else lstarg:[aM]))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+exponential blade function...
+input is any scalar or grade 2 blade (bivector angle) and any other inputs 
+should return false
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+this function is developed using exponential_blade_angle_code.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bldexp(bld):=block([exlst,bexp,scala,theta,base],
+local(exlst,bexp,scala,theta,base),
+exlst:extract(bld),bexp:false,
+if notequal(exlst,false) then 
+block(scala:exlst[1],theta:exlst[2],base:exlst[3],
+if scala then bexp:exp(theta)
+else block(if member(base,lstblds[2]) then
+bexp:cos(theta)+sin(theta)*base)),
+bexp)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+exponential multivector function...
+the first input is any multivector M (including scalar, a)
+the second input is a non-negative integer, the highest index 
+in the exponential sum (e.g. n=3 for full grade algebraic multivectors or
+n=7 for numerical bivectors gives an accuracy of near 4 decimal places)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+this function is developed using exponential_multivector_code.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvexp(M,n):=block([Mp,sum,num],
+local(Mp,sum,num),
+if integerp(n) then block(
+if n<0 then return(false)
+elseif n=0 then return(1)
+elseif n=1 then return(1+M)
+else block(Mp:M,sum:1+M,num:2,
+loop,Mp:Mp&*M,Mp:1/num*Mp,
+sum:sum+Mp,sum:facsum(sum,allblds),
+num:num+1,
+if num=n+1 then return(sum),
+go(loop)))
+else return(false))$ 
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+this function is used to pause between plots when gnuplot reuses the same window;
+it is developed in left_inner_short_tests.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+usage...
+interval:3$ /*seconds*/
+time:pauser(interval)$
+ldisplay(time[0],time[1])$
+kill(time)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pauser(delay):=block([tick,tock,n,tyme],
+local(tick,tock,n),
+tyme:make_array(any,2),
+tick:elapsed_real_time(),
+block(n:1,loop,n+1,tock:elapsed_real_time(),
+tyme[0]:tick,tyme[1]:tock,
+if tock < tick + delay then go(loop) else return(tyme)))$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

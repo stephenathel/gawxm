@@ -1,0 +1,119 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gcfns1.wxm
+
+Copyright (C) 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+function mvgrad() definition for the multivector gradient
+function mvdiv() definition for the multivector divergence
+function mvcurl() definition for the multivector curl
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function mvgrad() using code developed in file mvgrad_code.wxm
+usage e.g.
+
+Clst:[c1,c2,c3,c4,c5,c6,c7]$
+lenlst:2^Plen-1$
+C:0$
+for j:1 thru lenlst do
+block(C:C+Clst[j]*allblds[j])$
+H:2*C$
+Hstr:"H"$
+gradH:mvgrad(Hstr,Clst)$
+ldisplay(gradH)$
+ev(gradH,diff);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvgrad(Fstr,Clst):=block([j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF],
+local(j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF),
+DelFstr:"",
+lenlst:2^Plen-1,
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(ejm1:invblds[j],
+ejstr:string(ejm1),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DelFstr:sconcat(DelFstr,"+",ejstr,"&*",dstr)),
+DelF:parse_string(DelFstr)),DelF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function mvdiv() using code developed in file mvdiv_code.wxm
+usage e.g.
+
+Clst:[c1,c2,c3,c4,c5,c6,c7]$
+lenlst:2^Plen-1$
+C:0$
+for j:1 thru lenlst do
+block(C:C+Clst[j]*allblds[j])$
+H:2*C$
+Hstr:"H"$
+divH:mvdiv(Hstr,Clst)$
+ldisplay(divH)$
+ev(divH,diff);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvdiv(Fstr,Clst):=block([j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF],
+local(j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF),
+DelFstr:"",
+lenlst:2^Plen-1,
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(ejm1:invblds[j],
+ejstr:string(ejm1),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DelFstr:sconcat(DelFstr,"+",ejstr,"&.",dstr)),
+DelF:parse_string(DelFstr)),DelF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+function mvcurl() using code developed in file mvcurl_code.wxm 
+usage e.g.
+
+Clst:[c1,c2,c3,c4,c5,c6,c7]$
+lenlst:2^Plen-1$
+C:0$
+for j:1 thru lenlst do
+block(C:C+Clst[j]*allblds[j])$
+H:2*C&*C$
+Hstr:"H"$
+curlH:mvcurl(Hstr,Clst)$
+ldisplay(curlH)$
+ev(curlH,diff);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvcurl(Fstr,Clst):=block([j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF],
+local(j,lenlst,crd,ejm1,ejstr,crdstr,dstr,DelFstr,DelF),
+DelFstr:"",
+lenlst:2^Plen-1,
+for j:1 thru lenlst do
+block(
+crd:Clst[j],
+if not crd=0 then
+block(ejm1:invblds[j],
+ejstr:string(ejm1),
+crdstr:string(crd),
+dstr:sconcat("'diff(",Fstr,",",crdstr,")"),
+DelFstr:sconcat(DelFstr,"+",ejstr,"&^",dstr)),
+DelF:parse_string(DelFstr)),DelF)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

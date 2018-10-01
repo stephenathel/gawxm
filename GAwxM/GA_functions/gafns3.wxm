@@ -1,0 +1,155 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+gafns3.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialization of Geometric Algebra wxMaxima documents
+contains...
+infix operator definitions for basis vector outer product, blade outer product and outer powers of blades
+infix operator definition for the fundamental multivector geometric outer product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+basespout(Ubld,Vbld):=block([Uvar,Vvar,Ulen,Vlen,uvmems,stap,pvar,np,p,lenb,lenout,uvbld,sign],
+local(Uvar,Vvar,Ulen,Vlen,uvmems,stap,pvar,np,p,lenb,lenout,uvbld,sign),
+Uvar:listofvars(Ubld),
+Vvar:listofvars(Vbld),
+Ulen:length(Uvar),
+Vlen:length(Vvar),
+uvmems:[],swaps:0,stap:Ulen,
+pvar:Pvar,
+for np:1 thru Plen do
+block(p:pop(pvar),
+if not member(p,Uvar) and member(p,Vvar) then block(swaps:swaps+stap,uvmems:endcons(p,uvmems)),
+if member(p,Uvar) and not member(p,Vvar) then block(stap:stap-1,uvmems:endcons(p,uvmems)),
+if member(p,Uvar) and member(p,Vvar) then block(stap:stap-1,swaps:swaps+stap)),
+lenb:length(uvmems),
+lenout:Vlen+Ulen,
+if is(notequal(lenb,lenout)) then return(0) else
+uvbld:list2blade(uvmems),
+sign:(-1)^swaps,
+sign*uvbld)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+bladepout(Pbld,Qbld):=block([Plst,Pscalar,Pcord,ZPbase,Qlst,Qscalar,Qcord,ZQbase,blq,blp,pq,zbp,bp],
+local(Plst,Pscalar,Pcord,ZPbase,Qlst,Qscalar,Qcord,ZQbase,blq,blp,pq,zbp,bp),
+Plst:extract(Pbld),
+Pscalar:Plst[1],
+Pcord:Plst[2],
+ZPbase:Plst[3],
+Qlst:extract(Qbld),
+Qscalar:Qlst[1],
+Qcord:Qlst[2],
+ZQbase:Qlst[3],
+if (Pscalar and (not Qscalar)) then
+block(bp:Pcord*Qcord*ZQbase),
+if ((not Pscalar) and Qscalar) then
+block(bp:Pcord*Qcord*ZPbase),
+if (Pscalar and Qscalar) then
+block(bp:Pcord*Qcord),
+if ((not Pscalar) and (not Qscalar)) then
+block(zbp:basespout(ZPbase,ZQbase),
+bp:Pcord*Qcord*zbp,return(bp)),bp)$ 
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+bldpwrout(A,n):=block([np,pA],local(np,pA),
+pA:A,if n<1 then pA:false,
+if n>1 then
+block(for np:1 thru n-1 do
+pA:bladepout(pA,A)),pA)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+(vM+sM).(vN+sN)=vM.vN+vM.sN+sM.vN+sM.sN=vM.vN+sN*vM+sM*vN+sM*sN to limit the calls to bladep()
+during evaluate (the & functions), also, if the 'matrix dot product' is longer than lenarg for 
+the dimension, then we use grade by grade summation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+geompout(M,N):=block([arrprj,sM,dm,vM,sN,dn,vN,dmn,fvM,fvN,lstfvM,lstfvN,
+lenfvM,lenfvN,lenarg,lstargs,argmn,mr,nr,psarg,evarg,na,str1,str2,str3,psstr,narg,
+arg,eva,lenlim,R,S,arrR,arrS,arrRplusS,Rgrd,Sgrd,RplusS,rpluss,Out,prd],
+local(arrprj,sM,dm,vM,sN,dn,vN,dmn,fvM,fvN,lstfvM,lstfvN,
+lenfvM,lenfvN,lenarg,lstargs,argmn,mr,nr,psarg,evarg,na,str1,str2,str3,psstr,narg,
+arg,eva,lenlim,R,S,arrR,arrS,arrRplusS,Rgrd,Sgrd,RplusS,rpluss,Out,prd),
+
+arrprj:grader(M),
+sM:arrprj[0],
+dm:arrprj[Plen+1],
+remarray(arrprj),
+vM:dm*M-sM,
+arrprj:grader(N),
+sN:arrprj[0],
+dn:arrprj[Plen+1],
+remarray(arrprj),
+vN:dn*N-sN,
+dmn:dm*dn,
+
+if is(vM#0) and is(vN#0) then
+block(
+fvM:facsum(vM,allblds),
+lstfvM:arglst(fvM),
+lenfvM:length(lstfvM),
+
+fvN:facsum(vN,allblds),
+lstfvN:arglst(fvN),
+lenfvN:length(lstfvN),
+
+lenarg:lenfvM*lenfvN,
+lstargs:makelist(),
+
+for mr:1 thru lenfvM do
+block(for nr:1 thru lenfvN do
+block(argmn:lstfvM[mr] . lstfvN[nr],
+lstargs:endcons(argmn,lstargs))),
+
+psarg:makelist(),
+evarg:makelist(),
+for na:1 thru lenarg do
+block(str1:string(lstargs[na]),
+str2:ssubst("~^"," . ",str1),
+str3:ssubst("@^","^^",str2),
+psstr:parse_string(str3),
+psarg:endcons(psstr,psarg)),
+for narg:1 thru lenarg do
+block(arg:psarg[narg],eva:ev(arg),
+evarg:endcons(eva,evarg)),
+R:sum(evarg[n],n,1,lenarg))
+else block(lenarg:0,R:0),
+
+S:sN*vM+sM*vN+sM*sN,
+
+lenlim:(2**Plen-1)**2,
+if is(lenarg>=lenlim) then
+block(arrR:make_array(any,Plen+2),
+arrprj:grader(R),
+fillarray(arrR,arrprj),
+remarray(arrprj),
+arrS:make_array(any,Plen+2),
+arrprj:grader(S),
+fillarray(arrS,arrprj),
+remarray(arrprj),
+arrRplusS:make_array(any,Plen+2),
+for ng:1 thru Plen do
+block(Rgrd:facsum(arrR[ng],lstblds[ng]),
+Sgrd:facsum(arrS[ng],lstblds[ng]),
+RplusS:Rgrd+Sgrd,
+arrRplusS[ng]:facsum(RplusS,lstblds[ng])),
+rpluss:arrR[0]+arrS[0],
+arrRplusS[0]:facsum(rpluss),
+Out:0,
+for ng:0 thru Plen do
+block(Out:Out+arrRplusS[ng]),
+prd:Out/dmn)
+else prd:(R+S)/dmn)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

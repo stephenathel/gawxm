@@ -1,0 +1,212 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+left_inner_product_duality.wxm
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A version of the main document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+A series of consistency checks with the left inner product...
+    using the left inner product in the fundamental identity
+    checking the first duality identity for multivectors; (A.B)* = A^B*
+    testing the other duality identity for multivectors; (A^B)* = A.B*
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Inner product checks start here
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+consistency check for the left inner product with the fundamental identity;
+confirm that the arbitrary multivector, B, gives aB = a&.B + a&^B as valid with 
+the vector, a (the pure grade 1 multivector);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lsta:[1]$
+namea:"a"$
+makelistgrademv(namea,lsta)$
+lstB:[0,1,2,3]$
+nameB:"B"$
+makelistgrademv(nameB,lstB)$
+ldisplay(a,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+a&*B$
+aB:facsum(%,allblds)$
+ldisplay(aB)$
+aBsum:a&.B+a&^B$
+is(equal(aB,aBsum));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check the first duality identity for multivectors;
+(A.B)* = A^B* has been found to be true for all multivector full grade(A,B) pairs
+(0,0),(0,1),(0,2),(0,3),
+(1,0),(1,1),(1,2),(1,3),
+(2,0),(2,1),(2,2),(2,3),
+(3,0),(3,1),(3,2),(3,3) for Plen=3
+e.g. for the full grade(0,2) pair, B contains grades 2, 1 and 0 while A is a scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the basic test is to check that (A.B)* = A^B* for the full grade(3,3) pair
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstA:[0,1,2,3]$
+nameA:"A"$
+makelistgrademv(nameA,lstA)$
+ldisplay(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+AinnerB:A&.B$
+ldisplay(AinnerB)$
+(A&.B)&*Ii$
+lhs:expand(%)$
+A&^(B&*Ii)$
+rhs:expand(%)$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check the other duality identity for multivectors; 
+(A^B)* = A.B* has been found to be true for all multivector full grade(A,B) pairs
+(0,0),(0,1),(0,2),(0,3),
+(1,0),(1,1),(1,2),(1,3),
+(2,0),(2,1),(2,2),(2,3),
+(3,0),(3,1),(3,2),(3,3) for Plen=3
+e.g. for the full grade(2,0) pair, A contains grades 2, 1 and 0 while B is a scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the basic test is to check that (A^B)* = A.B* for the full grade(3,3) pair
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(A,B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+AouterB:A&^B$
+ldisplay(AouterB)$
+(A&^B)&*Ii$
+lhs:expand(%)$
+A&.(B&*Ii)$
+rhs:expand(%)$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

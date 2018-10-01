@@ -1,0 +1,205 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+grader_code_debug.wxm 
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Tests for grader_code() using Plen=4 so that some grades may have two bases or zero
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2;
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3~e4$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+source for function grader() in gafns4.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+grader_code(M):=block([grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,
+strarg,searchlst,ng,strbld,posb,lenlst,narg,evarg,argsum,aMn],
+local(grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,strarg,searchlst,
+ng,strbld,posb,lenlst,narg,evarg,argsum,aMn),
+
+grarr:make_array(any,Plen+2),
+for grd:0 thru Plen do grarr[grd]:0,
+grarr[Plen+1]:1,
+
+rM:rat(M),
+bM:denom(rM),
+aM:rM*bM,
+aM:facsum(aM,allblds),
+grarr[Plen+1]:bM,
+
+for grd:Plen thru 1 step -1 do
+block(
+lstargs:arglst(aM),
+lenarg:length(lstargs),
+searchlst:lstblds[grd],
+lengrd:nbases[grd],
+lstgrdarg:[],
+
+if not aM=0 then 
+block(for na:1 thru lenarg do
+block(strarg:string(lstargs[na]),
+for ng:1 thru lengrd do
+block(strbld:string(searchlst[ng]),
+posb:ssearch(strbld,strarg,sequal),
+if posb>0 then
+block(lstgrdarg:endcons(strarg,lstgrdarg))))),
+
+lenlst:length(lstgrdarg),
+if lenlst>0 then 
+block(for narg:1 thru lenlst do
+block(evarg[narg]:eval_string(lstgrdarg[narg])),
+argsum:sum(evarg[n],n,1,lenlst),
+grarr[grd]:argsum,
+aMn:aM-argsum,
+aM:facsum(aMn,allblds))),
+
+grarr[0]:aM,grarr)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+input values for test
+M:a0+a1*e3+a2*e2~e3+a3*e1~e2~e3$
+M:a0+b1*e2+b2*e3+d1*e1~e2~e3~e4+c1*e1~e3~e4+c2*e2~e3~e4$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+M:1/2+e1/3+e1~e2~e4/7+e1~e2~e3~e4/11$
+arr:grader_code(M)$
+arr[0];
+arr[1];
+arr[2];
+arr[3];
+arr[4];
+
+denM:arr[Plen+1]$
+ldisplay(denM)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the denominator is held in grarr[Plen+1]
+the graded multivector terms can be recovered by dividing by the denominator
+arr[0]/denM;
+arr[1]/denM; etc
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arr[0]/denM;
+arr[1]/denM;
+arr[2]/denM;
+arr[3]/denM;
+arr[4]/denM;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
