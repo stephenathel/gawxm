@@ -1,0 +1,309 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter05.05.wxm (LAGA examples)
+
+Copyright (C) 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Representing Rotations
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+the initialization file, maxima-init.mac is in the /home directory 
+and contains the variable, maxima_userdir, and this allows the paths
+in file_search_maxima to be extended to point to the GA functions
+ldisplay(maxima_userdir)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2;
+global parameters, Pseudos, Pvar[] and Plen, I and Ii
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:e1~e2~e3$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar,Plen,I,Ii)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global array parameters 
+lstbases[], nbases[], maxnbases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstbases,Plen)$
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
+lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(lstblds,Plen)$
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.24 (Represent 3D rotations)
+page 89
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+lstgu:[1]$
+nameu:"u"$
+makelistgrademv(nameu,lstgu)$
+ub:u$
+ldisplay(ub)$
+ib:e1~e3$
+ldisplay(ib)$
+Z:bldexp(-ib*theta/2)$
+ldisplay(Z)$
+Zi:bldexp(+ib*theta/2)$
+ldisplay(Zi)$
+vb:Z&*ub&*Zi$
+ldisplay(vb)$
+vf:facsum(vb,allblds)$
+ldisplay(vf)$
+vt:trigsimp(vf)$
+ldisplay(vt)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.24
+page 89
+Rotate e1+e3 by 90deg in the plane e1~e2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+ub:e1+e3$
+ib:e1~e2$
+theta:%pi/2$
+Z:bldexp(-ib*theta/2)$
+ldisplay(Z)$
+Zi:bldexp(+ib*theta/2)$
+ldisplay(Zi)$
+vb:Z&*ub&*Zi$
+ldisplay(vb)$
+ev(vb);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.25
+page 90
+Rotate e1+e3 by 90deg about the axis e3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+ub:e1+e3$
+nb:e3$
+theta:%pi/2$
+Z:bldexp(-nb~*I*theta/2)$
+ldisplay(Z)$
+Zi:bldexp(+nb~*I*theta/2)$
+ldisplay(Zi)$
+vb:Z&*ub&*Zi$
+ldisplay(vb)$
+ev(vb);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.2
+page 90
+compare rotations by theta and (2*pi-theta);
+use the exercise 5.24 with a general value of theta
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+ub:e1+e3$
+ib:e1~e2$
+bldang:theta/2*ib$
+Z:bldexp(-bldang)$
+ldisplay(Z)$
+Zi:bldexp(+bldang)$
+ldisplay(Zi)$
+vb1:Z&*ub&*Zi$
+ldisplay(vb1)$
+lhs:expand(vb1)$
+ldisplay(lhs)$
+lhs:trigsimp(lhs)$
+ldisplay(lhs)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+phi:2*%pi-theta$
+bldang:phi/2*ib$
+Z:bldexp(-bldang)$
+ldisplay(Z)$
+Zi:bldexp(+bldang)$
+ldisplay(Zi)$
+vb2:(Z&*ub)&*Zi$
+ldisplay(vb2)$
+rhs:expand(vb2)$
+ldisplay(rhs)$
+rhs:trigsimp(rhs)$
+ldisplay(rhs)$
+
+is(equal(lhs,rhs));
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.27
+page 91
+
+Composition of rotations; 90deg about z-axis followed by 90deg about x-axis
+
+This is harder than it looks and lasts up to the end of this file!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+theta:%pi/2$
+bldang1:e3&*I*theta/2$
+Z1:bldexp(-bldang1)$
+ldisplay(Z1)$
+bldang2:e1&*I*theta/2$
+Z2:bldexp(-bldang2)$
+ldisplay(Z2)$
+Z:Z2&*Z1$
+ldisplay(Z)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+display the scalar part and the bivector part separately
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+grarr:grader(Z)$
+den:grarr[4]$
+Zs:grarr[0]/den$
+Zbv:grarr[2]/den$
+ldisplay(Zs,Zbv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now use the rotation represented by Eq. (5.19)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+thetan:2*%pi/3$
+n:(e1-e2+e3)/sqrt(3)$
+bldangn:n&*I*thetan/2$
+Zn:mvexp(-bldangn,11)$
+ldisplay(Zn)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+show that Zs=Zns and Zbv=Znbv using the grader() fuction
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fpprintprec:4$
+Znprint:expand(ev(Zn,numer))$
+ldisplay(Znprint)$
+grarr:grader(Znprint)$
+den:grarr[4]$
+Zns:grarr[0]/den$
+Znbv:grarr[2]/den$
+ldisplay(Zns,Znbv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+since Ii&*I=1 we can find the vector factor in the product with I in Eq. (5.19)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Ii&*I; 
+Znv:Znbv&*Ii$
+ldisplay(Znv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+and finally find the axis of the composite rotation!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+naxis:Znv/sin(thetan)$
+ldisplay(naxis)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
