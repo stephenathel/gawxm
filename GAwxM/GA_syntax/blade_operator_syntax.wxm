@@ -126,11 +126,11 @@ should be opened and used as a reference when studying the values of the express
 
 /* [wxMaxima: comment start ]
 'tilda' has the highest precedence; it is a binary operator and serves only to bind the 
-ascending bases into blades and so expressions such as e1~e1 and e3~e2 should not occur;
+ascending base vectors into blades and expressions such as e1~e1 and e3~e2 should not occur;
 'tilda' is an infix operator and does not have an associated binary infix function; it is 
-used to form the bases of the algebra in function list2blade();
-'tilda' is left associative so the interpreter sometimes brackets pairs of ascending 
-bases when forming blades and these may be later resolved by removing the brackets
+used to form the higher order blades of the algebra basis in function list2blade();
+'tilda' is left associative, and binary, so the interpreter brackets pairs of ascending 
+base vectors when forming blades and these may be later resolved by removing the brackets;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -195,7 +195,8 @@ e1~.a*e1~e2;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the blade power operators have the same precedence as the blade product operators
+the blade power operators are rarely used; they have the same precedence 
+as the blade product operators
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -203,36 +204,6 @@ e1@*3;
 e1@*3~*e2;
 e1~e2@*3;
 e2~*e1@*3;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-examples of the blade power operators for indices 0 to 3
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-e2~e3@*0;
-e2~e3@^0;
-e2~e3@.0;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-e2~e3@*1;
-e2~e3@*2;
-e2~e3@*3;
-e2~e3~*e2~e3~*e2~e3;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-e2~e3@^1;
-e2~e3@^2;
-e2~e3~^e2~e3;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-e2~e3@.1;
-e2~e3@.2;
-e2~e3@.3;
-e2~e3~.e2~e3~.e2~e3;
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
