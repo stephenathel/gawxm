@@ -1,11 +1,11 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 17.10.1 ] */
+/* [ Created with wxMaxima version 11.08.0 ] */
+
 /* [wxMaxima: comment start ]
 geometric_product_syntax.wxm
 
 Copyright (C) 2018  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: comment start ]
 A test document for Geometric Algebra with wxMaxima
@@ -17,14 +17,13 @@ calculation of the inverse pseudoscalar used to generate the dual of a multivect
 Enumeration of the standard basis for the specified dimension
 
 Explanation of the 'tilda' infix operator
-Examples of syntax and precedence of the infix geometric product operators
+Examples of syntax and precedence of the infix geometric product operators, i.e. the 
+geometric inner product, the geometric outer product and the geometric product itself
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: comment start ]
 Initialization
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 reset()$
@@ -38,11 +37,9 @@ derivabbrev:true$
 lispdisp:true$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 load intrinsic (maxima or lisp) function files
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 load("basic")$
@@ -51,7 +48,6 @@ load("functs")$
 load("scifac")$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 batchload GA specific (maxima) function files;
 the initialization file, maxima-init.mac is in the /home directory 
@@ -59,7 +55,6 @@ and contains the variable, maxima_userdir, and this allows the paths
 in file_search_maxima to be extended to point to the GA functions
 ldisplay(maxima_userdir)$
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 batchload("gafns0")$
@@ -71,13 +66,11 @@ batchload("gafns5")$
 batchload("gafns6")$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 the pseudoscalar and its inverse
 the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
 global parameters, Pseudos, Pvar[] and Plen, I and Ii
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 Pseudos:e1~e2~e3$
@@ -90,12 +83,10 @@ kill(ni)$
 ldisplay(Pvar,Plen,I,Ii)$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 global array parameters 
 lstbases[], nbases[], maxnbases
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 array(lstbases,Plen)$
@@ -108,12 +99,10 @@ maxnbases:(combination(Plen,floor(Plen/2)))$
 kill(eset,ng)$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
 lstblds[] is an array of lists of blades and allblds[] is a list of all blades
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 array(lstblds,Plen)$
@@ -127,27 +116,23 @@ ldisplay(allblds)$
 kill(lstb,ng)$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 end of Initialization
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: comment start ]
 definition and precedence of the infix operators is found in gafns0.wxm so that document
 should be opened and used as a reference when studying the values of the expressions below
    [wxMaxima: comment end   ] */
 
-
 /* [wxMaxima: comment start ]
 'tilda' has the highest precedence; it is a binary operator and serves only to bind the 
-ascending bases into blades and so expressions such as e1~e1 and e3~e2 should not occur;
+ascending base vectors into blades and expressions such as e1~e1 and e3~e2 should not occur;
 'tilda' is an infix operator and does not have an associated binary infix function; it is 
-used to form the bases of the algebra in function list2blade();
-'tilda' is left associative so the interpreter sometimes brackets pairs of ascending 
-bases when forming blades and these may be later resolved by removing the brackets
+used to form the higher order blades of the algebra basis in function list2blade();
+'tilda' is left associative, and binary, so the interpreter brackets pairs of ascending 
+base vectors when forming blades and these may be later resolved by removing the brackets;
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: comment start ]
 the geometric product operators and their functions are as taken from gafns0.wxm...
@@ -156,12 +141,10 @@ the geometric product operators and their functions are as taken from gafns0.wxm
 "&."(A,B):=geompinn(A,B);
    [wxMaxima: comment end   ] */
 
-
 /* [wxMaxima: comment start ]
-the geometric product operators all have a precedence less than 'tilda' so that the bases
-remain bound to each other as bivectors in the evaluation of the expressions below
+the geometric product operators all have a precedence less than 'tilda' so that the base 
+vectors remain bound to each other as bivectors in the evaluation of the expressions below;
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 e1~e2&*e3;
@@ -171,34 +154,41 @@ e1&^e2~e3;
 e1&.e1~e2;
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
-geometric and geometric outer product syntax and precedence using the scalars, a and b
+geometric and geometric outer product syntax and precedence using the scalar, a
    [wxMaxima: comment end   ] */
 
-
 /* [wxMaxima: comment start ]
-the geometric product operators have a higher precedence than scalar multiplication
+the geometric product operators have a higher precedence than scalar multiplication so
+the leading a*, without the parentheses, never enters the geometric product code
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
-(a*e1)&*(b*e2);
-(a*e1)&^(b*e2);
+a*e1~e2&*e2~e3;
+(a*e1~e2)&*e2~e3;
 /* [wxMaxima: input   end   ] */
-
-
-/* [wxMaxima: comment start ]
-when there is equal precedence, the order of execution is left to right 
-   [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
-a&*e1&*b&*e2;
-a&^e1&^b&^e2;
+a*e1~e2&^e3;
+(a*e1~e2)&^e3;
 /* [wxMaxima: input   end   ] */
 
+/* [wxMaxima: comment start ]
+when there is equal precedence, the order of execution is left to right; if it were
+otherwise the values of the three expressions below would be zero
+   [wxMaxima: comment end   ] */
 
+/* [wxMaxima: input   start ] */
+e1~e2&*e2~e3&^e2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1~e2&^e3&*e2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1~e2&.e1~e2&*e2;
+/* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
