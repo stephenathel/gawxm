@@ -1,0 +1,88 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+initialize_lsts.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization for Geometric Algebra using wxMaxima
+contains...
+Determination of the canonical basis from combinations of the base vectors
+Definition and display of the global lists for the basis
+
+one of two batchload files to be loaded from initialization.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+initialize this list with the only list we have so far; Pvar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstbases:makelist(Pvar[n],n,1,Plen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the integer array, nbases (n:0,...3) is used for grader(M) in gafns4.wxm;
+in order to use the same indices for the lists, (n:1,...3) define it using function array()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+array(nbases,Plen)$
+eset:setify(Pvar)$
+for ng:1 thru Plen do
+block(nbases[ng]:combination(Plen,ng),
+lstbases[ng]:full_listify(powerset(eset,ng)))$
+maxnbases:(combination(Plen,floor(Plen/2)))$
+nbases[0]:1$    /*an array index zero cannot be used to index any of the lists*/
+/*ldisplay(lstbases)$*/
+kill(eset,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+initialize this list again with Pvar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstblds:makelist(Pvar[n],n,1,Plen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the list named lstblds is used for grader(M) in gafns4.wxm;
+lstblds[] is a list of lists of blades and allblds[] is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+for ng:1 thru Plen do
+block(lstb:lstbases[ng],
+lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
+allblds:[]$
+for ng:1 thru Plen do
+block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(lstblds)$
+ldisplay(allblds)$
+kill(lstb,ng)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the canonical basis as a global list, invblds[], like allblds[]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invblds:[]$
+for k:1 thru Plen do
+block(ni:k*(k-1)/2,
+nk:(-1)^ni,
+lst:nk*lstblds[k],
+invblds:append(invblds,lst))$
+ldisplay(invblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

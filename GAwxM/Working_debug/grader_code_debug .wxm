@@ -2,15 +2,21 @@
 /* [ Created with wxMaxima version 11.08.0 ] */
 
 /* [wxMaxima: comment start ]
-work_list2blade_code.wxm
+grader_code_debug.wxm 
 
 GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A development document for Geometric Algebra using wxMaxima
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
 
-To show the formation of the initialization lists
+Tests for grader_code() using Plen=4 so that some grades may have two bases or zero
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -75,7 +81,7 @@ the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:{e1,e2,e3}$
+Pseudos:{e1,e2,e3,e4}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
@@ -140,57 +146,89 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-source of the code for function list2blade() in file gafns1.wxm
+
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-list2blade_code(lst):=block([b],
-local(b),
-if emptyp(lst) then return(1) else 
-block((b:setify(lst)),b))$
+grader_code(M):=block([grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,
+strarg,searchlst,ng,strbld,posb,lenlst,narg,evarg,argsum,aMn],
+local(grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,strarg,searchlst,
+ng,strbld,posb,lenlst,narg,evarg,argsum,aMn),
+grarr:make_array(any,Plen+2),
+for grd:0 thru Plen do grarr[grd]:0,
+grarr[Plen+1]:1,
+rM:rat(M),
+bM:denom(rM),
+aM:rM*bM,
+aM:facsum(aM,allblds),
+grarr[Plen+1]:bM,
+for grd:Plen thru 1 step -1 do
+block(
+lstargs:arglst(aM),
+lenarg:length(lstargs),
+searchlst:lstblds[grd],
+lengrd:nbases[grd],
+lstgrdarg:[],
+if not aM=0 then 
+block(for na:1 thru lenarg do
+block(strarg:string(lstargs[na]),
+for ng:1 thru lengrd do
+block(strbld:string(searchlst[ng]),
+posb:ssearch(strbld,strarg,sequal),
+if posb>0 then
+block(lstgrdarg:endcons(strarg,lstgrdarg))))),
+lenlst:length(lstgrdarg),
+if lenlst>0 then 
+block(evarg:make_array(any,lenlst+1),
+for narg:1 thru lenlst do
+block(evarg[narg]:eval_string(lstgrdarg[narg])),
+argsum:sum(evarg[n],n,1,lenlst),
+grarr[grd]:argsum,
+aMn:aM-argsum,
+aM:facsum(aMn,allblds))),
+grarr[0]:aM,grarr)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the pseudoscalar is specified 'manually' to define the dimension of the space,
-we can use the implied Pvar to test the code for function list2blade()
+input values for tests when Plen=4
+M:1/2+{e1}/3+{e1,e2,e4}/5+{e1,e3,e4}/7+{e1,e2,e3,e4}/11$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+or input values for tests with just a signed canonical basis vector input e.g.
+M:Ii;M:-1
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-pv:list2blade_code(Pvar)$
-ldisplay(pv)$
-setp(pv);
+M:1/2+{e1}/3+{e1,e2,e4}/5+{e1,e3,e4}/7+{e1,e2,e3,e4}/11$
+arr:grader_code(M)$
+arr[0];
+arr[1];
+arr[2];
+arr[3];
+arr[4];
+
+denM:arr[Plen+1]$
+ldisplay(denM)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-now using lists and not arrays, show how the lists are formed in the above code loops
+the denominator is held in grarr[Plen+1] within grader();
+the graded multivector terms can be recovered by dividing by the denominator e.g.
+arr[0]/denM;
+arr[1]/denM; etc
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-eset:setify(Pvar);
-ng:2$
-nbases_ng:combination(Plen,ng);
-lstbases_ng:full_listify(powerset(eset,ng));
-/* [wxMaxima: input   end   ] */
+arr:grader(M)$
+arr[0]/denM;
+arr[1]/denM;
+arr[2]/denM;
+arr[3]/denM;
+arr[4]/denM;
 
-/* [wxMaxima: input   start ] */
-ng:2$
-lstb:lstbases[ng];
-lstblds_ng:makelist(list2blade_code(lst),lst,lstb);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-to show that we are no longer using arrays for the blades here
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-listp(lstbases);
-listp(lstblds);
-listp(allblds);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-arrayinfo(nbases);
-listarray(nbases);
+denM:arr[Plen+1]$
+ldisplay(denM)$
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

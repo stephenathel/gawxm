@@ -4,19 +4,11 @@
 /* [wxMaxima: comment start ]
 Desargues_theorem.wxm
 
-GNU General Public License 2013  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A short development document for Geometric Algebra with wxMaxima
-that may be used as an initialization template and to check that 
-there are no stdin errors due to batchload;
-contains...
-Initialization
-Loading of functions (intrinsic and GA specific)
-Pseudoscalar definition (specifies the space dimension) and
-Calculation of the inverse pseudoscalar used to generate the dual of a multivector
-Enumeration of the standard basis for the specified dimension
+An application document for Geometric Algebra using wxMaxima
 
 The example of projective geometry given in the Survey, section 4.1.4, page 25
    [wxMaxima: comment end   ] */
@@ -26,94 +18,30 @@ Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-reset()$
-kill(all)$
-stardisp:true$
-stringdisp:true$
-noundisp:true$
-simp:true$
-dotdistrib:true$
-derivabbrev:true$
-lispdisp:true$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-load intrinsic (maxima or lisp) function files
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-load("basic")$
-load("facexp")$
-load("functs")$
-load("scifac")$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-batchload GA specific (maxima) function files;
-the initialization file, maxima-init.mac is in the /home directory 
-and contains the variable, maxima_userdir, and this allows the paths
-in file_search_maxima to be extended to point to the GA functions
-ldisplay(maxima_userdir)$
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-batchload("gafns0")$
-batchload("gafns1")$
-batchload("gafns2")$
-batchload("gafns3")$
-batchload("gafns4")$
-batchload("gafns5")$
-batchload("gafns6")$
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
 the pseudoscalar and its inverse
-the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2;
-global parameters, Pseudos, Pvar[] and Plen, I and Ii
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:e1~e2~e3~e4$
+Pseudos:{e1,e2,e3,e4}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
 ni:(Plen-1)*Plen/2$
 Ii:(-1)^ni*I$
 kill(ni)$
-ldisplay(Pvar,Plen,I,Ii)$
+ldisplay(Pvar)$
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-global array parameters 
-lstbases[], nbases[], maxnbases
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-array(lstbases,Plen)$
-array(nbases,Plen)$
-eset:setify(Pvar)$
-for ng:1 thru Plen do
-block(nbases[ng]:combination(Plen,ng),
-lstbases[ng]:full_listify(powerset(eset,ng)))$
-maxnbases:(combination(Plen,floor(Plen/2)))$
-kill(eset,ng)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
-lstblds[] is an array of lists of blades and allblds[] is a list of all blades
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-array(lstblds,Plen)$
-for ng:1 thru Plen do
-block(lstb:lstbases[ng],
-lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
-allblds:[]$
-for ng:1 thru Plen do
-block(allblds:append(allblds,lstblds[ng]))$
-ldisplay(allblds)$
-kill(lstb,ng)$
+batchload("initialize_lsts")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
@@ -125,18 +53,18 @@ Projective geometry starts here
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-use e1 as the unit vector, e, orthogonal to 3D space (e2,e3,e4) and form vectors a,b,c;
-also confine the vertices to a particular plane by setting the coefficient of e3 to zero;
+use {e1} as the unit vector, {e}, orthogonal to 3D space {e2,e3,e4} and form vectors a,b,c;
+also confine the vertices to a particular plane by setting the coefficient of {e3} to zero;
 construct both a,b,c and a',b',c' where e.g. ad represents ad(ashed)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-a:e1+a2*e2+a4*e4$
-ad:e1+ad2*e2+ad4*e4$
-b:e1+b2*e2+b4*e4$
-bd:e1+bd2*e2+bd4*e4$
-c:e1+c2*e2+c4*e4$
-cd:e1+cd2*e2+cd4*e4$
+a:{e1}+a2*{e2}+a4*{e4}$
+ad:{e1}+ad2*{e2}+ad4*{e4}$
+b:{e1}+b2*{e2}+b4*{e4}$
+bd:{e1}+bd2*{e2}+bd4*{e4}$
+c:{e1}+c2*{e2}+c4*{e4}$
+cd:{e1}+cd2*{e2}+cd4*{e4}$
 ldisplay(a,b,c)$
 ldisplay(ad,bd,cd)$
 /* [wxMaxima: input   end   ] */
@@ -161,7 +89,7 @@ and find the pseudoscalar inverse, Ki
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-K:e1~e2~e4$
+K:{e1,e2,e4}$
 ni:(Plen-1-1)*(Plen-1)/2$
 Ki:(-1)^ni*K$
 ldisplay(K,Ki)$
@@ -234,6 +162,7 @@ ldisplay(PQR0)$
 
 /* [wxMaxima: comment start ]
 confirm the validity of the last equation (the identity) in section 4.1.4
+this may take a while
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */

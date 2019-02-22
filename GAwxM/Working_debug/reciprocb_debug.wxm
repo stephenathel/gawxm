@@ -2,19 +2,20 @@
 /* [ Created with wxMaxima version 11.08.0 ] */
 
 /* [wxMaxima: comment start ]
-space_time_para_4.1.3.wxm
+reciprocb_debug.wxm
 
 GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-An application document for Geometric Algebra using wxMaxima
+A test document for Geometric Algebra with wxMaxima
 
-Ref: The Survey, para.4.1.3
+LAGA Problem 6.5.6 (Reciprocal bases) and the source for function reciprocb() in gafns5.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-investigate the use of the fourth axis, e4, as a possible imitation of G(1,3)
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -34,7 +35,7 @@ e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:{e1,e2,e3,e4}$
+Pseudos:{e1,e2,e3}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
@@ -53,191 +54,174 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-set derivabbrev:false$
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-derivabbrev:false$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-ratprint:false$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-The Survey, para.4.1.3
+Problem 6.5.6 preamble (only part b of Problem 6.5.6 is treated below)
+page 115
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-show the spacetime gammas required for the imitation of G(1,3)
+first make a vector
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-g1:%i*{e1}$
-g2:%i*{e2}$
-g3:%i*{e3}$
-g4:{e4}$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-g1&.g1;
-g2&.g2;
-g3&.g3;
-g4&.g4;
+r:x*{e1}+y*{e2}+z*{e3};
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the spacetime coordinate vector using the gammas
+now confirm the coefficients in the Fourier expansion
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-x:x1*g1+x2*g2+x3*g3+t*g4;
+r&.{e1};
+r&.{e2};
+r&.{e3};
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-choose a simple rotation angle for partial verification of the hyperbolic identity
+define the covariant basis as the orthonormal basis
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-alpha:%pi/3$
-ahalf:alpha/2;
+ecov:lstblds[1];
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the velocity magnitude as a fraction of the speed of light 
+find the reciprocal of the orthonormal basis as a list
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-tanh(alpha)$
-vel:ev(%,numer);
+econ:reciproce(ecov)$
+econ;
+econ[1];
+econ[2];
+econ[3];
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-choose a simple (imaginary ugh!) unit vector, vhat for the unit velocity
+form the arbitrary basis vectors
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-vhat:g2$
-vhat&*vhat;
+u:u1*{e1}+u2*{e2}+u3*{e3};
+v:v1*{e1}+v2*{e2}+v3*{e3};
+w:w1*{e1}+w2*{e2}+w3*{e3};
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-show the rotation plane and the rotation bivector
+define an arbitrary basis, bcov:[u,v,w] and use the multivector outer product function
+to find the denominator as a multiple of the pseudoscalar of the orthonormal basis
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Plane:vhat&*g4$
-B:Plane*ahalf$
-ldisplay(Plane,B)$
+bcov:[u,v,w];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+u&^v&^w$
+bld:facsum(%,allblds);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-form a rotation exponential, with accuracy limited using mvexp( ,13)
+find the (scalar) norm of the denominator to be used with the reciprocal function output
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp(B,13)$
-ev(%,numer,expand);
+denext:extract(bld)$
+ldisplay(denext)$
+normden:denext[2]$
+ldisplay(normden)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-verify that the intrinsic hyperbolic functions are consistent with function mvexp()
-while imitating G(1,3) with the intrinsic imaginary, %i
+this is the code under test and the source for function reciprocb() in gafns5.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-cosh(ahalf)+Plane*sinh(ahalf)$
-trigsimp(%)$
-Rv:ev(%,numer,expand);
+reciprocb_code(bcov):=block([x,i,j,lst,excl,bld,nj,bcon],
+local(x,i,j,lst,excl,bld,nj,bcon),
+lst:bcov,
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+bcon:makelist(concat(x,i),i,1,len),
+for j:1 thru len do
+block(lst:bcov,
+excl:bcov[j],
+lst:delete(excl,lst),
+bld:list2vecouter(lst),
+nj:(j-1),
+bcon[j]:(-1)^nj*bld&*Ii)),
+bcon)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: comment start ]
-numerical comparison of spacetime vector rotation with the Lorentz transformation
-e.g. for a simple velocity, vel*vhat (= vel*g1)
+the output from function reciprocb() should now be divided by normden but for
+clarity this is not shown for the complete basis, however, the second vector in
+the reciprocal basis list, for example, is given by bcon[2]/normden
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-vel:0.8$
-alpha:atanh(vel)$
-ahalf:alpha/2;
+bcov:[u,v,w];
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-form the rotation bivector
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-vhat:g1$
-B:vhat&*g4*ahalf$
-ev(%,numer,expand);
+bcon:reciprocb_code(bcov)$
+bcon[1]$
+n1:facsum(%,allblds)$
+bcon[2]$
+n2:facsum(%,allblds)$
+bcon[3]$
+n3:facsum(%,allblds)$
+ldisplay(n1,n2,n3)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-form the left and right exponential multipliers
+Problem 6.5.6b (only)
+page 115
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+represent the reciprocal basis with the list of contravariant vectors, [bs1,bs2,bs3] 
+e.g. bs1 is "b superscript 1"
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp(-B,13)$
-lexp:ev(%,numer,expand);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-mvexp(+B,13)$
-rexp:ev(%,numer,expand);
+bs1:n1/normden$
+bs2:n2/normden$
+bs3:n3/normden$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-apply the rotation to a spacetime coordinate vector "parallel" to the velocity
+use the Fourier expansion coefficients, x, y, and z, used earlier to form the vector r;
+then in order to form the rhs of Eq.(6.21), first find each scalar coefficient separately
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-x:x1*g1+t*g4;
+r:x*{e1}+y*{e2}+z*{e3};
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rs1:r&.bs1;
+rs2:r&.bs2;
+rs3:r&.bs3;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-find the rotated spacetime vector
+now form the rhs of Equation (6.21), using the above calculated coefficients 
+and the arbitrary, covariant (non-orthogonal) basis vectors, u, v and w
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-xbar:lexp&*x&*rexp$
-ev(%,numer,expand)$
-collectterms(%,%i,e1,e4);
+rhs:rs1*u+rs2*v+rs3*w$
+ldisplay(rhs)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-compare the spacetime rotation result with the Lorentz transformation factors
+this result is the same as the definition of r w.r.t. the orthonormal basis
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-L:1/sqrt(1-vel^2);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-Lv:vel*1/sqrt(1-vel^2);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-the Lorentz space and time 
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-x1bar:(-Lv*t+L*x1)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-tbar:(+L*t-Lv*x1)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-the Lorentz spacetime vector
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-x1bar*g1+tbar*g4;
+lhs:r$
+is(equal(lhs,rhs))$
+ldisplay(r,%)$
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

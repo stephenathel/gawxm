@@ -1,11 +1,11 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 17.10.1 ] */
+/* [ Created with wxMaxima version 11.08.0 ] */
+
 /* [wxMaxima: comment start ]
 gafns4.wxm
 
 GNU General Public License 2013  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: comment start ]
 initialization of Geometric Algebra wxMaxima documents
@@ -18,7 +18,6 @@ generation of multivectors with unit coefficients...
 makeunitarymv(name)
    [wxMaxima: comment end   ] */
 
-
 /* [wxMaxima: comment start ]
 grader() allocates all grades from a Multivector to a local array (of length Plen+2),  
 grarr (of Plen+1 expressions; including ,for grarr[0], the zero grade scalar part);
@@ -29,7 +28,6 @@ arr:grader(A)$
 denA:arr[Plen+1]$
 scalarA:arr[0]/denA$
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 grader(M):=block([grarr,rM,bM,aM,grd,na,lstargs,lenarg,lengrd,lstgrdarg,
@@ -71,7 +69,6 @@ aM:facsum(aMn,allblds))),
 grarr[0]:aM,grarr)$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 lstblds does not include the scalar, 1, so add a[0,1]*1 as the scalar part
 usage
@@ -80,7 +77,6 @@ makemultivec(nameA);
 arrayinfo(a);
 generates global multivector A and the global array of coordinates, a
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 makemultivec(name):=block([str,stra,arrvec,grd,lengrd,strv,strn],
@@ -97,7 +93,6 @@ strn:sconcat(name,":",str,"[0,1]+sum(arrvec[j],j,1,Plen)"),
 eval_string(strn))$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 no checks on lstgrades
 creates a multivector from the list of particular grades
@@ -107,7 +102,6 @@ nameC0:"C0"$
 makelistgrademv(nameC0,lstgC0)$
 C0;
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 makelistgrademv(name,lstgrades):=block([nameCstr,strm,strp,arr,arrprj,
@@ -131,13 +125,11 @@ strn:sconcat(name,":Cout"),
 eval_string(strn))$
 /* [wxMaxima: input   end   ] */
 
-
 /* [wxMaxima: comment start ]
 usage
 nameE:"E"$
 makeunitarymv(nameE)$
    [wxMaxima: comment end   ] */
-
 
 /* [wxMaxima: input   start ] */
 makeunitarymv(name):=block([str,stra,arrvec,grd,lengrd,strv,strn],
@@ -151,8 +143,6 @@ eval_string(strv)),
 strn:sconcat(name,":","1+sum(arrvec[j],j,1,Plen)"),
 eval_string(strn))$ 
 /* [wxMaxima: input   end   ] */
-
-
 
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$

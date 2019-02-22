@@ -1,0 +1,76 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+initialize_fns.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization for Geometric Algebra using wxMaxima
+contains...
+Initialization of flags
+Loading of functions (intrinsic and GA-GC specific)
+
+one of two batchload files to be loaded from initialization.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization start
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GA specific (maxima) function files;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gafns0")$
+batchload("gafns1")$
+batchload("gafns2")$
+batchload("gafns3")$
+batchload("gafns4")$
+batchload("gafns5")$
+batchload("gafns6")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+batchload GC specific (maxima) function files;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("gcfns1")$
+batchload("gcfns2")$
+batchload("gcfns3")$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

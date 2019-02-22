@@ -4,7 +4,7 @@
 /* [wxMaxima: comment start ]
 gcfns1.wxm
 
-GNU General Public License 2016  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -13,7 +13,6 @@ contains...
 function mvgrad() definition for the multivector gradient
 function mvdiv() definition for the multivector divergence
 function mvcurl() definition for the multivector curl
-
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]

@@ -4,26 +4,23 @@
 /* [wxMaxima: comment start ]
 gafns1.wxm
 
-GNU General Public License 2013  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
 initialization of Geometric Algebra wxMaxima documents
 contains...
-definition of the blade syntax using "~" in list2blade()
+definition of the bases syntax using intrinsic, ordered sets using {,,,} in list2blade()
 infix operator definitions for basis vector product, blade product and powers of blades
 infix operator definition for the fundamental multivector geometric product
 infix operator definition for the commutator product
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-list2blade(lst):=block([len,b,u,n],
-local(len,b,u,n),
+list2blade(lst):=block([b],
+local(b),
 if emptyp(lst) then return(1) else 
-block(len:length(lst),
-block(b:string(lst[1]),for n:2 thru len do 
-block(u:string(lst[n]),b:concat(b," ~ ",u))),
-eval_string(b)))$
+block((b:setify(lst)),b))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]

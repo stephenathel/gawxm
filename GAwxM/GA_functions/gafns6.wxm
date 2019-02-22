@@ -4,7 +4,7 @@
 /* [wxMaxima: comment start ]
 gafns6.wxm
 
-GNU General Public License 2013  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -13,7 +13,7 @@ contains...
 definition of the arglst() function 
 definition of the bldexp() function 
 definition of the mvexp() function
-definition of the pauser() function
+definition of the pauser() function (changed from any to fixnum, 2019)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -36,20 +36,20 @@ this function is developed using arglst_and_grader_code.wxm
 /* [wxMaxima: input   start ] */
 arglst(aM):=block([lstarg,opa,eM,ope,mM,opm],
 local(lstarg,opa,eM,ope,mM,opm),
-if is(atom(aM)) then lstarg:[aM]
-else block(opa:op(aM),  
-if (opa="~") then lstarg:[aM]
+if is(numberp(aM) or symbolp(aM)) then lstarg:[aM]
+else block(opa:op(aM),
+if is(setp(aM)) then lstarg:[aM]
 elseif (opa="*") then block(eM:expand(aM),ope:op(eM),
 if (ope="*") then lstarg:[aM] else lstarg:args(eM))
-elseif (opa="+") then lstarg:args(aM) 
+elseif (opa="+") then lstarg:args(aM)
 elseif (opa="^") then block(eM:expand(aM),lstarg:args(eM))
 elseif (opa="-") then block(mM:-aM,
-if is(atom(mM)) then lstarg:[aM]
-else block(opm:op(mM),  
-if (opm="~") then lstarg:[aM]
+if is(numberp(mM) or symbolp(mM)) then lstarg:[aM]
+else block(opm:op(mM),
+if is(setp(mM)) then lstarg:[aM]
 elseif (opm="*") then block(eM:expand(mM),ope:op(eM),
 if (ope="*") then lstarg:[aM] else lstarg:-args(eM))
-elseif (opm="+") then lstarg:-args(mM) 
+elseif (opm="+") then lstarg:-args(mM)
 elseif (opm="^") then block(eM:expand(mM),lstarg:-args(eM))))
 else lstarg:[aM]))$
 /* [wxMaxima: input   end   ] */
@@ -120,7 +120,7 @@ kill(time)$
 /* [wxMaxima: input   start ] */
 pauser(delay):=block([tick,tock,n,tyme],
 local(tick,tock,n),
-tyme:make_array(any,2),
+tyme:make_array(fixnum,2),
 tick:elapsed_real_time(),
 block(n:1,loop,n+1,tock:elapsed_real_time(),
 tyme[0]:tick,tyme[1]:tock,

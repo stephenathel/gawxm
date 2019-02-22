@@ -4,7 +4,7 @@
 /* [wxMaxima: comment start ]
 gafns0.wxm
 
-GNU General Public License 2013  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -13,9 +13,13 @@ contains...
 definition and precedence of the infix operators
    [wxMaxima: comment end   ] */
 
-/* [wxMaxima: input   start ] */
-infix("~",140,141,expr,expr,expr)$
+/* [wxMaxima: comment start ]
+replacing infix("~",140,141,expr,expr,expr)$;
+matchfix("{","}",expr,expr)$ 
+is possible, however, we now just define the bases as intrinsic, ordered sets using {,,,}
+   [wxMaxima: comment end   ] */
 
+/* [wxMaxima: input   start ] */
 infix("~*",130,131,expr,expr,expr)$
 "~*"(A,B):=bladep(A,B);
 infix("@*",130,131,expr,expr,expr)$

@@ -3,5 +3,5 @@ fylenames:simplode([wxMuserdir,"GAmacsy/GA_functions/###.wxm"])$
 file_search_maxima: append (file_search_maxima,[fylenames])$
 fylenames:simplode([wxMuserdir,"GAmacsy/GC_functions/###.wxm"])$
 file_search_maxima: append (file_search_maxima,[fylenames])$
-fylenames:simplode([wxMuserdir,"GAmacsy/GA_GC_initialize/###.wxm"])$
+fylenames:simplode([wxMuserdir,"GAmacsy/GAGC_initialize/###.wxm"])$
 file_search_maxima: append (file_search_maxima,[fylenames])$

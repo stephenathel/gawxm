@@ -4,20 +4,13 @@
 /* [wxMaxima: comment start ]
 VAGC_grad_scalar.wxm
 
-GNU General Public License 2016  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A short development document for Geometric Algebra with wxMaxima
-just to test some calculus functions within the GAwxM environment,
-contains...
-Initialization
-Loading of functions (intrinsic and GA specific)
-Pseudoscalar definition (specifies the space dimension) and
-Calculation of the inverse pseudoscalar used to generate the dual of a multivector
-Enumeration of the standard basis for the specified dimension
+A development document for Geometric Algebra using wxMaxima
 
-Exercise 5.13, VAGC page 66 for the gradient of a scalar function
+Exercise 5.13, VAGC page 66 for the gradient of a scalar function in 3D
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -25,118 +18,30 @@ Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-reset()$
-kill(all)$
-stardisp:true$
-stringdisp:true$
-noundisp:true$
-simp:true$
-dotdistrib:true$
-derivabbrev:true$
-lispdisp:true$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-load intrinsic (maxima or lisp) function files
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-load("basic")$
-load("facexp")$
-load("functs")$
-load("scifac")$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-batchload GA specific (maxima) function files;
-the initialization file, maxima-init.mac is in the /home directory 
-and contains the variable, maxima_userdir, and this allows the paths
-in file_search_maxima to be extended to point to the GA functions
-ldisplay(maxima_userdir)$
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-batchload("gafns0")$
-batchload("gafns1")$
-batchload("gafns2")$
-batchload("gafns3")$
-batchload("gafns4")$
-batchload("gafns5")$
-batchload("gafns6")$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-batchload GC specific (maxima) function files;
-the paths in file_search_maxima are also extended to point to the GC functions
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-batchload("gcfns1")$
-batchload("gcfns2")$
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
 the pseudoscalar and its inverse
-the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
-global parameters, Pseudos, Pvar[] and Plen, I and Ii
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:e1~e2~e3$
+Pseudos:{e1,e2,e3}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
 ni:(Plen-1)*Plen/2$
 Ii:(-1)^ni*I$
 kill(ni)$
-ldisplay(Pvar,Plen,I,Ii)$
+ldisplay(Pvar)$
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-global array parameters 
-lstbases[], nbases[], maxnbases
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-array(lstbases,Plen)$
-array(nbases,Plen)$
-eset:setify(Pvar)$
-for ng:1 thru Plen do
-block(nbases[ng]:combination(Plen,ng),
-lstbases[ng]:full_listify(powerset(eset,ng)))$
-maxnbases:(combination(Plen,floor(Plen/2)))$
-kill(eset,ng)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
-lstblds[] is an array of lists of blades and allblds[] is a list of all blades
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-array(lstblds,Plen)$
-for ng:1 thru Plen do
-block(lstb:lstbases[ng],
-lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
-allblds:[]$
-for ng:1 thru Plen do
-block(allblds:append(allblds,lstblds[ng]))$
-ldisplay(allblds)$
-kill(lstb,ng)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-find the inverse of the canonical basis as a global list, invblds[], like allblds
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-invblds:[]$
-for k:1 thru Plen do
-block(ni:k*(k-1)/2,
-nk:(-1)^ni,
-lst:nk*lstblds[k],
-invblds:append(invblds,lst))$
-ldisplay(invblds)$
+batchload("initialize_lsts")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]

@@ -2,19 +2,17 @@
 /* [ Created with wxMaxima version 11.08.0 ] */
 
 /* [wxMaxima: comment start ]
-space_time_para_2.4.3_v2015.wxm
+geometric_product_1.wxm
 
 GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-An application document for Geometric Algebra using wxMaxima
+A user document for Geometric Algebra with wxMaxima
+contains...
 
-Ref: The Survey, para 2.4.3, March 2015 version
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: comment start ]
-investigate the use of the fourth axis, %i*{e4}, as a possible imitation for G(3,1)
+Examples of syntax and precedence of the infix geometric product operators, i.e. the 
+geometric inner product, the geometric outer product and the geometric product itself
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -34,7 +32,7 @@ e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:{e1,e2,e3,e4}$
+Pseudos:{e1,e2,e3}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
@@ -53,63 +51,64 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-set derivabbrev:false$
+definition and precedence of the infix operators is found in gafns0.wxm so that document
+should be opened and used as a reference when studying the values of the expressions below
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the geometric product operators and their functions are as taken from gafns0.wxm...
+"&*"(A,B):=geomp(A,B);
+"&^"(A,B):=geompout(A,B);
+"&."(A,B):=geompinn(A,B);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the geometric product operators all have a precedence less than {,} so that the base 
+vectors remain bound to each other as bivectors in the evaluation of the expressions below;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-derivabbrev:false$
+{e1,e2}&*{e3};
+{e1,e2}&^{e3};
+{e1}&*{e2,e3};
+{e1}&^{e2,e3};
+{e1}&.{e1,e2};
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-coded from para.2.4.3, March 2015 version of The Survey...
-partial verification of the last identity replacing e0 with %i*{e4}
+geometric and geometric outer product syntax and precedence using the scalar, a
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-choose a simple rotation angle and unit vector, vhat for the velocity 
+the geometric product operators have a higher precedence than scalar multiplication so
+the leading a*, without the parentheses, ( ), never enters the geometric product code
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-alpha:%pi/3$
-ahalf:alpha/2;
-vhat:{e2}$
+a*{e1,e2}&*{e2,e3};
+(a*{e1,e2})&*{e2,e3};
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+a*{e1,e2}&^{e3};
+(a*{e1,e2})&^{e3};
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the velocity magnitude as a fraction of the speed of light 
+when there is equal precedence, the order of execution is left to right; if it were
+otherwise the values of the three expressions below would be zero
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-vel:tanh(alpha)$
-ev(%,numer);
+{e1,e2}&*{e2,e3}&^{e2};
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-show the rotation bivector (2015 version gave e0&*vhat)
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-Bv:(%i*{e4})&*vhat;
+{e1,e2}&^{e3}&*{e2};
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-form the rotation (for a positive exponent), with accuracy limited using mvexp(...,13)
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-Bv*ahalf$
-mvexp(%,13)$
-ev(%,numer,expand);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-verify that the identity requires hyperbolic functions noting the negative bivector
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-cosh(ahalf)+Bv*sinh(ahalf)$
-trigsimp(%)$
-Rv:ev(%,numer,expand);
+{e1,e2}&.{e1,e2}&*{e2};
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

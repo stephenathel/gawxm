@@ -4,21 +4,17 @@
 /* [wxMaxima: comment start ]
 develop_reciprocM_code.wxm
 
-GNU General Public License 2016  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A short development document for Geometric Algebra with wxMaxima
-just to test some calculus functions within the GAwxM environment,
+A development document for Geometric Algebra using wxMaxima
 contains...
-Initialization
-Loading of functions (intrinsic and GA specific)
-Pseudoscalar definition (specifies the space dimension) and
-Calculation of the inverse pseudoscalar used to generate the dual of a multivector
-Enumeration of the standard basis for the specified dimension
+Initialization with
+Pseudoscalar definition (specifies the space dimension)
 
 in order to progress in forming a function for the vector derivative on a manifold
-we need to be able to form the reciprocal of the outer product of a list of basis vectors
+we need to be able to form the reciprocal of a list of basis vectors
 So we use Exercise 5.26, VAGC page 75 to find the derivative of a vector function 
 on a surface (manifold). We calculate the required reciprocal basis in two different ways;
 1) using Problem 5.4.2 (and we also find the vector derivative)
@@ -30,119 +26,30 @@ Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-reset()$
-kill(all)$
-stardisp:true$
-stringdisp:true$
-noundisp:true$
-simp:true$
-dotdistrib:true$
-derivabbrev:true$
-lispdisp:true$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-load intrinsic (maxima or lisp) function files
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-load("basic")$
-load("facexp")$
-load("functs")$
-load("scifac")$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-batchload GA specific (maxima) function files;
-the initialization file, maxima-init.mac is in the /home directory 
-and contains the variable, maxima_userdir, and this allows the paths
-in file_search_maxima to be extended to point to the GA functions
-ldisplay(maxima_userdir)$
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-batchload("gafns0")$
-batchload("gafns1")$
-batchload("gafns2")$
-batchload("gafns3")$
-batchload("gafns4")$
-batchload("gafns5")$
-batchload("gafns6")$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-batchload GC specific (maxima) function files;
-the paths in file_search_maxima are also extended to point to the GC functions
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-batchload("gcfns1")$
-batchload("gcfns2")$
-batchload("gcfns3")$
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
 the pseudoscalar and its inverse
-the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
-global parameters, Pseudos, Pvar[] and Plen, I and Ii
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:e1~e2~e3~e4$
+Pseudos:{e1,e2,e3}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
 ni:(Plen-1)*Plen/2$
 Ii:(-1)^ni*I$
 kill(ni)$
-ldisplay(Pvar,Plen,I,Ii)$
+ldisplay(Pvar)$
 /* [wxMaxima: input   end   ] */
 
-/* [wxMaxima: comment start ]
-global array parameters 
-lstbases[], nbases[], maxnbases
-   [wxMaxima: comment end   ] */
-
 /* [wxMaxima: input   start ] */
-array(lstbases,Plen)$
-array(nbases,Plen)$
-eset:setify(Pvar)$
-for ng:1 thru Plen do
-block(nbases[ng]:combination(Plen,ng),
-lstbases[ng]:full_listify(powerset(eset,ng)))$
-maxnbases:(combination(Plen,floor(Plen/2)))$
-kill(eset,ng)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
-lstblds[] is an array of lists of blades and allblds[] is a list of all blades
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-array(lstblds,Plen)$
-for ng:1 thru Plen do
-block(lstb:lstbases[ng],
-lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
-allblds:[]$
-for ng:1 thru Plen do
-block(allblds:append(allblds,lstblds[ng]))$
-ldisplay(allblds)$
-kill(lstb,ng)$
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-find the inverse of the canonical basis as a global list, invblds[], like allblds
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-invblds:[]$
-for k:1 thru Plen do
-block(ni:k*(k-1)/2,
-nk:(-1)^ni,
-lst:nk*lstblds[k],
-invblds:append(invblds,lst))$
-ldisplay(invblds)$
+batchload("initialize_lsts")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
@@ -160,7 +67,6 @@ derivabbrev:false$
 /* [wxMaxima: comment start ]
 Exercise 5.26
 VAGC page 75
-(adapted from VAGC_vector_deriv_Exercise5.26.wxm)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -168,7 +74,7 @@ parameterize a surface with vector b(old)x
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-bx:u*e1+v*e2+(u*u+v*v)*e3$
+bx:u*{e1}+v*{e2}+(u*u+v*v)*{e3}$
 ldisplay(bx)$
 /* [wxMaxima: input   end   ] */
 
@@ -250,7 +156,7 @@ ldisplay(delf)$
 
 /* [wxMaxima: comment start ]
 in order to progress in forming a function for the vector derivative on a manifold
-we need to be able to form the reciprocal of the outer product of a list of basis vectors
+we need to be able to form the reciprocal of a list of basis vectors
 for any dimension manifold in any dimension vector space
    [wxMaxima: comment end   ] */
 
@@ -289,7 +195,7 @@ now using the method of Problem 5.4.1 as applied to a manifold
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-bx:u*e1+v*e2+(u*u+v*v)*e3$
+bx:u*{e1}+v*{e2}+(u*u+v*v)*{e3}$
 ldisplay(bx)$
 /* [wxMaxima: input   end   ] */
 
@@ -334,13 +240,13 @@ ev(bivout);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-we need the inverse of the (2D) basis outer product on the Manifold somehow
+we need the inverse of the (2D) basis on the Manifold somehow
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
 reciprocM_code(cov):=block([mut,mutev,abs2,mrev,lenc,x,i,j,lst,bex,mv,mvev,nj,rec,con],
 local(mut,mutev,abs2,mrev,lenc,x,i,j,lst,bex,mv,mvev,nj,rec,con),
-mut:lst2outer_code(cov),
+mut:lst2outer(cov),
 mutev:ev(mut),
 abs2:normod(mutev)^2,
 mrev:mvrev(mutev),
@@ -350,7 +256,7 @@ for j:1 thru lenc do
 block(lst:cov,
 bex:cov[j],
 lst:delete(bex,lst),
-mv:lst2outer_code(lst),
+mv:lst2outer(lst),
 mvev:ev(mv),
 nj:(j-1),
 rec:(-1)^nj*mvev&*mrev,
@@ -362,11 +268,11 @@ comparison with other reciprocal functions in gafns5.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pvar;
-reciproce(Pvar);
-reciprocb(Pvar);
-reciprocM_code(Pvar);
-reciprocM(Pvar);
+veclst:lstblds[1];
+reciproce(veclst);
+reciprocb(veclst);
+reciprocM_code(veclst);
+reciprocM(veclst);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -402,8 +308,15 @@ rectgt[2]&.bv;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-display(bu,bv,tgtbasis)
-$reciprocM(tgtbasis);
+display(bu,bv,tgtbasis);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the developed code was then copied to gcfns3.wxm as functions lst2outer() and reciprocM()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reciprocM(tgtbasis);
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

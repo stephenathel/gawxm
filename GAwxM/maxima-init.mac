@@ -1,5 +1,7 @@
 wxMuserdir:strimr(".maxima",maxima_userdir)$
-fylenames:simplode([wxMuserdir,"GAwxM_v1/GA_functions/###.wxm"])$
+fylenames:simplode([wxMuserdir,"GAwxM/GA_functions/###.wxm"])$
 file_search_maxima: append (file_search_maxima,[fylenames])$
-fylenames:simplode([wxMuserdir,"GAwxM_v1/GC_functions/###.wxm"])$
+fylenames:simplode([wxMuserdir,"GAwxM/GC_functions/###.wxm"])$
+file_search_maxima: append (file_search_maxima,[fylenames])$
+fylenames:simplode([wxMuserdir,"GAwxM/GA_GC_initialize/###.wxm"])$
 file_search_maxima: append (file_search_maxima,[fylenames])$

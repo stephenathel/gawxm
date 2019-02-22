@@ -133,7 +133,7 @@ eval_string(b)))$
 function for the reciprocal of the orthonormal basis
 N.B. if a function is to output a list, firstly we need to make (dimension) a dummy list
 usage ref.
-LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+reciprocb_debug.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -154,7 +154,7 @@ econ)$
 function list2vecouter() is derived from list2bldouter() by replacing the blade outer 
 product (~^) with the (multi)vector outer product (&^) and removing the string handling
 usage ref.
-LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+reciprocb_debug.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -167,9 +167,7 @@ block(u:lst[n],bn:b&^u,b:facsum(bn,allblds))),bout:b))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the function for the reciprocal of the arbitrary basis;
-usage ref.
-LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+reciprocb_debug.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -188,14 +186,17 @@ ldisplay(wkr,wkth)$
 /* [wxMaxima: input   start ] */
 reciprocb(bcov):=block([x,i,j,lst,excl,bld,nj,bcon],
 local(x,i,j,lst,excl,bld,nj,bcon),
-bcon:makelist(concat(x,i),i,1,Plen),
-for j:1 thru Plen do
+lst:bcov,
+if emptyp(lst) then return(1) else 
+block(len:length(lst),
+bcon:makelist(concat(x,i),i,1,len),
+for j:1 thru len do
 block(lst:bcov,
 excl:bcov[j],
 lst:delete(excl,lst),
 bld:list2vecouter(lst),
 nj:(j-1),
-bcon[j]:(-1)^nj*bld&*Ii),
+bcon[j]:(-1)^nj*bld&*Ii)),
 bcon)$
 /* [wxMaxima: input   end   ] */
 

@@ -4,7 +4,7 @@
 /* [wxMaxima: comment start ]
 left_inner_product_duality.wxm
 
-GNU General Public License 2013  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -51,11 +51,12 @@ load("scifac")$
 
 /* [wxMaxima: comment start ]
 batchload GA specific (maxima) function files;
-the initialization file, maxima-init.mac is in the /home directory 
-and contains the variable, maxima_userdir, and this allows the paths
-in file_search_maxima to be extended to point to the GA functions
-ldisplay(maxima_userdir)$
    [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 batchload("gafns0")$
@@ -68,51 +69,77 @@ batchload("gafns6")$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the pseudoscalar and its inverse
-the lowest useable dimension pseudoscalar should be e1~e2 i.e. Plen = 2
-global parameters, Pseudos, Pvar[] and Plen, I and Ii
+batchload GC specific (maxima) function files;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-Pseudos:e1~e2~e3$
+batchload("gcfns1")$
+batchload("gcfns2")$
+batchload("gcfns3")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
 Pvar:listofvars(Pseudos)$
 Plen:length(Pvar)$
 I:Pseudos$
 ni:(Plen-1)*Plen/2$
 Ii:(-1)^ni*I$
 kill(ni)$
-ldisplay(Pvar,Plen,I,Ii)$
+ldisplay(Pvar)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-global array parameters 
-lstbases[], nbases[], maxnbases
+initialize this list with the only list we have so far; Pvar
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-array(lstbases,Plen)$
+lstbases:makelist(Pvar[n],n,1,Plen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the integer array, nbases (n:0,...3) is used for grader(M) in gafns4.wxm;
+in order to use the same indices for the lists, (n:1,...3) define it using function array()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
 array(nbases,Plen)$
 eset:setify(Pvar)$
 for ng:1 thru Plen do
 block(nbases[ng]:combination(Plen,ng),
 lstbases[ng]:full_listify(powerset(eset,ng)))$
 maxnbases:(combination(Plen,floor(Plen/2)))$
+nbases[0]:1$    /*an array index zero cannot be used to index any of the lists*/
+ldisplay(lstbases)$
 kill(eset,ng)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-global arrays nbases[] and lstblds[] are used for grader(M) in gafns4.wxm
-lstblds[] is an array of lists of blades and allblds[] is a list of all blades
+initialize this list again with Pvar
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-array(lstblds,Plen)$
+lstblds:makelist(Pvar[n],n,1,Plen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the list named lstblds is used for grader(M) in gafns4.wxm;
+lstblds is an list of lists of blades and allblds is a list of all blades
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
 for ng:1 thru Plen do
 block(lstb:lstbases[ng],
 lstblds[ng]:makelist(list2blade(lst),lst,lstb))$
 allblds:[]$
 for ng:1 thru Plen do
 block(allblds:append(allblds,lstblds[ng]))$
+ldisplay(lstblds)$
 ldisplay(allblds)$
 kill(lstb,ng)$
 /* [wxMaxima: input   end   ] */

@@ -4,7 +4,7 @@
 /* [wxMaxima: comment start ]
 gcfns3.wxm
 
-GNU General Public License 2017  Stephen Athel Abbott.
+GNU General Public License 2019  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -12,8 +12,10 @@ initialization of Geometric Algebra wxMaxima documents
 contains...
 function lst2outer() definition to form an expression for the outer product 
 of a list of vectors
-function reciprocM() definition to form the reciprocal of the outer product 
-of a list of basis vectors for any dimension manifold in any higher dimension vector space
+function reciprocM() definition to form the reciprocal of a list of basis vectors
+for any dimension manifold in any higher dimension vector space
+function vectordelM() definition to form the vector derivative on a manifold 
+using the output from function reciprocM()
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
