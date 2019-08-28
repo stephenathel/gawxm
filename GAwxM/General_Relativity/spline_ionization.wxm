@@ -1,0 +1,32 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: input   start ] */
+load(interpol)$
+fpprintprec:4$
+data:[[1200,0.000050],[1500,0.000053],[2000,0.000123],[2500,0.00092],
+[3000,0.0098],[3500,0.072],[4000,0.40],[4500,0.92],[5000,0.996]];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+cspline(data);
+f(x):=''%$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load(draw)$  /* load draw package */
+/* Plotting interpolating function */
+      draw2d(
+        color      = red, 
+        explicit(f(x),x,1000,5000),
+        point_size = 3,
+        color      = blue,
+        points(data))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+map(f,[4200,4500]);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
