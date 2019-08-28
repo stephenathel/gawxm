@@ -1,0 +1,210 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+ctensor_christoffel.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Ref: The Survey, paragraph 4.1.2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Use of ctensor functions christof()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The Survey, para.4.1.3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+show the flat spacetime required for the imitation of G(1,3), where we have used the fourth
+axis, e4, for the time axis and the intrinsic maxima imaginary, %i, for the space axes
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g1:%i*{e1}$
+g2:%i*{e2}$
+g3:%i*{e3}$
+g4:{e4}$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the spacetime coordinate vector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xb:x*g1+y*g2+z*g3+t*g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The Survey, paragraph 4.1.2, suggests a spacetime split using the geometric product, here
+that is xb&*g4; we could call this the split spacetime coordinate, splxb
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+splxb:xb&*g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the actual split into time and space
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+realpart(splxb);
+imagpart(splxb);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+in order to unsplit the split spacetime we postmultiply by the inverse of g4 (that also
+occurs in the global list, invblds[] as {e4})
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+invg4:g4/normod(g4)^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+to recover the spacetime coordinate vector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+splxb&*invg4;
+is(equal(%,xb));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for any 3D point vector, p, in a flat spacetime
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p:x*{e1}+y*{e2}+z*{e3}$
+normp:normod(p)$
+ldisplay(normp)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for a flat spacetime
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[x,y,z,t];
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+declare(a,real,b,real);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gs:-(1+a(t))$
+gt:+(1-b(t))$
+lg:matrix([gs,0,0,0],[0,gs,0,0],[0,0,gs,0],[0,0,0,gt]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the contravariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ug:invert_by_lu(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(ug);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Christoffel tensor of the second kind
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rational simplification
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratchristof:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the third index is the contravariant index of the symmetric affine connection
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+christof(mcs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
