@@ -1,0 +1,8 @@
+userdir:"C:/Maxima_user/"$
+wxMuserdir:userdir$
+fylenames:simplode([wxMuserdir,"GAwxM/GA_functions/###.wxm"])$
+file_search_maxima: append (file_search_maxima,[fylenames])$
+fylenames:simplode([wxMuserdir,"GAwxM/GC_functions/###.wxm"])$
+file_search_maxima: append (file_search_maxima,[fylenames])$
+fylenames:simplode([wxMuserdir,"GAwxM/GA_GC_initialize/###.wxm"])$
+file_search_maxima: append (file_search_maxima,[fylenames])$
