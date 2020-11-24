@@ -2,15 +2,23 @@
 /* [ Created with wxMaxima version 12.04.0 ] */
 
 /* [wxMaxima: comment start ]
-exponential_multivector.wxm
+work_mvrev_function.wxm
 
-GNU General Public License 2019  Stephen Athel Abbott.
+GNU General Public License 2020  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A development document for Geometric Algebra using wxMaxima
+A short development document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
 
-Source code for function mvexp()
+use of the early Initialization template to show retrospective development 
+of the function mvrev(); some testing of ratprint and rational approximation
+shows little loss of precision for the given decimal multivector coefficients;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -140,111 +148,131 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-exponential function...
-the first input is any multivector M (including scalar, a)
-the second input is a non-negative integer, the highest index 
-in the exponential sum (e.g. n=3 for full grade algebraic multivectors or
-n=7 for numerical bivectors gives an accuracy of 4 decimal places)
+develop the function mvrev();
+maxima seems to perform high precision integer arithmetic using rational
+approximation; this may not be apparent when using GAwxM for algebra with
+rational coefficients; for floating point numerical calculations refer
+to document...work_mvrevfp_function.wxm;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the multivector reverse code; 
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp_code(M,n):=block([Mp,sum,num],
-local(Mp,sum,num),
-if integerp(n) then block(
-if n<0 then return(false)
-elseif n=0 then return(1)
-elseif n=1 then return(1+M)
-else block(Mp:M,sum:1+M,num:2,
-loop,Mp:Mp&*M,Mp:1/num*Mp,
-sum:sum+Mp,sum:facsum(sum,allblds),
-num:num+1,
-if num=n+1 then return(sum),
-go(loop)))
-else return(false))$
+mvrev_code(M):=block([arrprj,arrA,denM,r,s,ndx,revM],
+local(arrprj,arrA,denM,r,s,ndx,revM),
+arrprj:grader(M),
+arrA:make_array(any,Plen+1),
+arrA[0]:arrprj[0],
+arrA[1]:arrprj[1],
+for r:2 thru Plen do
+block(ndx:r*(r-1)/2,arrA[r]:(-1)^ndx*arrprj[r]),
+denM:arrprj[Plen+1],
+remarray(arrprj),
+revM:0,
+for s:0 thru Plen do
+block(revM:revM+arrA[s]),
+revM/denM)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that the input index is tested and that scalar, a, is handled
+control the display of decimal places for decimal fractions (no trailing zeros)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp_code(a,0);
-mvexp_code(a,1);
-mvexp_code(a,-1);
-mvexp_code(a,1.1);
-mvexp_code(a,5);
+fpprintprec:6;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that base products are resolved before being used in mvexp_code()
+display the default value of ratprint 
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-B:b*{e1}~*{e2};
-mvexp_code(B,2);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-C:c1*{e1}~^{e2}+c2*{e2}~^{e3};
-mvexp_code(C,3);
+ldisplay(ratprint)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the tests with mixed grade multivectors are also a strong test for geomp()
-i.e. &* in mvexp_code()
+create practical decimal coefficients using a few familiar bivector angles...
    [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-lstgA:[2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-mvexp_code(A,0);
-mvexp_code(A,1);
-mvexp_code(A,2);
-mvexp_code(A,3);
-/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-tests a few bivector angles
+although there are many calls to the geomp() function, within function mvexp(),
+the %pi is retained along with the integer arithmetic in the factorial fractions;
+even though ratprint is true, geomp() does not generate any rational 
+approximation notifications; maybe experiment with the number of terms in mvexp();
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-bv:{e1,e2}*%pi/3$
-mvexp_code(bv,7);
-expand(ev(%,numer));
-kill(bv)$
+bv1:{e1,e2}*%pi/3$
+mvexp(bv1,7);
+ebv1:expand(ev(%,numer))$
+ldisplay(ebv1)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 theta:%pi/4$
-ibv:{e2,e3}$
-mvexp_code(ibv*theta,7);
-expand(ev(%,numer));
-kill(ibv,theta)$
+bv2:{e2,e3}$
+mvexp(bv2*theta,7);
+ebv2:expand(ev(%,numer))$
+ldisplay(ebv2)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-and finally test the function mvexp() in file, gafns6.wxm
+however, here the function, geomp(), in fact, displays the approximations;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-theta:%pi/2$
-ibv:{e1,e3}$
-mvexp(ibv*theta,9);
-expand(ev(%,numer));
-kill(ibv,theta)$
+ebv1&*ebv2;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-create a long expression from a full grade multivector
+the product of the rotation bivectors;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-lstgA:[0,1,2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-expA:mvexp(A,3)$
-ldisplay(expA)$
+bvp:expand(ev(%,numer));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now using these decimal fractions, mvrev_code() generates the rational 
+approximation notifications;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvrev_code(bvp);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the multivector reverse, the bivectors have reversed signs;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+revbvp:expand(ev(%,numer));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the reverse of the geometric product is nearly equal
+to the juxtaposed product of the reverses for the given decimal coefficients;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+rev1:mvrev_code(ebv1)$
+rev2:mvrev_code(ebv2)$
+rev2&*rev1$
+rev21:expand(ev(%,numer));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the difference is close to the default floating point precision, fpprec;
+this shows that there is little loss of precision in function mvrev();
+we are, however, using low precision (n=7) values for the bivector angles;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(fpprintprec,fpprec)$
+drev:revbvp-rev21;
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

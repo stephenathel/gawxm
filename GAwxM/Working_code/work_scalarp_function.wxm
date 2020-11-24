@@ -2,15 +2,23 @@
 /* [ Created with wxMaxima version 12.04.0 ] */
 
 /* [wxMaxima: comment start ]
-exponential_multivector.wxm
+work_scalarp_function.wxm
 
-GNU General Public License 2019  Stephen Athel Abbott.
+GNU General Public License 2020  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-A development document for Geometric Algebra using wxMaxima
+A short development document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
 
-Source code for function mvexp()
+use of the early Initialization template to show retrospective development 
+of the functions normod() and scalarp(); includes some testing of
+ratprint and maxima rational approximation;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -140,111 +148,91 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-exponential function...
-the first input is any multivector M (including scalar, a)
-the second input is a non-negative integer, the highest index 
-in the exponential sum (e.g. n=3 for full grade algebraic multivectors or
-n=7 for numerical bivectors gives an accuracy of 4 decimal places)
+develop the functions normod(), scalarp();
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function to find the scalar product of two multivectors
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp_code(M,n):=block([Mp,sum,num],
-local(Mp,sum,num),
-if integerp(n) then block(
-if n<0 then return(false)
-elseif n=0 then return(1)
-elseif n=1 then return(1+M)
-else block(Mp:M,sum:1+M,num:2,
-loop,Mp:Mp&*M,Mp:1/num*Mp,
-sum:sum+Mp,sum:facsum(sum,allblds),
-num:num+1,
-if num=n+1 then return(sum),
-go(loop)))
-else return(false))$
+scalarp_code(M,N):=block([Mrev,G,arrprj,arrS,denG],
+local(Mrev,G,arrprj,arrS,denG),
+Mrev:mvrev(M),
+G:Mrev&*N,
+arrprj:grader(G),
+arrS:make_array(any,Plen+2),
+fillarray(arrS,arrprj),
+denG:arrprj[Plen+1],
+remarray(arrprj),
+arrS[0]/denG)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that the input index is tested and that scalar, a, is handled
+debug line for scalarp_code()...ldisplay(Mrev,G),...after...G:Mrev&*N;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+function to find the norm (modulus) of a multivector
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp_code(a,0);
-mvexp_code(a,1);
-mvexp_code(a,-1);
-mvexp_code(a,1.1);
-mvexp_code(a,5);
+normod_code(M):=block([spM],
+local(spM),
+spM:scalarp_code(M,M),
+sqrt(spM))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that base products are resolved before being used in mvexp_code()
+control the display of decimal places for decimal fractions (no trailing zeros)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-B:b*{e1}~*{e2};
-mvexp_code(B,2);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-C:c1*{e1}~^{e2}+c2*{e2}~^{e3};
-mvexp_code(C,3);
+fpprintprec:16$
+ldisplay(fpprintprec,fpprec,ratprint)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the tests with mixed grade multivectors are also a strong test for geomp()
-i.e. &* in mvexp_code()
+the integer input to function mvexp() was adjusted to the smallest
+value (n=15) that displays all the same sig. figs. for the two coefficients;
    [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-lstgA:[2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-mvexp_code(A,0);
-mvexp_code(A,1);
-mvexp_code(A,2);
-mvexp_code(A,3);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-tests a few bivector angles
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-bv:{e1,e2}*%pi/3$
-mvexp_code(bv,7);
-expand(ev(%,numer));
-kill(bv)$
-/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
 theta:%pi/4$
-ibv:{e2,e3}$
-mvexp_code(ibv*theta,7);
-expand(ev(%,numer));
-kill(ibv,theta)$
+bv:{e2,e3}$
+mvexp(bv*theta,15)$
+ebv:expand(ev(%,numer))$
+ldisplay(ebv)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-and finally test the function mvexp() in file, gafns6.wxm
+the multivector product, geomp() within the function scalarp_code() gives the 
+rational approximation notifications and a rational result;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-theta:%pi/2$
-ibv:{e1,e3}$
-mvexp(ibv*theta,9);
-expand(ev(%,numer));
-kill(ibv,theta)$
+scalarp_code(ebv,ebv);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-create a long expression from a full grade multivector
+the usage can include ratprint:false$ and the result is then still rational;
+the floating point value of the difference from unity is then shown;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-lstgA:[0,1,2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-expA:mvexp(A,3)$
-ldisplay(expA)$
+ratprint:false$
+scalarp_code(ebv,ebv);
+float(1-%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+finally test the function normod() in file, gafns5.wxm with good precision;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(fpprintprec,fpprec,ratprint)$
+normod(ebv)$
+float(1-%);
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */

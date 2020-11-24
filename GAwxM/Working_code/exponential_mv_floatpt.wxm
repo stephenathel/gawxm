@@ -2,15 +2,21 @@
 /* [ Created with wxMaxima version 12.04.0 ] */
 
 /* [wxMaxima: comment start ]
-exponential_multivector.wxm
+exponential_mv_floatpt.wxm
 
-GNU General Public License 2019  Stephen Athel Abbott.
+GNU General Public License 2020  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
 A development document for Geometric Algebra using wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
 
-Source code for function mvexp()
+Test the code for function mvexpfp() for floating point exponential code
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -139,12 +145,19 @@ kill(lstb,ng)$
 end of Initialization
    [wxMaxima: comment end   ] */
 
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+
+fpprintprec:6$
+/* [wxMaxima: input   end   ] */
+
 /* [wxMaxima: comment start ]
-exponential function...
+algebraic (integer) exponential function...(for reference,
+from the document...exponential_multivector.wxm)
 the first input is any multivector M (including scalar, a)
 the second input is a non-negative integer, the highest index 
-in the exponential sum (e.g. n=3 for full grade algebraic multivectors or
-n=7 for numerical bivectors gives an accuracy of 4 decimal places)
+in the exponential sum (e.g. n=7 for numerical bivectors may give
+an accuracy of 4 decimal places)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -164,87 +177,108 @@ else return(false))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that the input index is tested and that scalar, a, is handled
+floating point exponential function...
+maxima performs high precision integer arithmetic in preference to floating point; 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+if the code were to contain lines... 
+ratprint:false...ratprint:true then we could leave ratprint:true intact after use;
+e.g.
+else block(ratprint:false,Mp:fpM,sum:1+fpM,num:2,
+loop,Mp:Mp&*fpM,Mp:1/num*Mp,
+sum:sum+Mp,sum:facsum(sum,allblds),
+num:num+1,
+if num=n+1 then return(sum),
+go(loop)),ratprint:true,
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-mvexp_code(a,0);
-mvexp_code(a,1);
-mvexp_code(a,-1);
-mvexp_code(a,1.1);
-mvexp_code(a,5);
+mvexpfp_code(M,n):=block([fpM,Mp,sum,num],
+local(fpM,Mp,sum,num),
+if integerp(n) then block(fpM:float(M),
+if n<0 then return(false)
+elseif n=0 then return(1)
+elseif n=1 then return(1+fpM)
+else block(Mp:fpM,sum:1+fpM,num:2,
+loop,Mp:Mp&*fpM,Mp:1/num*Mp,
+sum:sum+Mp,sum:facsum(sum,allblds),
+num:num+1,
+if num=n+1 then return(sum),
+go(loop)),
+expand(ev(sum,float)))
+else return(false))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-shows that base products are resolved before being used in mvexp_code()
+however, here the usage controls ratprint outside of the function, for clarity
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-B:b*{e1}~*{e2};
-mvexp_code(B,2);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-C:c1*{e1}~^{e2}+c2*{e2}~^{e3};
-mvexp_code(C,3);
+ratprint;
+ratprint:false;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-the tests with mixed grade multivectors are also a strong test for geomp()
-i.e. &* in mvexp_code()
+show that the input index is tested and that scalar, a, is handled
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-lstgA:[2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-mvexp_code(A,0);
-mvexp_code(A,1);
-mvexp_code(A,2);
-mvexp_code(A,3);
+a:log(2)$
+mvexpfp_code(a,0);
+mvexpfp_code(a,1);
+mvexpfp_code(a,-1);
+mvexpfp_code(a,1.1);
+mvexpfp_code(a,5);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-tests a few bivector angles
+test a few bivector angles
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
 bv:{e1,e2}*%pi/3$
-mvexp_code(bv,7);
-expand(ev(%,numer));
+mvexpfp_code(bv,7);
 kill(bv)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-theta:%pi/4$
-ibv:{e2,e3}$
-mvexp_code(ibv*theta,7);
-expand(ev(%,numer));
+ibv:{e2,e3}*%pi/4$
+mvexpfp_code(ibv,7);
 kill(ibv,theta)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-and finally test the function mvexp() in file, gafns6.wxm
+the inclusion of n=13 and/or a small value blade coefficient can
+exercise the floating point code
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-theta:%pi/2$
-ibv:{e1,e3}$
-mvexp(ibv*theta,9);
-expand(ev(%,numer));
-kill(ibv,theta)$
+bv:{e2,e3}*%pi/4+1e-6*{e1,e3}$
+ldisplay(bv)$
+mvexpfp_code(bv,13);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-create a long expression from a full grade multivector
+test the function mvexpfp() in file, gafns6.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-lstgA:[0,1,2,3]$
-nameA:"A"$
-makelistgrademv(nameA,lstgA)$
-expA:mvexp(A,3)$
-ldisplay(expA)$
+bv:{e2,e3}*%pi/4+1e-6*{e1,e3}$
+ldisplay(bv)$
+mvexpfp(bv,13);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the original exponential function...mvexp(),larger values of n and/or 
+coefficients with orders of magitude difference, have shown the 
+maxima integer arithmetic becoming overwhelmed; see below...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bv:{e2,e3}*%pi/4+1e-6*{e1,e3}$
+ldisplay(bv)$
+mvexp(bv,13);
 /* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
