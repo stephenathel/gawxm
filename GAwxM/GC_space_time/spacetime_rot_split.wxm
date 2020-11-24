@@ -2,19 +2,19 @@
 /* [ Created with wxMaxima version 12.04.0 ] */
 
 /* [wxMaxima: comment start ]
-space_time_para_4.1.2.wxm
+spacetime_rot_split.wxm
 
-GNU General Public License 2019  Stephen Athel Abbott.
+GNU General Public License 2020  Stephen Athel Abbott.
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
 An application document for Geometric Algebra using wxMaxima
 
-Ref: The Survey, para.4.1.2,
+Ref: The Survey, paragraph 4.1.3
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-investigate the use of the fourth axis, g4 = e4 to imitate G(1,3)
+Use of G(1,3) for splitting the rotated vector
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
@@ -53,20 +53,23 @@ end of Initialization
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-set derivabbrev:false$
+floating point print (display) precision
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-derivabbrev:false$
+fpprintprec:6$
+ratprint:false$
+ldisplay(fpprintprec,fpprec,ratprint)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-The Survey, ref. para 4.1.2
-investigate the use of the fourth axis with g4 = e4
+The Survey, para.4
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-in order to imitate G(1,3) use these gammas
+show the spacetime gammas required for the imitation of G(1,3), where, to avoid the use 
+of gamma_zero, we have used the fourth axis, e4, for the time axis and the intrinsic
+maxima imaginary, %i, for the space axes
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -77,18 +80,7 @@ g4:{e4}$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-allocate the inner products to definite axes for G(1,3) using g4 as the time axis
-   [wxMaxima: comment end   ] */
-
-/* [wxMaxima: input   start ] */
-g1&.g1;
-g2&.g2;
-g3&.g3;
-g4&.g4;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: comment start ]
-the spacetime coordinate vector using these gammas
+the spacetime coordinate vector using the gammas
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -96,66 +88,71 @@ x:x1*g1+x2*g2+x3*g3+t*g4;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-examine a spacetime split using g4 = e4
+spacetime vector rotation for a simple velocity, vel*vhat (= vel*g1)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-x&^g4$
-space:collectterms(%,%i);
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-time:x&.g4;
+vel:0.8$
+alpha:atanh(vel)$
+ahalf:alpha/2;
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-now specify some "sigma" bivectors (printed bold although they are bivectors)
+form the rotation bivector
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-s1:g1&^g4;
-s2:g2&^g4;
-s3:g3&^g4;
+vhat:g1$
+B:vhat&*g4*ahalf$
+ev(%,numer,expand);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-b(old)x space using the sigmas
+form the left and right exponential multipliers
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-x1*s1+x2*s2+x3*s3$
-bx:collectterms(%,%i)$
-is(equal(bx,space))$
-ldisplay(%,bx)$
+mvexp(-B,13)$
+lexp:ev(%,numer,expand);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+mvexp(+B,13)$
+rexp:ev(%,numer,expand);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-typical sigma products
+find the rotated spacetime vector, xbar, para. 4.1.3;
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-s1&*s1;
-s2&.s3;
-/* [wxMaxima: input   end   ] */
-
-/* [wxMaxima: input   start ] */
-s1&*s3;
-s3&*s1;
+lexp&*x&*rexp$
+ev(%,numer,expand)$
+xbar:collectterms(%,e1,e4);
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-using the spacetime coordinate vector, x from above;
-compute...to find the spacetime interval used in para.4.1.2;
+The Survey, paragraph 4.1.2, suggests a spacetime split using 
+the geometric product; x&*gamma_zero, thus, using our g's as the gammas, that 
+is x&*g4; we could call this the split (rotated) spacetime coordinate, splx
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
-x&*x;
+xbar&*g4$
+ev(%,numer,expand)$
+splx:collectterms(%,e1,e4)$
+ldisplay(splx)$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
-so the above coordinate vector, x could be used to imitate G(1,3) 
-with g4 as the worldline tangent vector
+for this imitation of G(1,3), the split of the rotated spacetime coordinate
+into time and space (using the sigma bivectors as the G(3) basis) is...
    [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+realpart(splx);
+imagpart(splx);
+/* [wxMaxima: input   end   ] */
 
 /* Maxima can't load/batch files which end with a comment! */
 "Created with wxMaxima"$
