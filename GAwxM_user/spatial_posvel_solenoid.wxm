@@ -1,0 +1,315 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+spatial_posvel_solenoid.wxm
+
+GNU General Public License 2020  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Ref: The Survey, paragraph 4.1
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Use of G(1,3) for a solenoid leading to a re-examination of function normod()
+and its dependant functions, mvrev() and scalarp() for use with numerical
+expressions other than those used for initial development...
+ref. work_normod_function.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+definition of the geometry of an ideal solenoid: the separation of consecutive 
+turns of wire must produce the ideal closed path; this gives a model of the 
+motion of an electron around one cycle of the solenoid; the geometry is 
+confirmed by finding averages from both the velocity integral and the spatial
+scalar product integral;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+floating point print (display) precision
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fpprintprec:6$
+ratprint:false$
+ldisplay(fpprintprec,fpprec,ratprint)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use inertial time to parametrize the motion of an electron around a macroscopic
+toroidal solenoid; the geometry of the turns of wire in the coil and the timing
+must be ideal so that the electron path is closed and could repeat if needed;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+describe the geometry of the solenoid: the axis of the turns of wire is a circle
+and has torus radius, k metres, and the coil radius is a metres; the separation of 
+consecutive turns of wire, b metres, must produce the ideal closed path; for 
+an ideal closed path and an integer number of turns, n, we need n*b = 2*%pi*k
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+b:2*%pi*k/n$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+let the angular frequency of the electron around a turn of wire be omega rad/s 
+and the arc length along the circular axis of the coil be s metres;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+s:b*omega*t/(2*%pi)$
+ldisplay(s)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for coordinates (u, v), moving on the axis of the turns of wire, with u outwards
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+u:a*cos(omega*t)$
+v:a*sin(omega*t)$
+ldisplay(u,v)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the torus itself, the cylindrical coordinates have the z axis through 
+the centre, perpendicular to the plane of the torus and theta is the angle
+around that axis so s = k*theta;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+r:k+u$
+theta:s/k$
+z:-v$
+ldisplay(r,theta,z)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+inertial spatial position within the wire of the solenoid
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x1:r*cos(theta)$
+x2:r*sin(theta)$
+x3:z$
+ldisplay(x1,x2,x3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The Survey, para.4.1.2
+use the fourth axis, e4, for the time axis and the intrinsic
+maxima imaginary, %i, for the space axes
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g1:%i*{e1}$
+g2:%i*{e2}$
+g3:%i*{e3}$
+g4:{e4}$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the inertial spacetime coordinate vector using the gammas
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x4:t$
+x:x1*g1+x2*g2+x3*g3+x4*g4$
+ldisplay(x)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+prepare for numerical calculations; function mvexp() generates rational numbers;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+fpprintprec:6$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the electron speed, esp in metres/sec; 
+select the solenoid geometry and find omega
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vel:0.8$
+c:3e+8$
+esp:vel*c$
+k:0.08$
+a:0.02$
+omega:esp/a$
+n:360$
+ldisplay(omega)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the spacing of each pair of the n turns of wire (in metres)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numer:true$
+b:ev(b,eval)$
+ldisplay(b)$
+numer:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the inertial spacetime velocity vector, vi
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vi:diff(x,t)$
+ldisplay(vi)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the duration of one cycle of the solenoid (around the n turns of wire)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numer:true$
+n*2*%pi/omega$
+T:ev(%,eval)$
+ldisplay(T)$
+numer:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+set the time to the end of one solenoid cycle to check the position and time
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numer:true$
+t:T$
+xT:ev(x,eval)$
+ldisplay(xT)$
+numer:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the inertial spatial velocity vb(old) at the same time, T
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+vb:imagpart(vi)$
+ldisplay(vb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+at time T, vbT has a component, 0.8c m/s in the negative z direction 
+and also an in-plane component, 3.3e6 m/s around the circular axis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numer:true$
+vbT:ev(vb,eval)$
+ldisplay(vbT)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+truncate blades that have very small coefficients before further computation;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+modv:normod(vbT)$
+ratprint:false$
+trunc:1e-6*modv$
+sum:0$
+for na:1 thru Plen do
+block(ebase:allblds[na],
+vn:vbT&.ebase,
+if abs(vn)>trunc then
+block(sum:sum+vn*ebase))$
+ev(sum,eval)$
+vbT:expand(%)$
+ldisplay(vbT)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+re-establish the variable parameter, t and show the value of ratprint
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+kill(t);
+ratprint;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the 3D spatial position, xb(old) at parameter (time), t
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xb:imagpart(x)$
+ldisplay(xb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the 3D spatial velocity vb(old) at parameter (time), t
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(vb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+create the velocity function, bv at parameter (time), t
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expr:ev(vb,eval,expand)$
+define(bv(t),expr);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the average velocity measured from the origin in metres/sec (close to zero)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Jv:integrate(bv(t),t,0,T)$
+Jv/T$
+expand(%)$
+ev(%);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
