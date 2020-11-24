@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 11.08.0 ] */
+/* [ Created with wxMaxima version 12.04.0 ] */
 
 /* [wxMaxima: comment start ]
 gafns6.wxm
@@ -13,6 +13,7 @@ contains...
 definition of the arglst() function 
 definition of the bldexp() function 
 definition of the mvexp() function
+definition of the mvexpfp() function (floating point, 2020)
 definition of the pauser() function (changed from any to fixnum, 2019)
    [wxMaxima: comment end   ] */
 
@@ -85,7 +86,9 @@ n=7 for numerical bivectors gives an accuracy of near 4 decimal places)
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
-this function is developed using exponential_multivector_code.wxm
+this function is developed using the document...exponential_multivector.wxm;
+larger values of n may show the maxima integer arithmetic becoming overwhelmed;
+then see below...function mvexpfp()
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
@@ -105,8 +108,42 @@ else return(false))$
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
+floating point exponential function...
+this function is developed using the document...exponential_mv_floatpt.wxm;
+maxima seems to perform high precision integer arithmetic 
+in preference to floating point so the usage needs to suppress
+the default display of the rational approximations arising within the loop
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+usage...
+ratprint;
+ratprint:false;
+a:log(2)$
+mvexpfp_code(a,5);
+optional line...ratprint:true;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+mvexpfp(M,n):=block([fpM,Mp,sum,num],
+local(fpM,Mp,sum,num),
+if integerp(n) then block(fpM:float(M),
+if n<0 then return(false)
+elseif n=0 then return(1)
+elseif n=1 then return(1+fpM)
+else block(Mp:fpM,sum:1+fpM,num:2,
+loop,Mp:Mp&*fpM,Mp:1/num*Mp,
+sum:sum+Mp,sum:facsum(sum,allblds),
+num:num+1,
+if num=n+1 then return(sum),
+go(loop)),
+expand(ev(sum,float)))
+else return(false))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
 this function is used to pause between plots when gnuplot reuses the same window;
-it is developed in left_inner_short_tests.wxm
+it is developed in... left_inner_short_tests.wxm
    [wxMaxima: comment end   ] */
 
 /* [wxMaxima: comment start ]
