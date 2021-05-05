@@ -1,0 +1,180 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_deriv_grad_Theorem5.6_xh.wxm
+
+GNU General Public License 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Theorem 5.6, VAGC page 59 to show how the directional derivative is related to the
+gradient using the vector notation for the direction, h and the coordinate, x
+Also indicates how a gradient operator may be formed
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.6,
+VAGC page 59
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+coefficients of the vector, h
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+hlst:[h1,h2,h3,0,0,0,0]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+coefficients of the vector, x
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xlst:[x1,x2,x3,0,0,0,0]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate and direction vectors from the lists of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+eJ:allblds$
+lenlst:2^Plen-1$
+x:0$
+h:0$
+for j:1 thru lenlst do
+block(x:x+xlst[j]*eJ[j],
+h:h+hlst[j]*eJ[j])$
+ldisplay(x,h)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form a function, f(x) 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f(x):=x&*(x+3)$
+fx:ev(f(x))$
+ldisplay(fx)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the function mvderiv() to form Dhf(x)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fstr:"f(x)"$
+derivf:mvderiv(fstr,xlst,hlst)$
+ldisplay(derivf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+evaluate the directional derivative of f(x) without using the calculated value, fx
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Dhf:ev(derivf,diff)$
+ldisplay(Dhf)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm that the calculated directional derivative is related to the gradient 
+by Equation 5.2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use the function mvgrad() to form the gradient of g, as yet undefined
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fstr:"g"$
+gradg:mvgrad(fstr,xlst)$
+ldisplay(gradg)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+if the inner product code for &. treats the above gradient as a sum of terms of the form 
+base &* (scalar), then the gradient operator, gradg, may be used like a vector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form (h.grad)g
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+hinnergrad:h&.gradg;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+evaluate (h.grad)g for g=f(x)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g:f(x)$
+lhs:ev(hinnergrad,diff)$
+ldisplay(lhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm one of the equalities in Equation 5.2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,Dhf));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

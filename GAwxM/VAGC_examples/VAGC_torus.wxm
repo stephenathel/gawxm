@@ -1,0 +1,119 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_torus.wxm (VAGC examples)
+
+GNU General Public License 2014  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+The VAGC torus
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Vector and Geometric Calculus (VAGC)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC examples
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC Problem 1.2.1 
+Chapter 01, page 10, parameterize a torus with radii, R and r
+
+Again, use "xb" to represent the x vector, and find the square of the norm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+depends(xb,[phi,theta])$
+xb:(R+r*cos(phi))*(cos(theta)*{e1}+sin(theta)*{e2})+r*sin(phi)*{e3}$
+scalarp(xb,xb);
+trigreduce(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Parametric plot of the torus
+
+Set R=2 > r=1  and find the coordinates, x, y, z, using the inner product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xb$
+x:{e1}&.xb$
+y:{e2}&.xb$
+z:{e3}&.xb$
+r:1$
+R:2$
+load(draw)$
+draw(gr3d(title="",
+             dimensions=[400,400],
+             color=dark_green,
+             xtics=1,
+             ytics=1,
+             xlabel="x",
+             ylabel="y",
+             zrange=[-1,+1],
+             nticks=10,
+             parametric_surface(x,y,z,theta,0,2*%pi,phi,0,2*%pi),
+             surface_hide = true,
+             proportional_axes = xyz))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+gnuplot_close()$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(xb,x,y,z,r,R)$
+kill(xb,r)$
+remove(xb,dependency);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,121 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_div_Exercise5.9a.wxm
+
+GNU General Public License 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Exercise 5.9a, VAGC page 60 for the multivector divergence
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.9a
+VAGC page 60
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Clst:[c1,c2,c3,0,0,0,0]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+eJ:allblds$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate vector, c from the list of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lenlst:2^Plen-1$
+c:0$
+for j:1 thru lenlst do
+block(c:c+Clst[j]*eJ[j])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function, F(x)=x in Exercise 5.9a
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(c):=c$
+F:ev(F(c))$
+ldisplay(c,F)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Fstr:"F"$
+divF:mvdiv(Fstr,Clst)$
+ldisplay(divF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:ev(divF,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm that the evaluated divF is the same as the value given in the Exercise
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+n:Plen$
+rhs:n$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

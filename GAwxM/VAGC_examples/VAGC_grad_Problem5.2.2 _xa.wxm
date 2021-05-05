@@ -1,0 +1,170 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_grad_Problem5.2.2_xa.wxm
+
+GNU General Public License 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Problem 5.2.2, VAGC page 62 for the multivector gradient
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 5.2.2
+VAGC page 62
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate vector, x and the constant vector, a from the lists of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xstr:"x"$
+xlst:lstvector(xstr)$
+ldisplay(xlst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+x:makevector(xlst)$
+ldisplay(x)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+astr:"a"$
+alst:lstvector(astr)$
+ldisplay(alst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+a:makevector(alst)$
+ldisplay(a)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+eJ:allblds$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function, F(x)=xa in Problem 5.2.2a
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(x):=x&*a$
+F:ev(F(x))$
+ldisplay(x,F)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Fstr:"F"$
+gradF:mvgrad(Fstr,xlst)$
+ldisplay(gradF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:ev(gradF,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm that the evaluated gradF is the same as the value given in the Problem
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+n:Plen$
+rhs:n*a$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function, F(x)=x.a in Problem 5.2.2b but use the same gradient expression, gradF
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(x):=x&.a$
+F:ev(F(x))$
+ldisplay(F)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:ev(gradF,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs:a$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function, F(x)=x^a in Problem 5.2.2b cont.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(x):=x&^a$
+F:ev(F(x))$
+ldisplay(F)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:ev(gradF,diff);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs:(n-1)*a$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
