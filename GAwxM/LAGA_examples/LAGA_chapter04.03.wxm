@@ -1,0 +1,112 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter04.03.wxm (LAGA examples)
+ 
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Coordinates and the inner product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+LAGA examples
+Chapter 4.3
+
+let the left and right sides of an equation have values lhs and rhs
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 4.14 (Polarization identity)
+page 58
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ub:u1*{e1}+u2*{e2}+u3*{e3}$
+vb:v1*{e1}+v2*{e2}+v3*{e3}$
+lhs:ub&.vb$
+rhs:1/2*((ub+vb)&.(ub+vb)-(ub&.ub)-(vb&.vb))$
+is(equal(lhs,rhs))$
+ldisplay(lhs,rhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 4.12 (Pythagorean theorem)
+page 58
+
+if ub and vb are orthogonal then ub&.vb=0 and so lhs=0, giving the result
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:(ub+vb)&.(ub+vb)-(ub&.ub)-(vb&.vb)$
+rhs:2*ub&.vb$
+is(equal(lhs,rhs))$
+ldisplay(lhs,rhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 4.16 (Parallelogram identity)
+page 58
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ub:u1*{e1}+u2*{e2}+u3*{e3}$
+vb:v1*{e1}+v2*{e2}+v3*{e3}$
+lhs:(ub+vb)&.(ub+vb)+(ub-vb)&.(ub-vb)$
+rhs:2*(ub&.ub)+2*(vb&.vb)$
+is(equal(lhs,rhs))$
+ldisplay(lhs,rhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

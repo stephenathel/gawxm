@@ -1,0 +1,217 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter06.05problem6.5.6.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Product Properties in the geometric algebra, G3; reciprocal bases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 6.5.6 preamble (only part b of Problem 6.5.6 is treated below)
+page 115
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+first use function makelistgrademv() to make a vector
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgva:[1]$
+nameva:"va"$ 
+makelistgrademv(nameva,lstgva)$
+ldisplay(va)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now confirm the coefficients in the Fourier expansion
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+v1:va&.{e1}$
+v2:va&.{e2}$
+v3:va&.{e3}$
+ldisplay(v1,v2,v3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define the covariant basis as the orthonormal basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ecov:lstblds[1]$
+lst:ecov$
+bld:list2bldouter(lst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the orthonormal basis as a list
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+econ:reciproce(ecov)$
+econ;
+econ[1];
+econ[2];
+econ[3];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the arbitrary basis vectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgb1:[1]$
+nameb1:"b1"$ 
+makelistgrademv(nameb1,lstgb1)$
+ldisplay(b1)$
+lstgb2:[1]$
+nameb2:"b2"$ 
+makelistgrademv(nameb2,lstgb2)$
+ldisplay(b2)$
+lstgb3:[1]$
+nameb3:"b3"$ 
+makelistgrademv(nameb3,lstgb3)$
+ldisplay(b3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define an arbitrary basis, bcov:[b1,b2,b3] and test the vector outer product function
+by finding the denominator as a multiple of the pseudoscalar of the orthonormal basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bcov:[b1,b2,b3]$
+lst:bcov$
+bld:list2vecouter(lst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the (scalar) norm of the denominator to be used with the reciprocal function output
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+denext:extract(bld)$
+ldisplay(denext)$
+normden:denext[2]$
+ldisplay(normden)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the output from function reciprocb() should now be divided by normden but for
+clarity this is not shown for the complete basis, however, the second vector in
+the reciprocal basis list, for example, is given by bcon[2]/normden
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bcon:reciprocb(bcov)$
+ldisplay(bcon)$
+ldisp("")$
+bcon[1];
+bcon[2];
+bcon[3];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 6.5.6b (only)
+page 115
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+represent the reciprocal basis with the list of contravariant vectors, [bs1,bs2,bs3] 
+e.g. bs1 is "b superscript 1"
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bs1:bcon[1]/normden$
+bs2:bcon[2]/normden$
+bs3:bcon[3]/normden$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the Fourier expansion coefficients, v1, v2, and v3, used earlier to form the vector v;
+then in order to form the rhs of Eq.(6.21), first find each scalar coefficient separately
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(v1,v2,v3)$
+v:v1*{e1}+v2*{e2}+v3*{e3}$
+vs1:v&.bs1;
+vs2:v&.bs2;
+vs3:v&.bs3;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now form the rhs of Equation (6.21), using the above calculated coefficients 
+and the arbitrary, covariant (non-orthogonal) basis vectors, b1, b2, and b3
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs:vs1*b1+vs2*b2+vs3*b3$
+ldisplay(rhs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+this result is the same as the definition of va w.r.t. the orthonormal basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:va$
+is(equal(lhs,rhs))$
+ldisplay(va,%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

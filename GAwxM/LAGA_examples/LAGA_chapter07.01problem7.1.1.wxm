@@ -1,0 +1,107 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter07.01problem7.1.1.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Problems 7.1 in Project
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 7.1.1.
+page 124
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the shape of the subspace A is not relevant; find the norm of the planar circle
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+P:{e1}&^(3*{e2}+4*{e3})$
+areaP:normod(P)$
+ldisplay(P,areaP)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the subspace, A with area = 10, using the normalized plane
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A:10*P/areaP$
+ldisplay(A)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the inverse of the blade, B  as Bm1 (B to the power -1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+B:{e1}~*{e2}$
+Bm1:mvrev(B)/normod(B)^2$
+ldisplay(B,Bm1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the projection of blade A onto blade B as P = (A.B)/B and its norm (area)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+P:(A&.B)&*Bm1$
+normod(P)$
+ldisplay(P,%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

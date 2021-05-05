@@ -1,0 +1,114 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter07.03theorem7.08.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Reflect Vectors in the geometric algebra, G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 7.8
+page 128
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form the vector, a in G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstga:[1]$
+namea:"a"$ 
+makelistgrademv(namea,lstga)$
+ldisplay(a)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for k=2 in G4, form the k-blade, B
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k:2$
+lstgB:[k]$
+nameB:"B"$ 
+makelistgrademv(nameB,lstgB)$
+ldisplay(B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the inverse of B
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Bm1:mvrev(B)/normod(B)^2$
+ldisplay(Bm1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check the last equality in Eq.(7.15), creating a general expression for the 
+reflection of a vector in a plane in G4!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+(a&.B-a&^B)&*Bm1$
+lhs:facsum(%,allblds)$
+(-1)^(k+1)*B&*a&*Bm1$
+rhs:facsum(%,allblds)$
+is(equal(lhs,rhs))$
+ldisplay(%,lhs)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
