@@ -1,0 +1,25 @@
+Typos and changes for manuscript H2021050, kerr_transforms.pdf, the submitted version.
+
+The first line number is for its tex file,
+kerr_transforms.tex
+
+The second line number is for the tex file,
+kerr_transforms_typos_done.tex
+
+
+(51,51)	remove one of a pair of close-brackets from "}))^2"
+		in Equation (3)
+
+(118,118)		spelling; Schwarzchild changed to Schwarzschild
+
+(128,128)		spelling; Schwarzchild changed to Schwarzschild
+
+(172,172)	remove the word " system " and place the full-stop
+
+(192,193)	replace the line "Denominators...$r^2$." with 
+"Denominators within the final matrix were formed from Equation (16) and Equation (18)."
+
+(204,203)		spelling; Schwarzchild changed to Schwarzschild
+
+(213,212)		spelling; Schwarzchild changed to Schwarzschild
+

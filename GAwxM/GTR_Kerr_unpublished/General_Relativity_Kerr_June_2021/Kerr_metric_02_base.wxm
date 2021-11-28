@@ -1,0 +1,260 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+Kerr_metric_02_base.wxm
+
+GNU General Public License 2021  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The original 1963 Kerr metric (using R(3,1)) taken from the paper...
+Discovering the Kerr and Kerr–Schild metrics
+Roy Patrick Kerr (2008);
+
+Equn 1.26 for ds0^2; this is what Kerr has called the base metric;
+here we apply just the transformations: r+u=-t and r*cos(theta)=z;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+This file is developed from the file named ctensor_calc_Einstein.wxm. That file used 
+ctensor functions christof() and uricci() to calculate the Ricci tensor, Ricci scalar
+and hence the covariant Einstein tensor from a user defined covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+The ctensor package has been loaded within the GAwxM environment on the chance that the
+Geometric Algebra may be used at a later stage, so the GA preamble may be ignored. We 
+can jump straight to the starting comment ...Start of tensor analysis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for a rotating black hole
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the line element is given by...
+the base term (this document) + the mass term (ref. Kerr_metric_02_mass.wxm)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+declare([theta,dth,dphi],[noun,real])$
+declare([du,dt,dr,a,dz],[noun,real])$
+declare([r,phi,z,t],[noun,real])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Equation 1.26 from R.P.Kerr (1963)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2:(r^2+a^2*cos(theta)^2)*(dth^2+(sin(theta)^2*dphi^2))-
+(2*dr+du-a*sin(theta)^2*dphi)*(du+a*sin(theta)^2*dphi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2K:expand(ds2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Kerr-Schild metric shows confocal ellipsoids with the z-axis as rotation axis;
+the derivation from Kerr includes the transformations: r*cos(theta)=z and r+u=-t
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+here, for the first transformation, we just use (r+u=-t) dr+du=-dt
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+equnK:ds2K$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[du=-dt-dr]$
+equnK1:subst(%,[equnK]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extract the expression from the list output of the intrinsic function, subst()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+equnK1:%[1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the next transformation, we need to use cos(theta)*dr-r*sin(theta)*dth=dz for dth,
+since this introduces more circular functions before we substitute for those themselves; 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[dth=(dr*cos(theta)-dz)/(r*sin(theta))]$
+subst(%,[equnK1])$
+equnK2:%[1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now we also substitute cos(theta)=z/r and since the sin(theta) occurs
+as a square, there is no sign ambiguity due to the +ve sqrt() for the sine;
+the cosine lies in the interval [+1,-1], and its sign is still present in 
+the matrix elements g13 and g31 below;
+theta is measured from the spin axis (z-axis) in the range [0,pi];
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[cos(theta)=z/r,sin(theta)=+sqrt(1-(z/r)^2)]$
+subst(%,[equnK2])$
+equnK3:%[1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extract the elements of the base metric tensor in cylindrical coordinates;
+firstly, isolate numerator and denominator for the spacetime interval of the base metric;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+equnK4:facsum(%,[dr,dphi,dz,dt])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+denbase:denom(%)$
+ldisplay(denbase)$
+numbase:denbase*equnK4$
+ldisplay(numbase)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+manually rewrite the numerator output above (copy, paste and separate terms vertically)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+-dphi^2*r^2*(r^2+a^2)*(z-r)^2*(z+r)^2
++2*a*dphi*dr*r^2*(z-r)^2*(z+r)^2
+-dr^2*(a^2*z^4+r^6)
++2*dr*dz*r*z*(a^2*z^2+r^4)
+-dz^2*r^2*(a^2*z^2+r^4)
+-dt^2*r^4*(z-r)*(z+r)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the rewrite gives the same expression for the numerator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(%,numbase));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+initialize the intrinsic relativity tensor functions in ctensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[r,phi,z,t];
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the covariant base metric tensor as a matrix;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+read off and name both the diagonal and off-diagonal elements from the numerator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g11:-(a^2*z^4+r^6)$
+g22:-r^2*(r^2+a^2)*(z-r)^2*(z+r)^2$
+g33:-r^2*(a^2*z^2+r^4)$
+g44:-r^4*(z-r)*(z+r)$
+g12:+2*a*r^2*(z-r)^2*(z+r)^2$
+g21:+2*a*r^2*(z-r)^2*(z+r)^2$
+g13:+2*r*z*(a^2*z^2+r^4)$
+g31:+2*r*z*(a^2*z^2+r^4)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form a matrix from just the numerator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lg:matrix([g11,g12,g13,0],[g21,g22,0,0],[g31,0,g33,0],[0,0,0,g44]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now include the denominator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lg_base:lg/denbase;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg_base);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+determinant(lg_base)$
+g:factor(%)$
+ldisplay(g)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+so the base metric is singular at the origin and along the spin axis, r = +/-z
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

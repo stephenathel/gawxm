@@ -1,0 +1,459 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+Kerr_metric_03.wxm
+
+GNU General Public License 2021  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The original 1963 Kerr metric in cylindrical coordinates (using R(3,1));
+includes the transformations: r+u=-t and r*cos(theta)=z;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+This file is developed from the file named ctensor_calc_Einstein.wxm. That file used 
+ctensor functions christof() and uricci() to calculate the Ricci tensor, Ricci scalar
+and hence the covariant Einstein tensor from a user defined covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+The ctensor package has been loaded within the GAwxM environment on the chance that the
+Geometric Algebra may be used at a later stage, so the GA preamble may be ignored. We 
+can jump straight to the starting comment ...Start of tensor analysis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for a rotating black hole
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+declare([z,t],[noun,real])$
+declare([r,theta,phi,u],[noun,real]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Equation 1.26 from R.P.Kerr (1963)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2:(r^2+a^2*cos(theta)^2)*(dth2+(sin(theta)^2*dphi^2))-
+(2*dr+du-a*sin(theta)^2*dphi)*(du+a*sin(theta)^2*dphi);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(ds2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+identify the angular coordinate differences within the original Kerr metric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2K:facsum(%,dphi,dth2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Kerr-Schild metric shows confocal ellipsoids with the z-axis as rotation axis;
+the derivation from Kerr includes the transformations: r*cos(theta)=z and r+u=-t
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+here, we just use (r+u=-t) dr+du=-dt as for Kerr_metric_01.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+declare([t],[noun,real])$
+equnK:ds2K$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[du=-dt-dr]$
+equnK1:subst(%,[equnK]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now we also substitute cos(theta)=z/r in this file, Kerr_metric_02.wxm; since the
+circular functions occur as squares there is no sign ambiguity due to +ve sqrt();
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[cos(theta)=z/r,sin(theta)=+sqrt(1-(z/r)^2)]$
+equnK2:subst(%,[equnK1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+identify the radial and time coordinate differences
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(%)$
+facsum(%,dphi,dth2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extract the expr. and denominator from the nested list output from subst()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+%[1]$
+K2:%[1]$
+denK2:denom(K2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+work with the numerator to find dth2 as a function of z and r
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numK2:num(K2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+we need cos(theta)*dr-r*sin(theta)*dth=dz for Kerr_metric_02.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dth:(dr*cos(theta)-dz)/(r*sin(theta))$
+equndth2:dth*dth;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for dth2zr (= dth^2), again there is no sign ambiguity due to the +ve sqrt();
+find the denominator of the first term;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[cos(theta)=z/r,sin(theta)=+sqrt(1-(z/r)^2)]$
+subst(%,[equndth2])$
+dth2zr:%[1];
+dterm1:expand(denom(dth2zr));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the first term of numK2, the numerator of K2 (manual check)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+num(dth2zr)*(a^2*z^2+r^4)$
+expand(%)$
+nterm1:facsum(%,dr,dz);
+term1:nterm1/dterm1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the numerator of K2 less the first term
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+numK2 - (dth2)*(a^2*z^2+r^4);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+we do not need to recombine these terms within the separation formula in order to
+extract the elements of the covariant metric tensor in cylindrical coordinates;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+manually rewrite (copy, paste, factorize) the result above (check)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+-dphi^2*(r^2+a^2)*(z^2-r^2)+2*a*dphi*dr*(z^2-r^2)-(dt^2-dr^2)*r^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+isolate the temporal interval (check)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+-dphi^2*(r^2+a^2)*(z^2-r^2)+2*a*dphi*dr*(z^2-r^2)-dt^2*r^2+dr^2*r^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+%/denK2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+term1/denK2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+initialize the intrinsic relativity tensor functions in ctensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[r,phi,z,t];
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the covariant metric tensor as a matrix;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+read off and name both the diagonal and off-diagonal elements from K2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g11:1+z^2*(a^2*z^2+r^4)/r^4*(r^2-z^2)$
+
+g22:-(r^2+a^2)*(z^2-r^2)/r^2$
+
+g33:r^2*(a^2*z^2+r^4)/r^4*(r^2-z^2)$
+
+g44:-1$
+
+g13:-2*r*z*(a^2*z^2+r^4)/r^4*(r^2-z^2)$
+
+g31:-2*r*z*(a^2*z^2+r^4)/r^4*(r^2-z^2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the matrix at first with diagonal elements only
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lg:matrix([g11,0,g13,0],[0,g22,0,0],[g31,0,g33,0],[0,0,0,g44]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g:determinant(lg)$
+ldisplay(g)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the contravariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+using ug:invert(lg)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ug:invert(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(ug);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Christoffel tensor of the second kind
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rational simplification
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratchristof:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the third index is the contravariant index
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+christof(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the mixed Ricci tensor, uric is derived from the covariant Ricci tensor, ric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+uricci(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+lower the contravariant index of the mixed tensor, uric to form the covariant tensor, cric
+in the form of a matrix, being more familiar that the array, ric from function ricci()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cric:matrix([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0])$
+for mg:1 thru dim do
+block(
+for ng:1 thru dim do
+block(
+csum:0,
+for kg:1 thru dim do
+block(
+csum:csum+lg[kg,ng]*uric[mg,kg]),
+cric[mg,ng]:csum))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(cric);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(cric[1,1])$
+ldisplay(cric[4,4])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+calculate the Ricci scalar as the contraction of the covariant Ricci tensor, cric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+csum:0$
+for mg:1 thru dim do
+block(
+for ng:1 thru dim do
+block(
+csum:csum+ug[mg,ng]*cric[mg,ng]))$
+Rc:csum$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check against the intrinsic function for the Ricci scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Ri:scurvature()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(Rc,Ri))$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the calculated Ricci scalar, Rc to form R
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+R:facsum(Rc,operator(diff))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(R)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+half the product of the covariant metric tensor and the calculated Ricci scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+hgR:(1/2)*R*lg$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(hgR);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(hgR[1,1])$
+ldisplay(hgR[4,4])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the calculated Einstein tensor as a matrix
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gc:cric-hgR$
+matrixp(Gc);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the lhs of the 'spatial radial' field equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gs:Gc[1,1]$
+ldisplay(Gs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+facsum(Gs);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Gss:facsum(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the lhs of the 'temporal' field equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gt:Gc[4,4]$
+ldisplay(Gt)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

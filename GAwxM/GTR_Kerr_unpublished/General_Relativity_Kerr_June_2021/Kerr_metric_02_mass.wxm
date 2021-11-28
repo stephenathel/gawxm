@@ -1,0 +1,242 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+Kerr_metric_02_mass.wxm
+
+GNU General Public License 2021  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The original 1963 Kerr metric (using R(3,1)) taken from the paper...
+Discovering the Kerr and Kerr–Schild metrics
+Roy Patrick Kerr (2008);
+
+Equn 1.25 for the mass term only; this excludes what Kerr has called 
+the base metric, ds zero squared, shown in Equn 1.26;
+here we apply just the transformations: r+u=-t and r*cos(theta)=z;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+This file is developed from the file named ctensor_calc_Einstein.wxm. That file used 
+ctensor functions christof() and uricci() to calculate the Ricci tensor, Ricci scalar
+and hence the covariant Einstein tensor from a user defined covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+The ctensor package has been loaded within the GAwxM environment on the chance that the
+Geometric Algebra may be used at a later stage, so the GA preamble may be ignored. We 
+can jump straight to the starting comment ...Start of tensor analysis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for a rotating black hole
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the line element is given by...
+the base term (ref. Kerr_metric_02_base.wxm) + the mass term (this document)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+declare([theta,dth2,dphi],[noun,real])$
+declare([du,dt,dr,a,dz],[noun,real])$
+declare([r,phi,z,t],[noun,real])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Equation 1.25 from R.P.Kerr (1963)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2:2*m*r*(du+a*sin(theta)^2*dphi)^2/(r^2+a^2*cos(theta)^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+identify the angular coordinate difference within the mass term
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ds2K:facsum(%,dphi,du);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+here, to begin with, we just use (r+u=-t) dr+du=-dt
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+equnK:ds2K$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+[du=-dt-dr]$
+subst(%,[equnK]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extract the expression from the output list of the subst() function;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+equnK1:%[1];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now we also substitute cos(theta)=z/r;
+within the mass term, the angular coordinate difference, dth, does not 
+occur, so we can proceed directly to substitute for the circular functions;
+since the circular functions occur as squares there is no sign ambiguity
+due to the +ve sqrt() for sin(theta);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+[cos(theta)=z/r,sin(theta)=+sqrt(1-(z/r)^2)]$
+equnK2:subst(%,[equnK1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+extract the expression from the list output from subst() and find the denominator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+%[1]$
+K2:xthru(%)$
+denK2:denom(K2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the numerator and identify dt^2 and dr^2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+num(K2)$
+numK2:expandwrt(%,dt,dr);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+reformat the numerator to help reading off the metric elements due to the mass term
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
++2*m*a^2*dphi^2*(r^2-z^2)^2
+-4*m*a*dphi*dt*r^2*(r^2-z^2)
+-4*m*a*dphi*dr*r^2*(r^2-z^2)
++2*m*dt^2*r^4
++4*m*dr*dt*r^4
++2*m*dr^2*r^4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check that the reformat gives the same expression for the numerator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(%,numK2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+initialize the intrinsic relativity tensor functions in ctensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[r,phi,z,t];
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the partial metric tensor as a matrix; just the elements due to the mass term
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+read off and name both the diagonal and off-diagonal elements from numK2 (check)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+phioff:-4*m*a*r^2*(r^2-z^2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+g11:+2*m*r^4$
+g22:+2*m*a^2*(r^2-z^2)^2$
+g33:0$
+g44:+2*m*r^4$
+g24:phioff$
+g42:phioff$
+g21:phioff$
+g12:phioff$
+g14:+4*m*r^4$
+g41:+4*m*r^4$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the matrix at first with just the elements from the numerator
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lg:matrix([g11,g12,0,g14],[g21,g22,0,g24],[0,0,g33,0],[g41,g42,0,g44])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lg_mass:lg/denK2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg_mass);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

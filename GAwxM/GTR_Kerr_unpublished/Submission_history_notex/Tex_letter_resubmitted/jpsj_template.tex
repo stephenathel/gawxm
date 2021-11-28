@@ -1,0 +1,109 @@
+%\documentclass{jpsj3}
+%\documentclass[fp,twocolumn]{jpsj3}
+\documentclass[letter,twocolumn]{jpsj3}
+%\documentclass[letterpaper,twocolumn]{jpsj3}
+\usepackage{txfonts}
+
+
+\title{Brief Notes on Preparing \LaTeX\ Compuscript for \textit{Journal of the Physical Society of Japan}}
+
+\author{JPSJ Editorial Division$^1$\thanks{jpsj{\_}edit@jps.or.jp}, The Physical Society of Japan$^2$, and Taro Butsuri$^3$}
+\inst{$^1$2-31-22-5F Yushima, Bunkyo, Tokyo 113-0034, Japan \\
+$^2$2-31-22-8F Yushima, Bunkyo, Tokyo 113-0034, Japan \\
+$^3$2-31-22-4F Yushima, Bunkyo, Tokyo 113-0034, Japan} %\\
+
+\abst{This document briefly provides instructions on how to prepare your manuscript in \LaTeX\ format. As regards general instructions for preparing manuscripts, please refer to ``Instructions for Preparation of Manuscript", which is available at our Web site (http://jpsj.jps.jp/).}
+
+%%% Keywords are not needed any longer. %%%
+%%%\kword{keyword1, keyword2, keyword3, \ldots}
+%%%
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+You can use this file as a template to prepare your manuscript for \textit{Journal of Physical Society of Japan} (JPSJ)\cite{jpsj,instructions}. No sections or appendices should be given to other categories than Regular Papers. Key words are not necessary.
+
+Copy \verb|jpsj3.cls|, \verb|cite.sty|, and \verb|overcite.sty| onto an arbitrary directory under the texmf tree, for example, \verb|$texmf/tex/latex/jpsj|. If you have already obtained \verb|cite.sty| and \verb|overcite.sty|, you do not need to copy them.
+
+Many useful commands for equations are available because \verb|jpsj3.cls| automatically loads the \verb|amsmath| package. Please refer to reference books on \LaTeX\ for details on the \verb|amsmath| package.
+
+\section{Options}
+
+\subsection{Paper type}
+
+\verb|jpsj3.cls| has class options for paper types.  You should choose the appropriate option listed in Table~\ref{t1}.  Default (without option) is for a draft.
+
+\begin{table}
+\caption{List of options for paper types.}
+\label{t1}
+\begin{center}
+\begin{tabular}{ll}
+\hline
+\multicolumn{1}{c}{Option} & \multicolumn{1}{c}{Paper type} \\
+\hline
+\verb|ip| & Invited Review Papers \\
+\verb|st| & Special Topics \\
+\verb|letter| & Letters \\
+\verb|fp| & Full Papers \\
+\verb|shortnote| & Short Notes \\
+\verb|comment| & Comments \\
+\verb|addenda| & Addenda \\
+\verb|errata| & Errata \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\subsection{Two-column format}
+
+The \verb|twocolumn| option may help estimate the length of your manuscript particularly for Letters or Short Notes, which has a limitation of four or two printed pages each. If the \verb|txfonts| package is available in your \LaTeX\ system, you can estimate the length more accurately.
+
+\subsection{Equation numbers}
+
+The \verb|seceq| option resets the equation numbers at the start of each section.
+
+
+\begin{figure}
+%\includegraphics{fig01.eps}
+\caption{You can embed figures using the \texttt{\textbackslash includegraphics} command. EPS is the only format that can be embedded. Basically, figures should appear where they are cited in the text. You do not need to separate figures from the main text when you use \LaTeX\ for preparing your manuscript.}
+\label{f1}
+\end{figure}
+
+Label figures, tables, and equations appropriately using the \verb|\label| command, and use the \verb|\ref| command to cite them in the text as ``\verb|as shown in Fig. \ref{f1}|". This automatically labels the numbers in numerical order.
+
+\subsection{Citing literature, comments, and notes}
+
+List all the literature, comments, notes, etc., cited in the main text, using consecutive numbers.  Footnotes are not allowed in the main text.  Place numbers with a closing parenthesis in superscript to cite literature in the main text, for example, \cite{jpsj} \cite{instructions,etal}, \cite{jpsj,instructions,etal,ibid,Errata}, using the \verb|\cite{|$\cdots$\verb|}| commands. Place these citations after the punctuation mark.  Inline citations can be obtained by using the \verb|\citen{|$\cdots$\verb|}| command as ``according to Refs. \citen{jpsj,instructions,etal,ibid,Errata}.''
+
+\begin{acknowledgment}
+
+%\acknowledgment
+
+For environments for acknowledgement(s) are available: \verb|acknowledgment|, \verb|acknowledgments|, \verb|acknowledgement|, and \verb|acknowledgements|.
+
+\end{acknowledgment}
+
+\appendix
+\section{}
+
+Use the \verb|\appendix| command if you need an appendix(es). The \verb|\section| command should follow even though there is no title for the appendix (see above in the source of this file).
+
+For authors of Invited Review Papers, the \verb|profile| command is prepared for the author(s)' profile.  A simple example is shown below.
+
+\begin{verbatim}
+\profile{Taro Butsuri}{was born in Tokyo, Japan in 1965. ...}
+\end{verbatim}
+
+\begin{thebibliography}{9}
+\bibitem{jpsj} The abbreviation for JPSJ must be ``J. Phys. Soc. Jpn." \note{in the reference list}.
+\bibitem{instructions} More abbreviations of journal titles are listed in ``Instructions for Preparation of Manuscript".
+\bibitem{etal} The use of ``et al.'' is not accepted in principle, therefore, all the authors must be listed.
+\bibitem{ibid} The term ``ibid.'' should not be used even if the same journal or book is cited with different page numbers.
+\bibitem{Errata} Errata should be listed under the same reference number. 
+\end{thebibliography}
+
+
+\end{document}
+
