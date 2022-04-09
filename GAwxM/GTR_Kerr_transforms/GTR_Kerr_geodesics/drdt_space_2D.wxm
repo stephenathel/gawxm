@@ -1,0 +1,285 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+drdt_space_2D.wxm
+
+GNU General Public License 2022  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Ref: folder GTR_Kerr_transforms...
+that shows how to find the lost metrics and
+
+Ref: folder GTR_Kerr_geodesics...
+the folder for this file and other files to plot both radial 
+and glancing geodesics
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Itegration of ODEs for compact mass radial geodesics;
+The filename refers to the last of three graphs 
+(for rest frame velocity, dr by dt as v/u) and its abscissa
+(either rest frame space, r or time, t);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Ctrl-R to run then just close (click X on the graph) for each 
+graph in turn to continue the run;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Mg:4*10^6$ for the mass at the centre of the Galaxy;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fpprintprec:5$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+rg is the Schwarzschild radius in metres for a multiple, Mg,
+of the unit solar mass that has gravitational radius, 1480 metres
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Mg:4000000$
+rg:1480*Mg;
+mg:rg/2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+values for the outgoing particle radial geodesic from 2*rg to
+near zero velocity near radius, 4*rg; after which the particle would
+be ingoing;
+
+k:2.0$
+initr:+k*rg;
+initv:+0.5;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+values for the ingoing radial geodesic from 4*rg that continues down
+to near 2*rg with v near -0.46 starting with zero v;
+
+k:4.0$
+initr:+k*rg;
+initv:0.0; 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+values for the ingoing radial geodesic from 4*rg that continues down
+to 0.242*rg! with no discontinuity at the gravitational radius,
+starting with small negative v;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k:4.0$
+initr:+k*rg;
+initv:-0.1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the positive quadratic solution from Kerr_athel_2D.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+initt:0;
+initu:(sqrt(initr^2*initv^2+initr^2-2*mg*initr)+2*mg*initv)/(initr-2*mg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the unit of time is 1/c times the Schwarzschild radius
+time t / rg will be in sec/c/m i.e. dimensionless
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+n:10;
+tmax:n*rg;
+tstep:rg/n;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+domain:[tau,0,tmax,tstep];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+dr by dtau (here named as v) might be called the mixed frame velocity;
+it is not the proper velocity just because tau is the proper time;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the mixed frame form of Newton's law seems to be valid in the local 
+gravitational field;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+drdtau:v$
+dvdtau:-mg/r^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using the lost metric from file Kerr_athel_2D.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dtdtau:u$
+dudtau:-((2*mg*r+2*mg^2)*v^2+(2*mg*r+4*mg^2)*u*v+2*mg^2*u^2)/r^3;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+intrinsic Runge-Kutta integration
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstout:rk([drdtau,dvdtau,dtdtau,dudtau],[r,v,t,u],[initr,initv,initt,initu],domain)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+listp(lstout);
+lstlen:length(lstout);
+first(lstout);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+array(rvarr,lstlen,1)$
+lst:makelist(rv,i,1,2)$
+pltlst:makelist([r,v],i,1,lstlen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+for ng:1 thru lstlen do
+block(lst:makelist(rv,i,1,2),
+ext:lstout[ng],
+rout:ext[2],
+vout:ext[3],
+if abs(vout)<=3 then 
+block(rvarr[ng,0]:rout/rg,rvarr[ng,1]:vout,
+lst[1]:rout/rg,lst[2]:vout,pltlst[ng]:lst),
+pltlst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrayinfo(rvarr);
+listarray(rvarr);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+unique(pltlst)$
+rest(%,-1)$
+reverse(%)$
+pltlst:%;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot2d([discrete,pltlst],[xlabel,"radial r / rg"],[ylabel,"v is dr by dtau / c"])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the second plot
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstlen2:length(pltlst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lst2:makelist(tu,i,1,2)$
+pltlst2:makelist([t,u],i,1,lstlen2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+for ng:1 thru lstlen2 do
+block(lst2:makelist(tu,i,1,2),
+ext2:lstout[ng],
+tout:ext2[4],
+uout:ext2[5],
+vout:ext2[3],
+if abs(vout)<=3 then
+block(lst2[1]:tout/rg,lst2[2]:uout,pltlst2[ng]:lst2),
+pltlst2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+listp(pltlst2);
+first(pltlst2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+length(pltlst2);
+pltlst2[31];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot2d([discrete,pltlst2],[xlabel,"time t / rg in sec/c/m"],[ylabel,"u is dt by dtau"])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+plot2d([discrete,pltlst2],[xlabel,"cosmic time"],[ylabel,"dt_dtau"])$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the third plot for velocity versus radius
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstlen3:length(pltlst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lst3:makelist(tu,i,1,2)$
+pltlst3:makelist([t,u],i,1,lstlen3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+for ng:1 thru lstlen3 do
+block(lst3:makelist(tu,i,1,2),
+ext3:lstout[ng],
+rout:ext3[2],
+uout:ext3[5],
+vout:ext3[3],
+if abs(vout)<=3 then
+block(lst3[1]:rout/rg,lst3[2]:vout/uout,pltlst3[ng]:lst3),
+pltlst3)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+listp(pltlst3);
+first(pltlst3);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+length(pltlst3);
+pltlst3[31];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+plot2d([discrete,pltlst3],[xlabel,"radial r / rg"],[ylabel,"drdt is v/u"])$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
