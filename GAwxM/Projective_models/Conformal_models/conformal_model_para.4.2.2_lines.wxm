@@ -1,0 +1,165 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+conformal_model_para.4.2.2_lines.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization of the canonical basis lists by batchloading two files;
+
+Following section 4.2 of the summary, trying to use the intrinsic imaginary, %i to imitate G(n+1,1);
+
+Include ep(lus) and em(inus) as basis vectors in Pseudos and whenever em is used after Initialization
+it will be used as %i*{em} in order to imitate the base vector that squares to -1;
+
+para 4.2.2 just for lines in 3D
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,em,ep}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now we are ready to form the "more useful" combinations of the base vectors, with ef as e infinity, noting that 
+both e0 and ef do not occur within curly braces
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0:1/2*(%i*{em}-{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ef:(%i*{em}+{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Test them; e0&.ef is equal to -1; N.B. above, if the 1/2 factor is used for ef rather than for e0, p is again null
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0&.e0;
+ef&.ef;
+e0&.ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pb is pb(old) is pbold, the bold vector in R(n)
+p:e0+pb+1/2*pb&*pb*ef;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pb:pbx*{e1}+pby*{e2}+pbz*{e3};
+pb&.pb;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+so, as given in para. 4.2.1, p is null using equation (4.3)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p:e0+pb+1/2*pb&*pb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p&.p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+G(4,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now para.4.2.2 just for lines...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Lines...using pb (from above) and qb (below)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+qb:qbx*{e1}+qby*{e2}+qbz*{e3};
+q:e0+qb+1/2*qb&*qb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+try the direct representation 
+or maybe test the associativity of the conformal vector triple product with
+p&^(q&^ef);
+expand(%)$
+or
+(p&^q)&^ef;
+expand(%)$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p&^q&^ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the outer product of the three conformal vectors has produced a trivector expression; 
+trivectors that contain em have a coefficient that is a multiple of %i, the intrinsic imaginary that was
+introduced as %i*{em} in order to imitate the base vector that squares to -1;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rep:expand(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+rep squared means the geometric product and the role of %i is resolved within the product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rep&*rep;
+lhs:expand(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the square of Euclidean distance between the points uses the inner product of the bold vectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+(pb-qb)&.(pb-qb)$
+rhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

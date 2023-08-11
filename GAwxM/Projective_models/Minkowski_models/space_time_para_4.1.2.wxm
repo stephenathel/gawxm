@@ -1,0 +1,180 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+space_time_para_4.1.2.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Ref: The Survey, para.4.1.2,
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+investigate the use of the fourth axis, g4 = e4 to imitate G(3,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+The Survey, ref. para 4.1.2
+investigate the use of the fourth axis with g4 = e4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+in order to imitate G(3,1) use these gammas
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g1:%i*{e1}$
+g2:%i*{e2}$
+g3:%i*{e3}$
+g4:{e4}$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+allocate the inner products to definite axes for G(3,1) using g4 as the time axis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g1&.g1;
+g2&.g2;
+g3&.g3;
+g4&.g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the spacetime coordinate vector using these gammas
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x:x1*g1+x2*g2+x3*g3+t*g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+examine a spacetime split using g4 = e4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x&^g4$
+space:collectterms(%,%i);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+time:x&.g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now specify some "sigma" bivectors (printed bold although they are bivectors)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+s1:g1&^g4;
+s2:g2&^g4;
+s3:g3&^g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+b(old)x space using the sigmas
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x1*s1+x2*s2+x3*s3$
+bx:collectterms(%,%i)$
+is(equal(bx,space))$
+ldisplay(%,bx)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+typical sigma products
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+s1&*s1;
+s2&.s3;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+s1&*s3;
+s3&*s1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using the spacetime coordinate vector, x from above;
+compute...to find the spacetime interval used in para.4.1.2;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x&*x;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+G(3,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+show the associativity of g4 with g4&*g4 = 1, 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+g4&*g4;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+x&*(g4&*g4)&*x;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+(x&*g4)&*(g4&*x);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+x&*g4&*g4&*x;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
