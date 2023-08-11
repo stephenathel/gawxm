@@ -1,0 +1,216 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+Hmgeneous_model_Et.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The method is based on the use of the subspaces K and Ki as
+developed for the example in the Survey, section 4.1, page 23;
+Abbreviate the word "homogeneous" to "hmgen" for documentation
+In general "geodesic" refers to light-like geodesics with ds^2:=0;
+
+Refer to the diagram of a universe with typically 25 times the current
+volume estimate in the file...wider_world.pdf
+
+For the Expansion geodesic, E
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Projective geometry starts here
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use {e1} as the unit projection vector, e orthogonal to 3D space {e2,e3,e4} and form the unit circle;
+also confine the circle to a particular plane {e2,e4} by setting the coefficient of {e3} to zero;
+construct the points of the unit circle in R(2) using vector ab(u) for u in [0, 2*pi]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ab:cos(u)*{e2}+sin(u)*{e4}$
+ldisplay(ab)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the unit circle as an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(a(u),{e1}+cos(u)*{e2}+sin(u)*{e4});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+prescribe the pseudoscalar, K of the (hmgen model) subspace
+and find the pseudoscalar inverse, Ki
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+K:{e1,e2,e4}$
+ni:(Plen-1-1)*(Plen-1)/2$
+Ki:(-1)^ni*K$
+ldisplay(K,Ki)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+each point of the unit circle touches a larger circle of radius, k and
+the centre of that geodesic circle is also an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cb:(1+k)*ab$
+define(c(k,u),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the geodesic, E touches the outer circle, W (containing all geodesics)
+at the hmgen vector point, wv(u)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(wv(u),{e1}+(2*k+1)*(cos(u)*{e2}+sin(u)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the light-like geodesic, E starting at the unit circle with s=%pi
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gb:k*cos(u+s)*{e2}+k*sin(u+s)*{e4}$
+define(g(k,u,s),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4})+(k*cos(u+s)*{e2}+k*sin(u+s)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the oscillation of the universe ends and begins where the geodesics 
+touch the unit circle and there is space-like connectivity;
+as with all light paths within optics, they may be reversed so we have E for 
+expansion and C for contraction;
+for geodesic E, we start on the unit circle with s=%pi, again with space-like causality;
+typically, for our epoch, we may have u near to pi/4
+with material motion outwardswards along the e4 axis;
+here we have redefined u from the geodesic E global diameter to the negative e2 axis 
+and redefined s from the local radius to that same diameter; 
+this keeps the sine rule code applicable to both C and E without trying to generalize;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+we have confirmed in file Hmgeneous_model_E.wxm that we can use line segments 
+by using the appropriate subspace Ki and that code is now excluded for brevity;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+fpprintprec:5$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+we can now manually iterate k and u to find a typical visible volume percentage, vh
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k:ev(4.0,numer)$
+u:ev(%pi/3.5,numer)$
+ldisplay(k,u)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the sine rule to find the value of s, for given k and u
+w:asin((1+k)/k*cos(u));
+s:w+(%pi/2-u);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+w:ev(asin((1+k)*cos(u)/k),numer);
+s:ev(w+(%pi/2-u),numer)$
+ldisplay(s)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the position vector for the local minkowski frame on geodesic E
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pv:expand(g(k,u,s))$
+ldisplay(pv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now for cosmic expansion we may have an implicit definition of cosmic time as 
+tp:=%pi-s beginning at tp equal to zero;
+the cosmic time at the local minkowski frame is...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+tp:ev(%pi-s,numer)$
+ldisplay(tp)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+at the tangent from the centre to geodesic E, matter and light move through a 
+time-like hozizon that is the visible horizon for the local minkowski frame shown
+as a short arc between geodesics E and C; 
+h^2=(1+k)^2-k^2 defines the tangent and atan(h/k) gives the horizon time, th; 
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+h:ev(sqrt((1+k)^2-k^2),numer)$
+th:atan(h/k)$
+ldisplay(h,th)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+even now, if we included {e3} we could estimate the solid angle, ap subtended at the
+'centre' by the local horizon and also as a volume percentage, vh of the 'wider world';
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ap:ev(((%pi/2-th)+u-%pi/2)*2/(4*%pi),numer)$
+vh:ev(ap*100,numer)$
+ldisplay(ap,vh)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

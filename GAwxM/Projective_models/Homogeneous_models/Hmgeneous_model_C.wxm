@@ -1,0 +1,235 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+Hmgeneous_model_C.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The method is based on the use of the subspaces K and Ki as
+developed for the example in the Survey, section 4.1, page 23;
+Abbreviate the word "homogeneous" to "hmgen" for documentation
+In general "geodesic" refers to light-like geodesics with ds^2:=0;
+
+Refer to the diagram of a universe with typically 25 times the current
+volume estimate in the file...wider_world.pdf
+
+For the Contraction geodesic, C
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Projective geometry starts here
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use {e1} as the unit projection vector, e orthogonal to 3D space {e2,e3,e4} and form the unit circle;
+also confine the circle to a particular plane {e2,e4} by setting the coefficient of {e3} to zero;
+construct the points of the unit circle in R(2) using vector ab(u) for u in [0, 2*pi]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ab:cos(u)*{e2}+sin(u)*{e4}$
+ldisplay(ab)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the unit circle as an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(a(u),{e1}+cos(u)*{e2}+sin(u)*{e4});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+prescribe the pseudoscalar, K of the (hmgen model) subspace
+and find the pseudoscalar inverse, Ki
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+K:{e1,e2,e4}$
+ni:(Plen-1-1)*(Plen-1)/2$
+Ki:(-1)^ni*K$
+ldisplay(K,Ki)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+each point of the unit circle touches a larger geodesic circle of radius, k and
+the centre of that geodesic circle is also an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cb:(1+k)*ab$
+define(c(k,u),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the outer circle, W of the wider world, containing all geodesics
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(w(u),{e1}+(2*k+1)*(cos(u)*{e2}+sin(u)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the light-like geodesic, C anti-clockwise starting on W
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gb:k*cos(u+s)*{e2}+k*sin(u+s)*{e4}$
+define(g(k,u,s),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4})+(k*cos(u+s)*{e2}+k*sin(u+s)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the oscillation of the universe ends and begins where the geodesics 
+touch the unit circle and there is space-like connectivity;
+as with all light paths within optics, they may be reversed so we have E for 
+expansion and C for contraction;
+for geodesic C, we start on W with s:=0, again with space-like causality;
+typically, we may have u near to pi/4 and s near pi/2  
+with material motion inwards along the e4 axis;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the local geodesic radius line segment is...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(cg(k,u,s),c(k,u)&^g(k,u,s))$
+facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+substitute (sin(u+s)*cos(u)-cos(u+s)*sin(u))=sin(s)
+
+cg(k,u,s):=k*cos(u+s)*{e1,e2}+k*sin(u+s)*{e1,e4}+(k^2+k)*sin(s)*{e2,e4};
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(cg(k,u,s),k*cos(u+s)*{e1,e2}+k*sin(u+s)*{e1,e4}+(k^2+k)*sin(s)*{e2,e4})$
+facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+universal contraction, using the geodesic C gives the same point vector, pv as found 
+in Hmgeneous_model_E.wxm for the expansion geodesic, E
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use the sine rule to find the value of s, for given k and u
+w:asin((1+k)/k*cos(u));
+s:w+(%pi/2-u);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+fpprintprec:5$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+from the diagram, measured in mm.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k:ev(38/14,numer);
+u:ev(%pi/4,numer);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+w:ev(asin((1+k)*cos(u)/k),numer);
+s:ev(w+(%pi/2-u),numer);
+ev(cg(k,u,s))$
+cp:expand(float(facsum(%,allblds)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the local minkowski frame on geodesic C
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gv:expand(g(k,u,s))$
+ldisplay(gv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the e4 global radial material line segment, aw from the unit circle to the outer circle
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+av:{e4}+{e1};
+wv:(2*k+1)*{e4}+{e1};
+aw:av&^wv;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+using the intersection to find the vector point location, pv of the local minkowski frame
+on the material axis taking the line segments as subspaces A and B in (Adual)&.B
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cp&*Ki$
+%&.aw$
+p:expand(float(facsum(%,allblds)));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+'normalizing' the projection vector, {e1}, giving the same local point vector, gv on 
+geodesic C, as vector, pv, given by intersection with the material axis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+float(p&.{e1});
+p/%$
+expand(%)$
+pv:expand(float(facsum(%,allblds)))$
+ldisplay(pv)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

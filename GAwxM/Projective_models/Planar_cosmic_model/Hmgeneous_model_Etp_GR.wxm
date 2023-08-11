@@ -1,0 +1,457 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+Hmgeneous_model_Etp_GR.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The method is based on the use of the subspaces K and Ki as
+developed for the example in the Survey, section 4.1, page 23;
+Abbreviate the word "homogeneous" to "hmgen" for documentation
+In general "geodesic" refers to light-like geodesics;
+
+Refer to the diagram of a universe with typically 25 times the current
+volume estimate in the file...wider_world.pdf
+
+For the Expansion geodesic, E this is a less verbose version that excludes
+the horizon time after the separation formula and explores the 2D metric;
+
+Find the elements of the 2D metric tensor for the wider world model;
+
+Use code from ctensor_calc_Einstein.wxm to study the planar cosmic model
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Projective geometry starts here
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use {e1} as the unit projection vector, e orthogonal to 3D space {e2,e3,e4} and form the unit circle;
+also confine the circle to a particular plane {e2,e4} by setting the coefficient of {e3} to zero;
+construct the points of the unit circle in R(2) using vector ab(u) for u in [0, 2*pi]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ab:cos(u)*{e2}+sin(u)*{e4}$
+ldisplay(ab)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+parameterize the unit circle as an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(a(u),{e1}+cos(u)*{e2}+sin(u)*{e4})$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+prescribe the pseudoscalar, K of the (hmgen model) subspace
+and find the pseudoscalar inverse, Ki
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+K:{e1,e2,e4}$
+ni:(Plen-1-1)*(Plen-1)/2$
+Ki:(-1)^ni*K$
+ldisplay(K,Ki)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+each point of the unit circle touches a larger circle of radius, k and
+the centre of that geodesic circle is also an hmgen vector function
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cb:(1+k)*ab$
+define(c(k,u),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4}))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the geodesic, E touches the outer circle, W (containing all geodesics)
+at the hmgen vector point, wv(u)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+define(wv(u),{e1}+(2*k+1)*(cos(u)*{e2}+sin(u)*{e4}))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+define the point vector, g(k,u,s) on the light-like geodesic, E;
+does its derivative model the universal expansion?;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cb:(1+k)*(cos(u)*{e2}+sin(u)*{e4})$
+gb:k*cos(u+s)*{e2}+k*sin(u+s)*{e4}$
+define(g(k,u,s),{e1}+(1+k)*(cos(u)*{e2}+sin(u)*{e4})+(k*cos(u+s)*{e2}+k*sin(u+s)*{e4}));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+we are now just using non-homogeneous vectors in the plane
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+du*diff(g(k,u,s),u)+ds*diff(g(k,u,s),s)$
+dg:facsum(%,allblds)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the components of the differential point vector and their squares
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dt:dg&.{e4}$
+dt2:expand(dt^2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+dr:dg&.{e2}$
+dr2:expand(dr^2)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the 2D spacetime interval squared
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dr2-dt2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+rearrange manually for coeff()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+dtau2:du^2*k^2*sin(u+s)^2+2*ds*du*k^2*sin(u+s)^2+ds^2*k^2*sin(u+s)^2
++2*du^2*k^2*sin(u)*sin(u+s)+2*ds*du*k^2*sin(u)*sin(u+s)
++2*du^2*k*sin(u)*sin(u+s)+2*ds*du*k*sin(u)*sin(u+s)
+−du^2*k^2*cos(u+s)^2−2*ds*du*k^2*cos(u+s)^2
+−ds^2*k^2*cos(u+s)^2−2*du^2*k^2*cos(u)*cos(u+s)−2*ds*du*
+k^2*cos(u)*cos(u+s)−2*du^2*k*cos(u)*cos(u+s)−2*ds*du*k*cos(u)*cos(u+s)
++du^2*k^2*sin(u)^2+2*du^2*k*sin(u)^2+du^2*sin(u)^2
+−du^2*k^2*cos(u)^2−2*du^2*k*cos(u)^2−du^2*cos(u)^2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the coefficients of the planar cosmic coordinates u and s within the 
+separation formula;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cdu2:coeff(dtau2,du^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+subdu2:%*du^2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+coefficient of ds^2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cff_ds2:coeff(dtau2,ds^2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+subds2:%*ds^2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(trigsimp(dtau2-subdu2))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(trigsimp(%-subds2))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+facsum(%,2*ds*du)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+%/(2*ds*du)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the value of both off-diagonal coefficients (viz. the tensor summation for dtau^2)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cff_dsdu:k*(+k-k*cos(2*u+s)−2*k*cos(u+s)^2−cos(2*u+s));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+simplify cdu2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k^2*sin(u+s)^2−k^2*cos(u+s)^2−2*k^2*cos(2*u+s)−2*k*cos(2*u+s)+k^2*sin(u)^2+2
+*k*sin(u)^2+sin(u)^2−k^2*cos(u)^2−2*k*cos(u)^2−cos(u)^2$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+coefficient of du^2
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cff_du2:trigsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+impose the planar model with dummy dtheta, dphi (ctensor needs dim=4)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[u,theta,phi,s];
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lg:matrix([cff_du2,0,0,cff_dsdu],[0,1,0,0],[0,0,1,0],[cff_dsdu,0,0,cff_ds2]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the contravariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ug:invert_by_lu(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(ug);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Christoffel tensor of the second kind
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rational simplification
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratchristof:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the third index is the contravariant index
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+christof(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the mixed Ricci tensor, uric is derived from the covariant Ricci tensor, ric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+uricci(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+lower the contravariant index of the mixed tensor, uric to form the covariant tensor, cric
+in the form of a matrix, being more familiar that the array, ric from function ricci()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+cric:matrix([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0])$
+for mg:1 thru dim do
+block(
+for ng:1 thru dim do
+block(
+csum:0,
+for kg:1 thru dim do
+block(
+csum:csum+lg[kg,ng]*uric[mg,kg]),
+cric[mg,ng]:csum))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(cric);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(cric[1,1])$
+ldisplay(cric[4,4])$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+calculate the Ricci scalar as the contraction of the covariant Ricci tensor, cric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+csum:0$
+for mg:1 thru dim do
+block(
+for ng:1 thru dim do
+block(
+csum:csum+ug[mg,ng]*cric[mg,ng]))$
+Rc:csum$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+check against the intrinsic function for the Ricci scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Ri:scurvature()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(Rc,Ri))$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+use the calculated Ricci scalar, Rc to form R
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+R:facsum(Rc,operator(diff))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(R)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+half the product of the covariant metric tensor and the calculated Ricci scalar
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+hgR:(1/2)*R*lg$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(hgR);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+ldisplay(hgR[1,1])$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+trigsimp(hgR[1,1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+ldisplay(hgR[4,4])$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+trigsimp(hgR[4,4]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the calculated Einstein tensor as a matrix
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gc:cric-hgR$
+matrixp(Gc);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the lhs of the 'spatial' field equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gu:Gc[1,1]$
+ldisplay(Gu)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Guu:facsum(Gu,operator(diff))$
+ldisplay(Guu)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the lhs of the 'temporal' field equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Gs:Gc[4,4]$
+ldisplay(Gs)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Gss:facsum(Gs,operator(diff))$
+ldisplay(Gss)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the 'wider world' seems to be locally flat if we just measure two local angles
+and relate our spectra to the parameters of the cosmic geodesics although I
+can't do that
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
