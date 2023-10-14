@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 11.08.0 ] */
+/* [ Created with wxMaxima version 13.04.2 ] */
 
 /* [wxMaxima: input   start ] */
 load(interpol)$
@@ -9,7 +9,7 @@ data:[[1200,0.000050],[1500,0.000053],[2000,0.000123],[2500,0.00092],
 /* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: input   start ] */
-cspline(data);
+cspline(data,d1=0,dn=1e-4);
 f(x):=''%$
 /* [wxMaxima: input   end   ] */
 
