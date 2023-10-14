@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 11.08.0 ] */
+/* [ Created with wxMaxima version 13.04.2 ] */
 
 /* [wxMaxima: comment start ]
 cosmic_history.wxm
@@ -180,9 +180,11 @@ dim;
 the covariant metric tensor as a matrix
    [wxMaxima: comment end   ] */
 
-/* [wxMaxima: input   start ] */
+/* [wxMaxima: comment start ]
 mode_declare([function (A)],float)$
-/* [wxMaxima: input   end   ] */
+
+declare(A(t),[real]);
+   [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
 d1:-(A(t))^2$
@@ -211,6 +213,10 @@ matrixp(lg);
 /* [wxMaxima: comment start ]
 the contravariant metric tensor
    [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratmx:true;
+/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
 using ug:invert(lg)

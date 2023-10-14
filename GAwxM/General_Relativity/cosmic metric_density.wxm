@@ -1,5 +1,5 @@
 /* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
-/* [ Created with wxMaxima version 11.08.0 ] */
+/* [ Created with wxMaxima version 13.04.2 ] */
 
 /* [wxMaxima: comment start ]
 cosmic_metric_density.wxm
@@ -175,10 +175,10 @@ dim;
 the covariant metric tensor as a matrix
    [wxMaxima: comment end   ] */
 
-/* [wxMaxima: input   start ] */
+/* [wxMaxima: comment start ]
 mode_declare([function (a)],float)$
 mode_declare([function (b)],float)$
-/* [wxMaxima: input   end   ] */
+   [wxMaxima: comment end   ] */
 
 /* [wxMaxima: input   start ] */
 gs:-(1+a(t))$
@@ -205,6 +205,10 @@ matrixp(lg);
 /* [wxMaxima: comment start ]
 the contravariant metric tensor
    [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratmx:true;
+/* [wxMaxima: input   end   ] */
 
 /* [wxMaxima: comment start ]
 using ug:invert(lg)
