@@ -1,0 +1,115 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_polar_grad_noreciprocb.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A development document for Geometric Algebra using wxMaxima
+
+Exercise 5.20, VAGC page 70 for the gradient in polar coordinates for 2D only
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.20
+VAGC page 70
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate vector, xb(old) in 2D only!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xv:x*{e1}+y*{e2}$
+ldisplay(xv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xb:r*cos(th)*{e1}+r*sin(th)*{e2}$
+ldisplay(xb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+only wr is a unit vector of wjbasis from Eq. 5.16
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+wr:diff(xb,r)$
+wth:diff(xb,th)$
+ldisplay(wr,wth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the reciprocal of the basis from Eq. 5.16
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+r:sqrt(x^2+y^2)$
+th:atan(y/x)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+diff(r,x)*{e1}+diff(r,y)*{e2}$
+wkr:ratsimp(%)$
+diff(th,x)*{e1}+diff(th,y)*{e2}$
+wkth:ratsimp(%)$
+ldisplay(wkr,wkth)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+only wkr is a unit vector of wkbasis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+normod(wkr);
+normod(wkth);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
