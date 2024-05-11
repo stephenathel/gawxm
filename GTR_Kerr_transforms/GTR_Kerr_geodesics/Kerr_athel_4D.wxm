@@ -1,0 +1,205 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+Kerr_athel_4D.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Ref: The Survey, paragraph 4.1.2 for flat spacetime
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+The intrinsic functions for curved spacetime have been applied within the GAwxM environment,
+without using the GAwxM extrinsic functions, in the hope that it might be useful someday
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for the Kerr_athel metric R(3,1);
+it's flat!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(ctensor)$
+init_ctensor()$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+declare(a,real,b,real);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ct_coords:[r,th,ph,t]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+dim;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+gs:+(1+2*m/r)$
+gth:r^2$
+gph:r^2*sin(th)^2$
+gt:-(1-2*m/r)$
+grt:2*m/r$
+lg:matrix([gs,0,0,grt],[0,gth,0,0],[0,0,gph,0],[grt,0,0,gt]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the contravariant metric tensor
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ug:invert_by_lu(lg);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+matrixp(ug);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Christoffel tensor of the second kind
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rational simplification
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ratchristof:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the third index is the contravariant index
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+christof(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the mixed Ricci tensor, uric is derived from the covariant Ricci tensor, ric
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+uricci(false)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+arrays;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+cgeodesic(true)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+write the metric for non-zero mass
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+metric:(1+2*m/r)*diff(r,s)^2+4*m/r*diff(r,s)*diff(t,s)-(1-2*m/r)*diff(t,s)^2+r^2*diff(ph,s)^2
++r^2*sin(th)^2*diff(th,s)^2+1=0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+r^3*geod[1]=0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pseudo-acceleration equation for motion in (3+1)D
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(m*r*metric)+%;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the second order ODE for the proper time equation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+r^3*geod[4]=0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the second order ODEs for the two proper (time) angle equations
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+r*sin(th)*geod[3]=0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+r*geod[2]=0;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

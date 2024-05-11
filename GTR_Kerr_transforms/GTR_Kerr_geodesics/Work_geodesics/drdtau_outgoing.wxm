@@ -1,0 +1,166 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.04.0 ] */
+
+/* [wxMaxima: comment start ]
+ODE for SMBH outgoing radial geodesic
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+reset()$
+kill(all)$
+stardisp:true$
+stringdisp:true$
+noundisp:true$
+simp:true$
+dotdistrib:true$
+derivabbrev:true$
+lispdisp:true$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+load intrinsic (maxima or lisp) function files
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load("basic")$
+load("facexp")$
+load("functs")$
+load("scifac")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Mg:4*10^6$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fpprintprec:5$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Mg:4000000$
+rg:1480*Mg;
+mg:rg/2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for ingoing radial geodesic, inout=-1
+for outgoing radial geodesic, inout=+1
+for ingoing initially stationary, inout=0
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+these values here (and coded below) stop the outgoing particles at 4*rg 
+k:2$
+initr:+k*rg;
+inout:+1;   
+j:1$
+initv:inout*ev(1/(1+j),numer);
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+so try to start initially stationary, inout=+0 by editing the code using...
+k:4$
+initr:+k*rg;
+inout:+0;   
+when the particles will reverse and fall in past 2*rg at 0.5c (mixed drdtau)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+k:2$
+initr:+k*rg;
+inout:+1;   
+j:1$
+initv:inout*ev(1/(1+j),numer);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+n:10;
+tmax:n*rg;
+tstep:rg/n;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+domain:[tau,0,tmax,tstep];
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+drdtau:v$
+dvdtau:-mg/r^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lstout:rk([drdtau,dvdtau],[r,v],[initr,initv],domain)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lstout;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lstlen:length(lstout);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+array(rvarr,lstlen,1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+lst:makelist(r,i,1,2)$
+pltlst:makelist([r,v],i,1,lstlen)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+for ng:1 thru lstlen do
+block(lst:makelist(r,i,1,2),
+ext:lstout[ng],
+rout:ext[2],
+vout:ext[3],
+if abs(vout)<=3 then 
+block(rvarr[ng,0]:rout/rg,rvarr[ng,1]:vout,
+lst[1]:rout/rg,lst[2]:vout,pltlst[ng]:lst),
+pltlst)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+if abs(vout)<=20 then wormhole
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arrayinfo(rvarr);
+listarray(rvarr);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+length(pltlst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+unique(pltlst)$
+rest(%,-1)$
+reverse(%)$
+rest(%,-1)$
+pltlst:%;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+unique(pltlst)$
+rest(%,-1)$
+reverse(%)$
+pltlst:%;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+length(pltlst);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+plot2d([discrete,])$
+[discrete, [[x1, y1], ..., [xn, ..., yn]]
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+plot2d([discrete,pltlst],[xlabel,"radial / horizon"],[ylabel,"v is dr by dtau / c"])$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,132 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter07.02.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Rotate in the geometric algebra, G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 7.12.
+page 125
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rotation by angle {e1,e2}*pi
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgu:[1]$
+nameu:"u"$
+makelistgrademv(nameu,lstgu)$
+ub:u$
+ldisplay(ub)$
+ib:{e1,e2}$
+ldisplay(ib)$
+Z:bldexp(-ib*%pi/2)$
+ldisplay(Z)$
+Zi:bldexp(+ib*%pi/2)$
+ldisplay(Zi)$
+vb:Z&*ub&*Zi$
+ldisplay(vb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+now apply the rotation by angle {e3,e4}*pi giving the negation of ub
+so there is no possible equivalent rotation by any angle i*theta
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ib:{e3,e4}$
+ldisplay(ib)$
+Z:bldexp(-ib*%pi/2)$
+ldisplay(Z)$
+Zi:bldexp(+ib*%pi/2)$
+ldisplay(Zi)$
+wb:Z&*vb&*Zi$
+ldisplay(wb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(wb,-ub));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 7.14.
+page 125
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+rotate a plane, Bp by a bivector angle using both geometric and blade operators
+ref. Exercise 5.24. page 89
+N.B. Exercise 7.14 is specified in G3 but completed below in G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Bp:{e2}&*({e1}+sqrt(3)*{e3})$
+ib:{e3}~*{e1}$
+theta:%pi/3$
+Z:bldexp(-ib*theta/2)$
+ldisplay(Z)$
+Zi:bldexp(+ib*theta/2)$
+ldisplay(Zi)$
+Br:Z&*Bp&*Zi$
+ev(Br)$
+ldisplay(Br,%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

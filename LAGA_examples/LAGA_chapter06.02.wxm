@@ -1,0 +1,141 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter06.02.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Blades, Norms and Reversion in the geometric algebra, G4, i.e. using Plen=4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 6.6
+page 99
+
+Show that if B is a 4-blade, then it has an inverse of the given form, using 
+the blade (tilda) product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+b1:s1*{e1}$
+b2:s2*{e2}$
+b3:s3*{e3}$
+b4:s4*{e4}$
+B:b1~*b2~*b3~*b4$
+ldisplay(B)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Binv:(b4~*b3~*b2~*b1)/normod(B)^2$
+ldisplay(Binv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+BBinv:B~*Binv$
+ldisplay(BBinv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 6.7
+page 99
+
+Show that if B is a 4-blade, then it has an inverse of the given form
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Bm1:(-1)^(4*(4-1)/2)*B/normod(B)^2$
+ldisplay(Bm1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+BBm1:B~*Bm1$
+ldisplay(BBm1)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 6.2.5
+page 100
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+6.2.5a e.g. for a 4-blade, A using the blade (tilda) outer product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a1:s1*{e1}$
+a2:s2*{e2}$
+a3:s3*{e3}$
+a4:s4*{e4}$
+A:a1~^a2~^a3~^a4$
+Arev:a4~^a3~^a2~^a1$
+ldisplay(A,Arev)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+6.2.5b e.g. for a 3-blade, A3, using the multivector reverse function, mvrev()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+A3:a1~*a2~*a4$
+A3rev:mvrev(A3)$
+A3revrev:mvrev(A3rev)$
+ldisplay(A3,A3rev,A3revrev)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,119 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter06.01.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Canonical Bases
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 6.1
+page 95
+
+Express a geometric product in terms of a canonical basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use the blade (basis) tilda products to form the the multivector factors
+and then use the ampersand (multivector) product;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+M1:3+4*{e1}~*{e2}+{e1}~*{e2}~*{e3}$
+M2:{e2}-5*{e2}~*{e3}$
+M:M1&*M2$
+ldisplay(M)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+or without using the blade (basis) tilda products and using the sets of base
+vectors themselves that constitute our canonical basis, giving the same result;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+M1:3+4*{e1,e2}+{e1,e2,e3}$
+M2:{e2}-5*{e2,e3}$
+M:M1&*M2$
+ldisplay(M)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 6.4
+page 96
+
+Express a particular 2-vector (bivector) as a 2-vector in the canonical basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+f1:({e1}-{e2})/sqrt(2)$
+f2:({e1}+{e2})/sqrt(2)$
+f3:{e3}$
+fbv:f1&*f2+sqrt(2)*f1&*f3$
+ldisplay(fbv)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+display this clearly as a 2-vector in the canonical basis
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+fpprintprec:4$
+f:expand(ev(fbv,numer))$
+ldisplay(f)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

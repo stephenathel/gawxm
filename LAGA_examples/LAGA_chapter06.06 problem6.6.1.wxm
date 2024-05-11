@@ -1,0 +1,119 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter06.06problem6.6.1.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Blades as Outer Products in the geometric algebra, G4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 6.6.1a
+page 117
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstga1:[1]$
+namea1:"a1"$ 
+makelistgrademv(namea1,lstga1)$
+ldisplay(a1)$
+lstga2:[1]$
+namea2:"a2"$ 
+makelistgrademv(namea2,lstga2)$
+ldisplay(a2)$
+lstga3:[1]$
+namea3:"a3"$ 
+makelistgrademv(namea3,lstga3)$
+ldisplay(a3)$
+lstga4:[1]$
+namea4:"a4"$ 
+makelistgrademv(namea4,lstga4)$
+ldisplay(a4)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+unused coefficients of vector b
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lstgb:[1]$
+nameb:"b"$ 
+makelistgrademv(nameb,lstgb)$
+ldisplay(b)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+redefinition of vector b...
+vector b is a sum of (scalar xi times vector ai) for i=1,4
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+b:x1*a1+x2*a2+x3*a3+x4*a4$
+ldisplay(b)$
+b:facsum(b,allblds)$
+ldisplay(b)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 6.6.1b
+page 117
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lst:[a1,a2,a3,a4]$
+lhs:x2*list2vecouter(lst)$
+lst:[a1,b,a3,a4]$
+rhs:list2vecouter(lst)$
+is(equal(lhs,rhs))$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,256 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+LAGA_chapter05.04.wxm (LAGA examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Generalized Complex Numbers
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Linear and Geometric Algebra (LAGA)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+LAGA examples
+Chapter 5.4
+page 84
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Generalized Complex Numbers
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Definition 5.10 (The unit pseudoscalar)
+page 84
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+{e1}~^{e2};
+{e2}~^{e1};
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Definition 5.12
+page 85
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+N.B. it is tempting to retain a bivector angle form independent of any basis by using the 
+intrinsic imaginary, %i (which cannot be removed from wxMaxima although it is not part of GA)
+this should be avoided in GAwxM because we cannot proceed very far with just one plane, %i
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+demoivre(exp(%i*theta));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Definition 5.13
+page 85
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+bldexp({e1,e2}*theta);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Exercise 5.16 a,b,c,d
+page 85
+the function bldexp() can give accurate values, noting the absence of %i
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ibv:{e1,e2}$
+ldisplay(ibv)$
+bldexp(ibv*%pi/4)$
+expand(ev(%,numer));
+bldexp(ibv*%pi/2)$
+expand(ev(%,numer));
+bldexp(ibv*%pi)$
+expand(ev(%,numer));
+bldexp(ibv*2*%pi)$
+expand(ev(%,numer));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the function mvexp() can give accurate estimates for n=15, with
+lower accuracy near theta = +pi and 2pi
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ibv:{e1,e2}$
+ldisplay(ibv)$
+mvexp(ibv*%pi/4,15)$
+expand(ev(%,numer));
+mvexp(ibv*%pi/2,15)$
+expand(ev(%,numer));
+mvexp(ibv*%pi,19)$
+expand(ev(%,numer));
+mvexp(ibv*2*%pi,21)$
+expand(ev(%,numer));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+some sections here might be a diversion so they are left empty...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.15 (Generalized complex number)
+page 85
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.17 (Complex conjugate)
+page 86
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.18 (Norm)
+page 86
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.21 (Complex number)
+page 86
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+LAGA examples continued...
+Chapter 5.4
+page 87
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Quaternions
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Definition 5.22 (Quaternion (spinor))
+page 87
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+i3:{e2}~*{e1};
+i1:{e3}~*{e2};
+i2:{e1}~*{e3};
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.23c and 5.23d
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Z:a+b1*i1+b2*i2+b3*i3$
+Zbar:mvrev(Z)$
+norm2Z:scalarp(Z,Z)$
+ldisplay(Z,Zbar,norm2Z)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.23e
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Z1:a1+b11*i1+b21*i2+b31*i3$
+Z2:a2+b12*i1+b22*i2+b32*i3$
+Z1Z2:Z1&*Z2$
+clhs:mvrev(Z1Z2)$
+crhs:mvrev(Z2)&*mvrev(Z1)$
+is(equal(clhs,crhs))$
+ldisplay(clhs,crhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Theorem 5.23f
+(for the squares of the norms only)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+nlhs:normod(Z1Z2)$
+nrhs:normod(Z1)*normod(Z2)$
+is(equal(nlhs^2,nrhs^2))$
+ldisplay(nlhs,nrhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Figure 5.16
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+i1@*2;
+i2@*2;
+i3@*2;
+i1~*i2;
+i2~*i3;
+i3~*i1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 5.4.5 (Theorem 5.11)
+we need to use the function geompout() here rather than the blade outer product,
+repeating the definitions of i1, i2 and i3 for reference
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+i3:{e2}~*{e1}$
+i1:{e3}~*{e2}$
+i2:{e1}~*{e3}$
+ldisplay(i3,i1,i2)$
+blhs:b1*i1+b2*i2+b3*i3$
+brhs:-b3*({e1}-b1/b3*{e3})&^({e2}-b2/b3*{e3})$
+is(equal(blhs,brhs))$
+ldisplay(blhs,brhs,%)$
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
