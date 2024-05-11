@@ -1,0 +1,185 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+conformal_model_para.4.2.2_planes_areas.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization of the canonical basis lists by batchloading two files;
+
+Following section 4.2 of the summary, trying to use the intrinsic imaginary, %i to imitate G(n+1,1);
+
+Include ep(lus) and em(inus) as basis vectors in Pseudos and whenever em is used after Initialization
+it will be used as %i*{em} in order to imitate the base vector that squares to -1;
+
+para 4.2.2 just for planes in 3D with the area of the triangle defining the plane
+found using the semi-perimeter formula
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,em,ep}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now we are ready to form the "more useful" combinations of the base vectors, with ef as e infinity, noting that 
+both e0 and ef do not occur within curly braces
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0:1/2*(%i*{em}-{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ef:(%i*{em}+{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Test them; e0&.ef is equal to -1; N.B. above, if the 1/2 factor is used for ef rather than for e0, p is again null
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0&.e0;
+ef&.ef;
+e0&.ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pb is pb(old) is pbold, the bold vector in R(n)
+p:e0+pb+1/2*pb&*pb*ef;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pb:pbx*{e1}+pby*{e2}+pbz*{e3};
+pb&.pb;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+so, as given in para. 4.2.1, p is null using equation (4.3)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p:e0+pb+1/2*pb&*pb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p&.p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+G(4,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now para.4.2.2 just for planes...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Planes...using pb (from above) and qb (below) with a third bold point, mb to define the plane in Rn
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+qb:qbx*{e1}+qby*{e2}+qbz*{e3};
+q:e0+qb+1/2*qb&*qb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+mb:mbx*{e1}+mby*{e2}+mbz*{e3};
+m:e0+mb+1/2*mb&*mb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+try the direct representation of the plane, a sphere through the point at infinity, ef
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+m&^p&^q&^ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the outer product of the four conformal vectors has produced a four-vector expression; 
+four-vectors that contain em have a coefficient that is a multiple of %i, the intrinsic imaginary that was
+introduced as %i*{em} in order to imitate the base vector that squares to -1;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rep:expand(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+para 4.2.2...Planes suggests that the area, A of the triangle defined by the points mb, pb and qb may be found 
+from the equation 4*A^2 = rep squared;
+rep squared means the geometric product and the role of %i is resolved within the product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rep&*rep$
+rhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+for the area of the triangle use the inner products of the three bold vector differences to 
+find the semi-perimeter, s
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a:sqrt((pb-qb)&.(pb-qb))$
+b:sqrt((qb-mb)&.(qb-mb))$
+c:sqrt((mb-pb)&.(mb-pb))$
+1/2*(a+b+c)$
+s:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+trying to show that 4*A^2 equals rep squared as in the summary;
+however, it was found that the direct representation squared has a negative value equal to -4*A^2;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+using the negative of the formula for area in terms of the semi-perimeter;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+-4*s*(s-a)*(s-b)*(s-c)$
+lhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

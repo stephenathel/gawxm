@@ -1,0 +1,181 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 11.08.0 ] */
+
+/* [wxMaxima: comment start ]
+Desargues_theorem.wxm
+
+GNU General Public License 2019  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+The example of projective geometry given in the Survey, section 4.1.4, page 25
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Projective geometry starts here
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+use {e1} as the unit vector, {e}, orthogonal to 3D space {e2,e3,e4} and form vectors a,b,c;
+also confine the vertices to a particular plane by setting the coefficient of {e3} to zero;
+construct both a,b,c and a',b',c' where e.g. ad represents ad(ashed)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a:{e1}+a2*{e2}+a4*{e4}$
+ad:{e1}+ad2*{e2}+ad4*{e4}$
+b:{e1}+b2*{e2}+b4*{e4}$
+bd:{e1}+bd2*{e2}+bd4*{e4}$
+c:{e1}+c2*{e2}+c4*{e4}$
+cd:{e1}+cd2*{e2}+cd4*{e4}$
+ldisplay(a,b,c)$
+ldisplay(ad,bd,cd)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+construct P,Q,R as the lines connecting corresponding vertices of the triangles
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+a&^ad$
+P:facsum(%,allblds)$
+b&^bd$
+Q:facsum(%,allblds)$
+c&^cd$
+R:facsum(%,allblds)$
+ldisplay(P,Q,R)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+prescribe the pseudoscalar, K of the (homogeneous model) subspace of the triangles
+and find the pseudoscalar inverse, Ki
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+K:{e1,e2,e4}$
+ni:(Plen-1-1)*(Plen-1)/2$
+Ki:(-1)^ni*K$
+ldisplay(K,Ki)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+In Figure 10, show that the upper triangle, T, is in the same subspace as that above
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J:a&^b&^c$
+T:facsum(%,allblds)$
+ldisplay(T)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+construct p,q,r as the intersections of the extensions of the sides of the triangles,
+using the dual within the subspace of the triangles (i.e. using Ki)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+((b&^c)&*Ki)&.(bd&^cd)$
+p:facsum(%,allblds)$
+ldisplay(p)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+((c&^a)&*Ki)&.(cd&^ad)$
+q:facsum(%,allblds)$
+ldisplay(q)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+((a&^b)&*Ki)&.(ad&^bd)$
+r:facsum(%,allblds)$
+ldisplay(r)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+again find J and also Jd(ashed) and then display their product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+J:a&^b&^c$
+Jd:ad&^bd&^cd$
+JJd:J&*Jd$
+ldisplay(JJd)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+display all the terms of the product of the bivectors P, Q and R
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+P&*Q&*R$
+PQR:facsum(%,allblds)$
+ldisplay(PQR)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+find the grade zero part of the product of the bivectors P, Q and R
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+arr:grader(PQR)$
+den:arr[Plen+1]$
+PQR0:arr[0]/den$
+ldisplay(PQR0)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm the validity of the last equation (the identity) in section 4.1.4
+this may take a while
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:(p&^q&^r)&*Ki$
+rhs:JJd*PQR0$
+is(equal(lhs,rhs))$
+ldisplay(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+N.B. the dual of p^q^r is found using the pseudoscalar inverse, Ki, for 
+the (homogeneous model) subspace of the triangles
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,181 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+minkowski_plane.wxm
+
+GNU General Public License 2023  Ste1hen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization of the canonical basis lists by batchloading two files;
+
+Following section 4.2 of the summary, trying to use the intrinsic imaginary, %i to imitate R(1,1)
+
+Include e1 and e2 as basis vectors in Pseudos and whenever e2 is used after Initialization
+it will be used as %i*{e2} in order to imitate the base vector that squares to -1;
+
+Also using para. 2.2 Generalized Homogeneous Coordinates for Computational Geometry
+Hongbo Li et al.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar for R(2) is I
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+I~*Ii;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+e1 is e plus, %i*e2 is e minus, with curly braces
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+{e1}~*{e1};
+(%i*{e2})~*(%i*{e2});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ep:{e1}$
+em:%i*{e2}$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Now we are ready to form combinations of the base vectors, with ef as e infinity, noting that 
+ee and ef do not occur within curly braces: they are not gawxm base vectors;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Equn. (2.2a) with e0 as ee
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ee:(em-ep)/2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Equn. (2.2b) with e as ef
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ef:(em+ep);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+ee&.ef is also equal to -1;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ee&*ee;
+ef&*ef;
+ef&.ee;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar for R(1,1) is E and these three products have the same (imaginary) value
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+E:ef&^ee;
+ep~^em;
+ep~*em;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+from here to the end, find how to use E
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+(2.5a) and (2.5b)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+E~*E;
+E~*ep;
+-em;
+E~*em;
+-ep;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+(2.5c)...E&*ef
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+E&*ef;
+-ef&*E;
+-ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+(2.5c)...E&*ee
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+E&*ee;
+-ee&*E;
+ee;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+we have imitated R(1,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+(2.5d)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:1-E$
+rhs:-ef&*ee$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+(2.5d)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:1+E$
+rhs:-ee&*ef$
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,136 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+conformal_world.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization of the canonical basis lists by batchloading two files;
+
+Following section 4.2 of the summary, trying to use the intrinsic imaginary, %i to imitate G(n+1,1);
+
+Include ep(lus) and em(inus) as basis vectors in Pseudos and whenever em is used after Initialization
+it will be used as %i*{em} in order to imitate the base vector that squares to -1;
+
+G(5,1) TBD
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4,em,ep}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now we are ready to form combinations of the base vectors, with ef as e infinity, noting that 
+both e0 and ef do not occur within curly braces
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0:1/2*(%i*{em}-{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ef:1*(%i*{em}+{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Test them; e0&.ef is equal to -1; N.B. above, if the 1/2 factor is used for ef rather than for e0, p is again null
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0&.e0;
+ef&.ef;
+e0&.ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pb is pb(old) is pbold, the bold vector in R(n)
+p:e0+pb+1/2*pb&.pb*ef;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pb:pbx*{e1}+pby*{e2}+pbz*{e3};
+pb&.pb;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+so, as given in para. 4.2.1, p is null using equation (4.3)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p:e0+pb+1/2*pb&*pb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p&.p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+and also q is null
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+qb:qbx*{e1}+qby*{e2}+qbz*{e3};
+qb&.qb;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+q:e0+qb+1/2*qb&*qb*ef$
+q&.q;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+test for equality in equation (4.4)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:p&.q$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs:-1/2*(pb-qb)&*(pb-qb)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+G(5,1)
+   [wxMaxima: comment end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

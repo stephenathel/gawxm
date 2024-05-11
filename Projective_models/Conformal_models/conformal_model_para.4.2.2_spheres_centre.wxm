@@ -1,0 +1,192 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 13.04.2 ] */
+
+/* [wxMaxima: comment start ]
+conformal_model_para.4.2.2_spheres_centre.wxm
+
+GNU General Public License 2023  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization of the canonical basis lists by batchloading two files;
+
+Following section 4.2 of the summary, trying to use the intrinsic imaginary, %i to imitate G(n+1,1);
+
+Include ep(lus) and em(inus) as basis vectors in Pseudos and whenever em is used after Initialization
+it will be used as %i*{em} in order to imitate the base vector that squares to -1;
+
+para 4.2.2 starts with Spheres in 3D!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,em,ep}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now we are ready to form the "more useful" combinations of the base vectors, with ef as e infinity, noting that 
+both e0 and ef do not occur within curly braces
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0:1/2*(%i*{em}-{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ef:1*(%i*{em}+{ep});
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Test them; e0&.ef is equal to -1; N.B. above, if the 1/2 factor is used for ef rather than for e0, p is again null
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+e0&.e0;
+ef&.ef;
+e0&.ef;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+pb is pb(old) is pbold, the bold vector in R(n)
+p:e0+pb+1/2*pb&.pb*ef;
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+pb:pbx*{e1}+pby*{e2}+pbz*{e3};
+pb&.pb;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+so, as given in para. 4.2.1, p is null using equation (4.3)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+p:e0+pb+1/2*pb&*pb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p&.p;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+G(4,1)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Now para.4.2.2 begins to get more complicated...
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Spheres...centre cb and radius rho, with 3D variable vector xb(old)
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xb:xx*{e1}+xy*{e2}+xz*{e3};
+cb:cx*{e1}+cy*{e2}+cz*{e3};
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+conformal vectors
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+x:e0+xb+1/2*xb&*xb*ef$
+c:e0+cb+1/2*cb&*cb*ef$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the Euclidean distance from the centre of the sphere
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+lhs:2*x&.c;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+-(xz-cz)^2-(xy-cy)^2-(xx-cx)^2;
+rhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+an equation for the 3D sphere
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+2*x&.(c-1/2*rho*rho*ef)=0;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+part of equation (4.5), the dual of the sphere
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+-(p&.ef)*c+(p&.c)*ef$
+lhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+p&.(c&^ef)$
+rhs:expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+is(equal(lhs,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the dual of the dual is a direct representation
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs&*Ii$
+expand(%)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+facsum(%,allblds);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+but how do we use %i here? try in ...spheres_work.wxm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+(pb-cb)&*(pb-cb)-normod(cb)^2-1;
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

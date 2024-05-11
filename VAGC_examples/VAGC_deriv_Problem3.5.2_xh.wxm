@@ -1,0 +1,148 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_deriv_Problem3.5.2_xh.wxm
+
+GNU General Public License 2016  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A short development document for Geometric Algebra with wxMaxima
+just to test some calculus functions within the GAwxM environment,
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+Calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+Problem 3.5.2, VAGC page 40 for the directional derivative of vector x^-1
+using the vector notation in the text for the direction, h and the coordinate, x
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Problem 3.5.2
+VAGC page 40
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+coefficients of the vector, h
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+hlst:[h1,h2,h3,0,0,0,0]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+coefficients of the vector, x
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+xlst:[x1,x2,x3,0,0,0,0]$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the coordinate and direction vectors from the lists of coefficients
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+eJ:allblds$
+lenlst:2^Plen-1$
+x:0$
+h:0$
+for j:1 thru lenlst do
+block(x:x+xlst[j]*eJ[j],
+h:h+hlst[j]*eJ[j])$
+ldisplay(x,h)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+form the function, F(x) from the Hint in the problem
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+F(x):=x*normod(x)^-2$
+Fx:ev(F(x))$
+ldisplay(Fx)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+show the function mvderiv() in action and form DdF!
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Fstr:"F"$
+derivF:mvderiv(Fstr,xlst,hlst)$
+ldisplay(derivF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+F:Fx$
+DdF:ev(derivF,diff)$
+ldisplay(DdF)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+confirm that the calculated DdF is the same as the formula given in the Problem
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+n2:normod(x)^2$
+Q1:h/n2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+Q2:-2*h&.x/n2^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+rhs:Q1+Q2*x$
+is(equal(DdF,rhs));
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

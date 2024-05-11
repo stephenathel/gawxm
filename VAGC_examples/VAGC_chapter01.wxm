@@ -1,0 +1,249 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 12.04.0 ] */
+
+/* [wxMaxima: comment start ]
+VAGC_chapter01.wxm (VAGC examples)
+
+GNU General Public License 2013  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+A test document for Geometric Algebra with wxMaxima
+contains...
+Initialization
+Loading of functions (intrinsic and GA specific)
+Pseudoscalar definition (specifies the space dimension) and
+calculation of the inverse pseudoscalar used to generate the dual of a multivector
+Enumeration of the standard basis for the specified dimension
+
+The sphere, the torus and the cone
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Reference book...Vector and Geometric Calculus (VAGC)
+by Alan Macdonald
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC examples
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+The command, draw(gr3d()) generates a gnuplot graph in a separate window. The function
+pauser() waits a few seconds before plotting the next graph.
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC Example 
+Chapter 01, page 8, parameterize a sphere with radius, r, and find the norm
+
+use "xb" to represent the x vector (usually printed in "b"old)
+and use trigreduce() to simplify
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+depends(xb,[phi,theta])$
+xb:r*sin(phi)*cos(theta)*{e1}+r*sin(phi)*sin(theta)*{e2}+r*cos(phi)*{e3}$
+normod(xb);
+trigreduce(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+scalarp({e1},xb);
+scalarp({e2},xb);
+scalarp({e3},xb);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Parametric plot of a sphere with unit radius
+
+Set r=1 and find the coordinates, x, y, z
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(draw)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xb$
+x:{e1}&.xb$
+y:{e2}&.xb$
+z:{e3}&.xb$
+r:1$
+load(draw)$
+draw(gr3d(title="",
+             dimensions=[600,500],
+             color=dark_green,
+             xtics=1/2,
+             ytics=1/2,
+             xlabel="x",
+             ylabel="y",
+             zrange=[-1,+1],
+             nticks=10,
+             parametric_surface(x,y,z,theta,0,2*%pi,phi,0,%pi),
+             surface_hide = true,
+             proportional_axes = xyz))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(xb,x,y,z,r)$
+kill(xb,r)$
+remove(xb,dependency);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+insert a time delay between calls to draw()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+interval:3$
+time:pauser(interval)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC Problem 1.2.1 
+Chapter 01, page 10, parameterize a torus with radii, R and r
+
+Again, use "xb" to represent the x vector, and find the square of the norm
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+depends(xb,[phi,theta])$
+xb:(R+r*cos(phi))*(cos(theta)*{e1}+sin(theta)*{e2})+r*sin(phi)*{e3}$
+scalarp(xb,xb);
+trigreduce(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+Parametric plot of the torus
+
+Set R=2 > r=1  and find the coordinates, x, y, z, using the inner product
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+load(draw)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xb$
+x:{e1}&.xb$
+y:{e2}&.xb$
+z:{e3}&.xb$
+r:1$
+R:2$
+load(draw)$
+draw(gr3d(title="",
+             dimensions=[600,500],
+             color=dark_green,
+             xtics=1,
+             ytics=1,
+             xlabel="x",
+             ylabel="y",
+             zrange=[-1,+1],
+             nticks=10,
+             parametric_surface(x,y,z,theta,0,2*%pi,phi,0,2*%pi),
+             surface_hide = true,
+             proportional_axes = xyz))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(xb,x,y,z,r,R)$
+kill(xb,r)$
+remove(xb,dependency);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+insert a time delay between calls to draw()
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+interval:3$
+time:pauser(interval)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: comment start ]
+VAGC Problem 1.2.2 
+Chapter 01, page 10, parameterize a cone with radius, R and height, h
+
+Again, use "xb" to represent the x vector and use zA for the height parameter
+in the region A of the (theta,zA)-plane
+   [wxMaxima: comment end   ] */
+
+/* [wxMaxima: input   start ] */
+depends(xb,[theta,zA])$
+xb:(zA/h)*R*(cos(theta)*{e1}+sin(theta)*{e2})+zA~*{e3}$
+scalarp(xb,xb);
+trigreduce(%);
+normod(xb);
+trigreduce(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+load(draw)$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+xb$
+x:{e1}&.xb$
+y:{e2}&.xb$
+z:{e3}&.xb$
+R:1$
+h:1$
+load(draw)$
+draw(gr3d(title="",
+             dimensions=[600,500],
+             color=dark_green,
+             xtics=1/2,
+             ytics=1/2,
+             xlabel="x",
+             ylabel="y",
+             zrange=[-1,+1],
+             nticks=10,
+             parametric_surface(x,y,z,theta,0,2*%pi,zA,-h,+h),
+             surface_hide = true,
+             proportional_axes = xyz))$
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ldisplay(xb,x,y,z,R,h)$
+kill(xb,r)$
+remove(xb,dependency);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$
