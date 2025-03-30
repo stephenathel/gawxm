@@ -1,0 +1,406 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 24.11.0_DevelopmentSnapshot ] */
+/* [wxMaxima: comment start ]
+christ_sigma_stat.wxm
+
+GNU General Public License 2025  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+Use of matrix and array code with the stationary spherical Kerr metric from Kerr_metrics.pdf
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Removal of ctensor functions ct_coords()  ratchristof() and christof()
+
+find the symmetric affine as an array, Gamten, the difference between the christoffel tensor
+ (renamed Chrten) and the S tensor (Sten) from GRTAF; first find the sigma tensor (Sigten) from GRTAF
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Initialization
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ext:["wxm"]$
+file_type_maxima:append(ext,file_type_maxima)$
+batchload("initialize_fns")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the pseudoscalar and its inverse
+the lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2
+e.g. for four dimensions edit Pseudos:{e1,e2,e3}$ to Pseudos:{e1,e2,e3,e4}$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Pseudos:{e1,e2,e3,e4}$
+Pvar:listofvars(Pseudos)$
+Plen:length(Pvar)$
+I:Pseudos$
+ni:(Plen-1)*Plen/2$
+Ii:(-1)^ni*I$
+kill(ni)$
+ldisplay(Pvar)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+batchload("initialize_lsts")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+end of Initialization
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+set derivabbrev:false$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+derivabbrev:false$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ratprint:false$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+Start of tensor analysis for kerr
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+load(ctensor)$
+init_ctensor()$
+ct_coords:[r,theta,phi,t];
+dim;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+declare(a,real,m,real)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the covariant metric tensor
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+gs:+(1+ 2*m/r)$
+gth:r^2$
+gph:(r*sin(theta))^2$
+gt:-(1-2*m/r)$
+grt:2*m/r$
+
+lg:matrix([gs,0,0,grt],[0,gth,0,0],[0,0,gph,0],[grt,0,0,gt]);                                                                                                                                                                                                         
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+matrixp(lg);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the contravariant metric tensor
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ug:invert_by_lu(lg)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+matrixp(ug);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+derivabbrev:true$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+determinant(lg)$
+detlg:trigsimp(%);
+
+determinant(ug)$
+detug:trigsimp(%);
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+determinant(lg)$
+trigsimp(%)$
+detg:factor(%)$
+rtmg:sqrt(-detg)$
+ldisplay(detg,rtmg)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+start of manual tensor arrays (indexed 0...3) and matrix calculations
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dimarr:3$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+ lg:trigsimp(lg); but lg is simple enough
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Llg:list_matrix_entries(lg)$
+array(lgarr,dimarr,dimarr)$
+fillarray(lgarr,Llg)$
+lgarr[0,0];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ug:trigsimp(ug);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Lug:list_matrix_entries(ug)$
+array(ugarr,dimarr,dimarr)$
+fillarray(ugarr,Lug)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+ldisplay(ugarr[amu,anu])
+))$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+tensorkill;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+Lx:[r,theta,phi,t];
+array(xarr,dimarr)$
+fillarray(xarr,Lx)$
+xarr[3];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+arrays;
+listarray(nbases);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+calculation of the Cristoffel symbol (2nd) for the early stationary spherical Kerr metric
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+array(Chrten,dimarr,dimarr,dimarr)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+asum:0,
+for alph:0 thru dimarr do
+block(
+asum:asum+ugarr[asig,alph]*( diff(lgarr[anu,alph],xarr[amu]) + diff(lgarr[alph,amu],xarr[anu]) - diff(lgarr[amu,anu],xarr[alph]) )
+),
+Chrten[amu,anu,asig]:trigsimp(asum/2)  )
+))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Chrten[amu,anu,asig])
+)))$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+find the Sigma tensor, Sigten as the simplest antisymmetric tensor similar to the Christoffel tensor
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+array(Sigten,dimarr,dimarr,dimarr)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+asum:0,
+for alph:0 thru dimarr do
+block(
+asum:asum+1/2*ugarr[asig,alph]*( diff(lgarr[anu,alph],xarr[amu]) - diff(lgarr[alph,amu],xarr[anu]) )
+),
+Sigten[amu,anu,asig]:trigsimp(asum)  )
+))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Sigten[amu,anu,asig])
+)))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Sigten[amu,anu,asig])
+)))$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+find the S tensor, Sten from GRTAF, that is subtracted from the christoffel tensor array, Chrten to form
+the symmetric part of the asymmetic affine connection array, Gamten 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+array(Sten,dimarr,dimarr,dimarr)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+asum:0,bsum:0,
+for alph:0 thru dimarr do
+block(
+asum:asum+bsum,
+bsum:0,
+for abet:0 thru dimarr do
+block(
+bsum:bsum+ugarr[asig,alph]*( lgarr[anu,abet]*Sigten[amu,alph,abet] + lgarr[amu,abet]*Sigten[anu,alph,abet] ) 
+) ),
+Sten[amu,anu,asig]:trigsimp(asum) 
+) ) )$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Sten[amu,anu,asig])
+)))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+calculation of the symmetric Gamma tensor, Gamten as the difference between the Cristoffel symbol, Chrten and the
+augmentation tensor, Sten
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+array(Gamten,dimarr,dimarr,dimarr)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+tensum:Chrten[amu,anu,asig] - Sten[amu,anu,asig],
+Gamten[amu,anu,asig]:trigsimp(tensum)  )
+))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Gamten[amu,anu,asig])
+)))$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+for amu:0 thru dimarr do
+block(
+for anu:0 thru dimarr do
+block(
+for asig:0 thru dimarr do
+block(
+ldisplay(Gamten[amu,anu,asig])
+)))$
+   [wxMaxima: comment end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 24.11.0_DevelopmentSnapshot"$

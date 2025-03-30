@@ -1,0 +1,378 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 24.11.0_DevelopmentSnapshot ] */
+/* [wxMaxima: comment start ]
+Kerr_1963_subcode.wxm
+
+GNU General Public License 2021  Stephen Athel Abbott.
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+An application document for Geometric Algebra using wxMaxima
+
+This file is looks very similar to the file named Kerr_1963.wxm;
+it is a subroutine form of that active document file and may be called from
+some of the christ...rota.wxm files by
+file_search_maxima;
+batch("Kerr_1963_subcode")$
+
+The Kerr metric taken from the letter...
+Gravitational Field...Special Metrics
+Roy Patrick Kerr (1963);
+
+Kerr did not originally split the equation for ds^2 into two parts;
+Here it is split just for visual comparison with the original letter;
+The first part is the sum of the first two products in the letter's equation
+and the second part is the negative product containing the mass;
+We transform these two parts separately for clarity and then 
+sum the two matrices to give the Kerr metric in spherical coordinates; 
+The original intended transformation: u=t+r is applied to each expression in turn;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Start of analysis for a rotating black hole
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+the line element was originally given in terms of (r,theta,phi,u),
+although phi and u only appear as coordinate differences;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+declare([r,theta,phi,u],[noun,real])$
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Firstly, using Equation (no number) (from original letter 1963)
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+The first part is the sum of the first two products in the letter's equation
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2:(r^2+a^2*cos(theta)^2)*(dtheta^2+(sin(theta)^2*dphi^2))+
+2*(du+a*sin(theta)^2*dphi)*(dr+a*sin(theta)^2*dphi);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+percent:expand(ds2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+identify the angular coordinate differences within the original Kerr metric
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+equnK:facsum(percent,dphi);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the derivation from Kerr includes transformations: u=t+r, r*cos(theta)=z 
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+here, to begin with, we just use u=t+r
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+percent:subst([du=dt+dr],[equnK])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+extract the expression from the output list of the subst() function
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+find the coefficient of dphi^2
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2K:percent[1];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+g33:coeff(ds2K,dphi,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+recover the coefficient of dtheta squared;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+g22:coeff(ds2K,dtheta,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+identify the radial and time coordinate differences
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2Kt:expandwrt(ds2K,dr,dt);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the base metric tensor as a matrix for [r,theta,phi,t]
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+read off and name both the diagonal and off-diagonal elements from ds2Kt, for a 
+symmetric base metric (check the off-diagonals are divided by two)
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+form the matrix lg_base
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+g11:cent:coeff(ds2Kt,dr,2)$
+g44:cent:coeff(ds2Kt,dt,2)$
+
+cent:coeff(ds2Kt,dtheta)$
+g12:coeff(cent,dr,1)/2$
+g21:g12$
+cent:coeff(ds2Kt,dphi)$
+g13:coeff(cent,dr,1)/2$
+g31:g13$
+cent:coeff(ds2Kt,dt)$
+g14:coeff(cent,dr,1)/2$
+g41:g14$
+
+cent:coeff(ds2Kt,dphi)$
+g23:coeff(cent,dtheta,1)/2$
+g32:g23$
+cent:coeff(ds2Kt,dt)$
+g24:coeff(cent,dtheta,1)/2$
+g42:g24$
+
+cent:coeff(ds2Kt,dt)$
+g34:coeff(cent,dphi,1)/2$
+g43:g34$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+form the matrix
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lg_base:matrix([g11,g12,g13,g14],[g21,g22,g23,g24],[g31,g32,g33,g34],[g41,g42,g43,g44]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+matrixp(lg_base);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+Secondly, again using the equation (no number) from the original letter (1963)
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+kill(ds2,ds2K,ds2Kt,percent)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+The second part is the negative product containing the mass;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2:-(1-2*m*r/(r^2+a^2*cos(theta)^2))*(du+a*sin(theta)^2*dphi)^2;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+identify the angular coordinate difference
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+equnK:facsum(ds2,dphi,du)$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+here, to begin with, we just use u=t+r
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+percent:subst([du=dt+dr],[equnK])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+extract the expression from the output list of the subst() function;
+also isolate the denominator and numerator;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2mass:percent[1]$
+numds2:num(ds2mass);
+dends2:denom(ds2mass);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+identify the radial and time coordinate differences
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+ds2num:expandwrt(numds2,dr,dt);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+the second part of the metric as a matrix for [r,theta,phi,t]
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+name both the diagonal and off-diagonal elements from ds2num, for the 
+symmetric tensor derived from the term containing the mass
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: comment start ]
+form the matrix lg_mass_num, a matrix of numerators
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+g11:coeff(ds2num,dr,2)$
+g22:coeff(ds2num,dtheta,2)$
+g33:coeff(ds2num,dphi,2)$
+g44:coeff(ds2num,dt,2)$
+
+cent:coeff(ds2num,dtheta)$
+g12:coeff(cent,dr,1)/2$
+g21:g12$
+cent:coeff(ds2num,dphi)$
+g13:coeff(cent,dr,1)/2$
+g31:g13$
+cent:coeff(ds2num,dt)$
+g14:coeff(cent,dr,1)/2$
+g41:g14$
+
+cent:coeff(ds2num,dphi)$
+g23:coeff(cent,dtheta,1)/2$
+g32:g23$
+cent:coeff(ds2num,dt)$
+g24:coeff(cent,dtheta,1)/2$
+g42:g24$
+
+cent:coeff(ds2num,dt)$
+g34:coeff(cent,dphi,1)/2$
+g43:g34$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+form the matrix at first with just the elements from the numerator
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lg_mass_num:matrix([g11,g12,g13,g14],[g21,g22,g23,g24],[g31,g32,g33,g34],[g41,g42,g43,g44])$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+matrixp(lg_mass_num);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+prepare to add the two matrices, remembering the denominator
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+lg_mass:1/dends2*lg_mass_num$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+matrixp(lg_mass);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+add the two symmetric matrices, firstly finding a numerator (lg_mass is unused),
+then dividing by the denominator;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+percent:lg_base+lg_mass$
+
+lg:trigsimp(percent);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+wxMaxima has allowed a substitution [a=0] into the entire metric matrix;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+percent:subst([a=0],[lg])$
+
+expand(percent[1]);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: comment start ]
+display the 1963 metric (before any 'mass term' split) tranformed by [du=dt+dr];
+this is also the result before any change in the sense of the rotation;
+   [wxMaxima: comment end   ] */
+
+
+/* [wxMaxima: input   start ] */
+dim:4$
+for mg:1 thru dim do
+block(
+for ng:mg thru dim do
+block(ldisplay(lg[mg,ng])))$
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 24.11.0_DevelopmentSnapshot"$

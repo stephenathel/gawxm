@@ -1,0 +1,1294 @@
+\documentclass[fleqn]{article}
+
+%% Created with wxMaxima 24.11.0_DevelopmentSnapshot
+
+\setlength{\parskip}{\medskipamount}
+\setlength{\parindent}{0pt}
+\usepackage{iftex}
+\ifPDFTeX
+  % PDFLaTeX or LaTeX 
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \DeclareUnicodeCharacter{00B5}{\ensuremath{\mu}}
+\else
+  %  XeLaTeX or LuaLaTeX
+  \usepackage{fontspec}
+\fi
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[leqno]{amsmath}
+\usepackage{ifthen}
+\newsavebox{\picturebox}
+\newlength{\pictureboxwidth}
+\newlength{\pictureboxheight}
+\newcommand{\includeimage}[1]{
+    \savebox{\picturebox}{\includegraphics{#1}}
+    \settoheight{\pictureboxheight}{\usebox{\picturebox}}
+    \settowidth{\pictureboxwidth}{\usebox{\picturebox}}
+    \ifthenelse{\lengthtest{\pictureboxwidth > .95\linewidth}}
+    {
+        \includegraphics[width=.95\linewidth,height=.80\textheight,keepaspectratio]{#1}
+    }
+    {
+        \ifthenelse{\lengthtest{\pictureboxheight>.80\textheight}}
+        {
+            \includegraphics[width=.95\linewidth,height=.80\textheight,keepaspectratio]{#1}
+            
+        }
+        {
+            \includegraphics{#1}
+        }
+    }
+}
+\newlength{\thislabelwidth}
+\DeclareMathOperator{\abs}{abs}
+
+\definecolor{labelcolor}{RGB}{100,0,0}
+
+\begin{document}
+cryten\_Q\_at\_r\_sinth.wxmGNU General Public License 2025  Stephen Athel Abbott.
+An application document for Geometric Algebra using wxMaximaUse of matrix and array code with the stationary spherical Kerr metric from Kerr\_metrics.pdf
+'manual' calculation of affine connections with the non-rotating spherical Kerr metric from Kerr\_metrics.pdf;find the symmetric affine as an array, Gamten, the difference between the christoffel tensor(renamed Chrten) and the S tensor (Sten) from GRTAF; first find the sigma tensor (Sigten) from GRTAF
+try changing the metric tensor; first just grph : r*sin(theta)\$ givesChrten(4,4,4)==+m/r\^ 2 not +2*m\^ 2/r\^ 3Gamten(4,4,4)==-m/r\^ 2 not +-2*m\^ 2/r\^ 3Q(4,4)==-(r-2*m)/r\^ 3then for angular momentum, a with scaled rotational energy, E== a\^ 2/(2*moment of inertia), m == m + EChrten(4,4,4)==+(m+E)/r\^ 2Gamten(4,4,4)==-(m+E)/r\^ 2Q(4,4)==-(r-2*m-2*E)/r\^ 3
+Initialization
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i3)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+ext:["wxm"]\$\\
+file\_type\_maxima:append(ext,file\_type\_maxima)\$\\
+batchload("initialize\_fns")\$
+\end{minipage}
+
+\noindent%
+
+the pseudoscalar and its inversethe lowest useable dimension pseudoscalar should be {e1,e2} i.e. Plen = 2e.g. for four dimensions edit Pseudos:{e1,e2,e3}\$ to Pseudos:{e1,e2,e3,e4}\$
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i8)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Pseudos:{e1,e2,e3,e4}\$\\
+Pvar:listofvars(Pseudos)\$\\
+Plen:length(Pvar)\$\\
+I:Pseudos\$\\
+ni:(Plen-1)*Plen/2\$\\
+Ii:(-1)\^\ ni*I\$\\
+kill(ni)\$\\
+ldisplay(Pvar)\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% t8} 
+\ensuremath{\mathrm{Pvar}}\mathop{=}\left[ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right] \mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i9)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+batchload("initialize\_lsts")\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% t9} 
+\ensuremath{\mathrm{lstblds}}\mathop{=}\mathop{[}\left[ \left{ \ensuremath{\mathrm{e1}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e4}}\right} \right] \mathop{,}\left[ \left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \right] \mathop{,}\left[ \left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \right] \mathop{,
+}\left[ \left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \right] \mathop{]}\mbox{}\]
+
+\[\tag{\% t10} 
+\ensuremath{\mathrm{allblds}}\mathop{=}\mathop{[}\left{ \ensuremath{\mathrm{e1}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{]}\mbox{}\]
+
+\[\tag{\% t11} 
+\ensuremath{\mathrm{invblds}}\mathop{=}\mathop{[}\left{ \ensuremath{\mathrm{e1}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e2}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e3}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\mathop{-
+}\left{ \ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{,}\left{ \ensuremath{\mathrm{e1}}\mathop{,}\ensuremath{\mathrm{e2}}\mathop{,}\ensuremath{\mathrm{e3}}\mathop{,}\ensuremath{\mathrm{e4}}\right} \mathop{]}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+end of Initialization
+set derivabbrev:false\$
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i12)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+derivabbrev:false\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i13)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+ratprint:false\$
+\end{minipage}
+
+\noindent%
+
+Start of tensor analysis
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i14)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+dimarr:3\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i18)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lx:[r,theta,phi,t];\\
+array(xarr,dimarr)\$\\
+fillarray(xarr,Lx)\$\\
+xarr[3];
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o15} 
+\left[ r\mathop{,}theta\mathop{,}phi\mathop{,}t\right] \mbox{}\]
+
+\[\tag{\% o18} 
+t\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i20)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+arrays;\\
+listarray(nbases);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o19} 
+\left[ \ensuremath{\mathrm{nbases}}\mathop{,}\ensuremath{\mathrm{xarr}}\right] \mbox{}\]
+
+\[\tag{\% o20} 
+\left[ 1\mathop{,}4\mathop{,}6\mathop{,}4\mathop{,}1\right] \mbox{}
+\]
+%%%%%%%%%%%%%%%%
+the covariant metric tensor
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i21)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+declare(m,real)\$
+\end{minipage}
+
+\noindent%
+
+grr:+(1+ 2*m/r)\$gth:r\^ 2\$gph:(r*sin(theta))\^ 2\$gt:-(1-2*m/r)\$grt:2*m/r\$lg:matrix([grr,0,0,grt],[0,gth,0,0],[0,0,gph,0],[grt,0,0,gt]);
+grph : r*sin(theta)\$
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i22)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+m\ :\ m\ +\ E\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i34)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+grr:+(1+\ 2*m/r)\$\\
+gth:r\^\ 2\$\\
+gph:(r*sin(theta))\^\ 2\$\\
+gtt:-(1-2*m/r)\$\\
+grt:2*m/r\$\\
+\\
+grth:0\$\\
+grph:0\$\\
+gthph:0\$\\
+gtht:0\$\\
+gpht:0\$\\
+\\
+grph\ :\ r*sin(theta)\$\\
+\\
+lg:matrix([grr,grth,grph,grt],[grth,gth,gthph,gtht],[grph,gthph,gph,gpht],[grt,gtht,gpht,gtt]);\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o34} 
+\begin{bmatrix}\frac{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }{r}\mathop{+}1 & 0 & r\mathop{\ensuremath{\cdot}}\sin{(theta)} & \frac{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }{r}\\
+0 & {{r}^{2}} & 0 & 0\\
+r\mathop{\ensuremath{\cdot}}\sin{(theta)} & 0 & {{r}^{2}}\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}} & 0\\
+\frac{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }{r} & 0 & 0 & \frac{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }{r}\mathop{-}1\end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i35)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+matrixp(lg);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o35} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i36)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+matrixp(lg);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o36} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+the contravariant metric tensor
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i37)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+ug:invert\_by\_lu(lg)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i38)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+matrixp(ug);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o38} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i39)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+derivabbrev:true\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i44)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+determinant(lg)\$\\
+trigsimp(\%)\$\\
+detg:factor(\%)\$\\
+rtmg:sqrt(-detg)\$\\
+ldisplay(detg,rtmg)\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% t44} 
+\ensuremath{\mathrm{detg}}\mathop{=}\mathop{-}\left( 2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{r}^{3}}\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\right) \mbox{}\]
+
+\[\tag{\% t45} 
+\ensuremath{\mathrm{rtmg}}\mathop{=}\sqrt{2}\mathop{\ensuremath{\cdot}}\sqrt{\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{r}^{3}}}\mathop{\ensuremath{\cdot}}\left| \sin{(theta)}\right| \mbox{}
+\]
+%%%%%%%%%%%%%%%%
+start of manual tensor arrays (indexed 0...3) and matrix calculations
+lg:trigsimp(lg); but lg is simple enough
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i49)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Llg:list\_matrix\_entries(lg)\$\\
+array(lgarr,dimarr,dimarr)\$\\
+fillarray(lgarr,Llg)\$\\
+lgarr[0,0];
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o49} 
+\frac{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }{r}\mathop{+}1\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i50)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+ug:trigsimp(ug);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o50} 
+\begin{bmatrix}\frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E} & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 1\\
+0 & \frac{1}{{{r}^{2}}} & 0 & 0\\
+\mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & \frac{1}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}} & \mathop{-}\left( \frac{1}{r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right) \\
+1 & 0 & \mathop{-}\left( \frac{1}{r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}1\end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i53)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lug:list\_matrix\_entries(ug)\$\\
+array(ugarr,dimarr,dimarr)\$\\
+fillarray(ugarr,Lug)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i54)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+arr2mat(arrin):=block([arrmat,Larr,amu,anu],\\
+local(arrmat,Larr,amu,anu),\\
+arrmat:matrix([0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]),\\
+Larr:listarray(arrin),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+arrmat[amu+1,anu+1]:pop(Larr)\\
+)),\\
+arrmat\\
+)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i56)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+ugmat:arr2mat(ugarr)\$\\
+ugmat;
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o56} 
+\begin{bmatrix}\frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E} & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 1\\
+0 & \frac{1}{{{r}^{2}}} & 0 & 0\\
+\mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & \frac{1}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}} & \mathop{-}\left( \frac{1}{r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right) \\
+1 & 0 & \mathop{-}\left( \frac{1}{r\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}1\end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+tensorkill;
+calculation of the Cristoffel symbol (2nd) for the early non-rotating spherical Kerr metric
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i57)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Chrten,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i58)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+asum:0,\\
+for\ alph:0\ thru\ dimarr\ do\\
+block(\\
+asum:asum+ugarr[asig,alph]*(\ diff(lgarr[anu,alph],xarr[amu])\ +\ diff(lgarr[alph,amu],xarr[anu])\ -\ diff(lgarr[amu,anu],xarr[alph])\ )\\
+),\\
+Chrten[amu,anu,asig]:trigsimp(asum/2)\ \ )\\
+))\$
+\end{minipage}
+
+\noindent%
+
+for clarity of inspection of third order tensors
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i59)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+arr2ten(tenarrin):=block([Lmat,matarr,asig,amu,anu],\\
+local(Lmat,matarr,asig,amu,anu),\\
+Lmat:makelist(0,dimarr+1),\\
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+array(matarr,dimarr,dimarr),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+matarr[amu,anu]:tenarrin[amu,anu,asig]\\
+)),\\
+Lmat[asig+1]:arr2mat(matarr)\\
+),\\
+Lmat\\
+)\$
+\end{minipage}
+
+\noindent%
+
+Lch\_ten[1...4] is a list of matrices for display (or simplification);
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i61)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lch\_ten:arr2ten(Chrten)\$\\
+Lch\_ten[1]\$
+\end{minipage}
+
+\noindent%
+
+Lch\_ten[2];Lch\_ten[3];Lch\_ten[4];
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i63)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+nextmat:Lch\_ten[1]\$\\
+eachmat:factor(nextmat)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i64)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+matrixp(\%);
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o64} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+show that we can get back to the tensor array form in order to have tensor multiplication again
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i65)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Chrten\_bak,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i66)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+nextmat:Lch\_ten[asig+1],\\
+eachmat:factor(nextmat),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+Chrten\_bak[amu,anu,asig]:eachmat[amu+1,anu+1]\\
+)))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i67)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+is(equal(Chrten,Chrten\_bak));
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o67} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i68)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+fillarray(Chrten,Chrten\_bak)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i70)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lch\_ten:arr2ten(Chrten);\\
+Lch\_ten[1]\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o69} 
+\mathop{[}\begin{bmatrix}\mathop{-}\left( \frac{{{r}^{2}}\mathop{-}m\mathop{\ensuremath{\cdot}}r\mathop{-}E\mathop{\ensuremath{\cdot}}r\mathop{+}2\mathop{\ensuremath{\cdot}}{{m}^{2}}\mathop{+}4\mathop{\ensuremath{\cdot}}E\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}{{E}^{2}}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{r}^{2}}}\right)  & \mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & \mathop{-}\left( \frac{m\mathop{+}E}{{{r}^{2}}}\right) \\
+\mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) }{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & 0\\
+\mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & 0\\
+\mathop{-}\left( \frac{m\mathop{+}E}{{{r}^{2}}}\right)  & 0 & 0 & \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}}\end{bmatrix}\mathop{,}\begin{bmatrix}0 & \frac{1}{r} & \mathop{-}\left( \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}r}\right)  & 0\\
+\frac{1}{r} & 0 & 0 & 0\\
+\mathop{-}\left( \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}r}\right)  & 0 & \mathop{-}\left( \cos{(theta)}\mathop{\ensuremath{\cdot}}\sin{(theta)}\right)  & 0\\
+0 & 0 & 0 & 0\end{bmatrix}\mathop{,
+}\begin{bmatrix}\frac{{{r}^{2}}\mathop{+}m\mathop{\ensuremath{\cdot}}r\mathop{+}E\mathop{\ensuremath{\cdot}}r\mathop{+}2\mathop{\ensuremath{\cdot}}{{m}^{2}}\mathop{+}4\mathop{\ensuremath{\cdot}}E\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}{{E}^{2}}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}} & \frac{\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}} & \frac{1}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & \frac{m\mathop{+}E}{{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\\
+\frac{\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}} & \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}} & \frac{\left( r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0\\
+\frac{1}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & \frac{\left( r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}} & \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & 0\\
+\frac{m\mathop{+}E}{{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0 & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right) \end{bmatrix}\mathop{,}\begin{bmatrix}\mathop{-}\left( \frac{r\mathop{-}m\mathop{-}E}{{{r}^{2}}}\right)  & \mathop{-}\left( \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}\sin{(theta)} & \frac{m\mathop{+}E}{{{r}^{2}}}\\
+\mathop{-}\left( \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & \mathop{-}r & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\cos{(theta)}}{2}\right)  & 0\\
+\mathop{-}\sin{(theta)} & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\cos{(theta)}}{2}\right)  & \mathop{-}\left( r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\right)  & 0\\
+\frac{m\mathop{+}E}{{{r}^{2}}} & 0 & 0 & \frac{m\mathop{+}E}{{{r}^{2}}}\end{bmatrix}\mathop{]}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+find the Sigma tensor, Sigten as the simplest antisymmetric tensor similar to the Christoffel tensor
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i71)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Sigten,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i72)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+asum:0,\\
+for\ alph:0\ thru\ dimarr\ do\\
+block(\\
+asum:asum+1/2*ugarr[asig,alph]*(\ diff(lgarr[anu,alph],xarr[amu])\ -\ diff(lgarr[alph,amu],xarr[anu])\ )\\
+),\\
+Sigten[amu,anu,asig]:trigsimp(asum)\ \ )\\
+))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i74)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lsig\_ten:arr2ten(Sigten)\$\\
+Lsig\_ten[1]\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i75)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Sigten\_bak,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i76)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+nextmat:Lsig\_ten[asig+1],\\
+eachmat:factor(nextmat),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+Sigten\_bak[amu,anu,asig]:eachmat[amu+1,anu+1]\\
+)))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i77)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+is(equal(Sigten,Sigten\_bak));
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o77} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i78)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+fillarray(Sigten,Sigten\_bak)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i83)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lsig\_ten:arr2ten(Sigten)\$\\
+Lsig\_ten[1];\\
+Lsig\_ten[2];\\
+Lsig\_ten[3];\\
+Lsig\_ten[4];
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o80} 
+\begin{bmatrix}0 & \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}} & \mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & \mathop{-}\left( \frac{1}{2\mathop{\ensuremath{\cdot}}r}\right) \\
+\mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & 0\\
+\frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & 0 & 0\\
+\frac{1}{2\mathop{\ensuremath{\cdot}}r} & 0 & 0 & 0\end{bmatrix}\mbox{}\]
+
+\[\tag{\% o81} 
+\begin{bmatrix}0 & \frac{1}{r} & 0 & 0\\
+\mathop{-}\left( \frac{1}{r}\right)  & 0 & 0 & 0\\
+0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0\end{bmatrix}\mbox{}\]
+
+\[\tag{\% o82} 
+\begin{bmatrix}0 & \mathop{-}\left( \frac{\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}}\right)  & \frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r} & \frac{1}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\\
+\frac{\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}} & 0 & \frac{\left( r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0\\
+\mathop{-}\left( \frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r}\right)  & \mathop{-}\left( \frac{\left( r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\cos{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & 0\\
+\mathop{-}\left( \frac{1}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & 0 & 0\end{bmatrix}\mbox{}\]
+
+\[\tag{\% o83} 
+\begin{bmatrix}0 & \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}\sin{(theta)}} & \mathop{-}\left( \frac{\sin{(theta)}}{2}\right)  & 0\\
+\mathop{-}\left( \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & \mathop{-}\left( \frac{r\mathop{\ensuremath{\cdot}}\cos{(theta)}}{2}\right)  & 0\\
+\frac{\sin{(theta)}}{2} & \frac{r\mathop{\ensuremath{\cdot}}\cos{(theta)}}{2} & 0 & 0\\
+0 & 0 & 0 & 0\end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+find the S tensor, Sten from GRTAF, that is subtracted from the christoffel tensor array, Chrten to formthe symmetric part of the asymmetic affine connection array, Gamten
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i84)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Sten,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i85)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+asum:0,bsum:0,\\
+for\ alph:0\ thru\ dimarr\ do\\
+block(\\
+asum:asum+bsum,\\
+bsum:0,\\
+for\ abet:0\ thru\ dimarr\ do\\
+block(\\
+bsum:bsum+ugarr[asig,alph]*(\ lgarr[anu,abet]*Sigten[amu,alph,abet]\ +\ lgarr[amu,abet]*Sigten[anu,alph,abet]\ )\ \\
+)\ ),\\
+Sten[amu,anu,asig]:trigsimp(asum)\ \\
+)\ )\ )\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i87)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Ls\_ten:arr2ten(Sten)\$\\
+Ls\_ten[1]\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i88)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Sten\_bak,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i89)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+nextmat:Ls\_ten[asig+1],\\
+eachmat:factor(nextmat),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+Sten\_bak[amu,anu,asig]:eachmat[amu+1,anu+1]\\
+)))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i90)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+is(equal(Sten,Sten\_bak));
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o90} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i91)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+fillarray(Sten,Sten\_bak)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i93)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Ls\_ten:arr2ten(Sten)\$\\
+Ls\_ten[1]\$
+\end{minipage}
+
+\noindent%
+
+calculation of the symmetric Gamma tensor, Gamten as the difference between the Cristoffel symbol, Chrten and theaugmentation tensor, Sten
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i94)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Gamten,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i95)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+tensum:Chrten[amu,anu,asig]\ -\ Sten[amu,anu,asig],\\
+Gamten[amu,anu,asig]:trigsimp(tensum)\ \ )\\
+))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i97)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lgam\_ten:arr2ten(Gamten)\$\\
+Lgam\_ten[1]\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i98)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Gamten\_bak,dimarr,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i99)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ asig:0\ thru\ dimarr\ do\\
+block(\\
+nextmat:Lgam\_ten[asig+1],\\
+eachmat:factor(nextmat),\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+Gamten\_bak[amu,anu,asig]:eachmat[amu+1,anu+1]\\
+)))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i100)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+is(equal(Gamten,Gamten\_bak));
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o100} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i101)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+fillarray(Gamten,Gamten\_bak)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i103)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+Lgam\_ten:arr2ten(Gamten);\\
+Lgam\_ten[1]\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o102} 
+\mathop{[}\begin{bmatrix}\mathop{-}\left( \frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}}\right)  & 0 & \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & \mathop{-}\left( \frac{1}{2\mathop{\ensuremath{\cdot}}r}\right) \\
+0 & \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) }{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & 0 & 0\\
+\frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & 0 & \frac{r\mathop{\ensuremath{\cdot}}\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) } & 0\\
+\mathop{-}\left( \frac{1}{2\mathop{\ensuremath{\cdot}}r}\right)  & 0 & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}}\right) \end{bmatrix}\mathop{,}\begin{bmatrix}0 & 0 & \frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}r} & 0\\
+0 & 0 & 0 & 0\\
+\frac{\cos{(theta)}}{2\mathop{\ensuremath{\cdot}}r} & 0 & \cos{(theta)}\mathop{\ensuremath{\cdot}}\sin{(theta)} & 0\\
+0 & 0 & 0 & 0\end{bmatrix}\mathop{,
+}\begin{bmatrix}\frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r}\right)  & \frac{1}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\\
+0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}\right)  & 0 & 0\\
+\mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{4\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r}\right)  & 0 & \mathop{-}\left( \frac{\left( r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}\sin{(theta)}}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) }\right)  & 0\\
+\frac{1}{2\mathop{\ensuremath{\cdot}}{{r}^{2}}\mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0 & 0 & \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{2\mathop{\ensuremath{\cdot}}{{r}^{3}}\mathop{\ensuremath{\cdot}}\sin{(theta)}}\end{bmatrix}\mathop{,}\begin{bmatrix}\frac{m\mathop{+}E}{{{r}^{2}}} & 0 & \frac{\sin{(theta)}}{2} & 0\\
+0 & r & 0 & 0\\
+\frac{\sin{(theta)}}{2} & 0 & r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}} & 0\\
+0 & 0 & 0 & \mathop{-}\left( \frac{m\mathop{+}E}{{{r}^{2}}}\right) \end{bmatrix}\mathop{]}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+looking for field equations,create the Q matrix from GRTAF
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i104)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Qten,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i105)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+asum:0,bsum:0,\\
+for\ alph:0\ thru\ dimarr\ do\\
+block(\\
+asum:asum+bsum,\\
+bsum:0,\\
+for\ abet:0\ thru\ dimarr\ do\\
+block(\\
+bsum:bsum+Sigten[alph,abet,abet]*Gamten[amu,anu,alph]\ \ \\
+)\ ),\\
+Qten[amu,anu]:trigsimp(asum)\ \\
+)\ )\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i107)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+q\_mat:arr2mat(Qten);\\
+q\_mat[4,4]\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o106} 
+\begin{bmatrix}\mathop{-}\left( \frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{{{r}^{3}}}\right)  & 0 & \frac{\left( r\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{-}3\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}} & \mathop{-}\left( \frac{1}{{{r}^{2}}}\right) \\
+0 & \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{m\mathop{+}E} & 0 & 0\\
+\frac{\left( r\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{-}3\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{\left( 2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0 & \frac{\left( r\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{-}3\mathop{\ensuremath{\cdot}}E\right) \mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{m\mathop{+}E} & 0\\
+\mathop{-}\left( \frac{1}{{{r}^{2}}}\right)  & 0 & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{{{r}^{3}}}\right) \end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+simplification of the matrix form, q\_mat before getting bak to the tensor array form, Qten
+nextmat:copymatrix(q\_mat)\$eachmat:factor(nextmat)\$
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i108)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+array(Qten\_bak,dimarr,dimarr)\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i111)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+nextmat:copymatrix(q\_mat)\$\\
+eachmat:factor(nextmat)\$\\
+for\ amu:0\ thru\ dimarr\ do\\
+block(\\
+for\ anu:0\ thru\ dimarr\ do\\
+block(\\
+Qten\_bak[amu,anu]:eachmat[amu+1,anu+1]\\
+))\$
+\end{minipage}
+
+\noindent%
+
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i112)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+is(equal(Qten,Qten\_bak));
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o112} 
+true\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i113)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+fillarray(Qten,Qten\_bak)\$
+\end{minipage}
+
+\noindent%
+
+Qten, is symmetric and may be usable in integral variation;or maybe not; see below as the mixed tensor and the scalar re-introduce the sin(theta) singularity into QcovtenQten looks best on its own
+
+
+\noindent
+%%%%%%%%
+%% INPUT:
+\begin{minipage}[t]{4.000000em}\color{red}\bfseries
+(\% i115)	
+\end{minipage}
+\begin{minipage}[t]{\textwidth}\color{blue}
+q\_mat:arr2mat(Qten);\\
+q\_mat[4,4]\$
+\end{minipage}
+%%%% OUTPUT:
+\[\displaystyle \tag{\% o114} 
+\begin{bmatrix}\mathop{-}\left( \frac{r\mathop{+}2\mathop{\ensuremath{\cdot}}m\mathop{+}2\mathop{\ensuremath{\cdot}}E}{{{r}^{3}}}\right)  & 0 & \frac{r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}E\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}} & \mathop{-}\left( \frac{1}{{{r}^{2}}}\right) \\
+0 & \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{m\mathop{+}E} & 0 & 0\\
+\frac{r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}E\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{2\mathop{\ensuremath{\cdot}}\left( m\mathop{+}E\right) \mathop{\ensuremath{\cdot}}r\mathop{\ensuremath{\cdot}}\sin{(theta)}} & 0 & \frac{r\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}m\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{-}3\mathop{\ensuremath{\cdot}}E\mathop{\ensuremath{\cdot}}{{\sin{(theta)}}^{2}}\mathop{+}m\mathop{+}E}{m\mathop{+}E} & 0\\
+\mathop{-}\left( \frac{1}{{{r}^{2}}}\right)  & 0 & 0 & \mathop{-}\left( \frac{r\mathop{-}2\mathop{\ensuremath{\cdot}}m\mathop{-}2\mathop{\ensuremath{\cdot}}E}{{{r}^{3}}}\right) \end{bmatrix}\mbox{}
+\]
+%%%%%%%%%%%%%%%%
+\end{document}
