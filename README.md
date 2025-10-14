@@ -19,3 +19,8 @@ Geometric Algebra using wxMaxima (GAwxM)
 
  The branch named "main-algebra" contains only the Geometric Algebra (GA) while the branch named "examples-and-extras" has 
  GA examples and relativity extras.
+
+ The GRTAF manuscript may be incorrectly described by AI as using an asymmetric metric connection, whereas it is only the 
+ affine connection that is asymmetric.
+
+ This work may now be archived to 'read only'.
